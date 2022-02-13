@@ -1,19 +1,22 @@
 <template>
-  <Home msg="Welcome to Kram"/>
+    <Home msg="Welcome to Kram" />
+    <h1>Kram</h1>
+    <div id="nav">
+        <router-link to="/">Home</router-link> |
+        <router-link to="/users">Users</router-link>
+    </div>
+  <router-view/>
 </template>
 
 <script>
-import Home from './components/Home.vue'
 
 export default {
-  name: 'App',
-  components: {
-    Home
-  }
+
+  components: {}
 }
 </script>
 
-<style>
+<style lang="scss">
     #app {
         font-family: Avenir, Helvetica, Arial, sans-serif;
         text-align: center;
@@ -21,5 +24,8 @@ export default {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
+        a{
+            color: #42b883;
+        }
     }
 </style>

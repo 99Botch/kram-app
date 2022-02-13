@@ -1,15 +1,23 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-  </div>
+    <div class="home">
+        <p>This is the home page</p>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
+//   name: 'Home',
+
+    data() {
+        return {
+            objectOfAttrs: {
+            name: 'bite'
+            }
+        }
+    },
 
   props: {
-    msg: String
+    // msg: String
   }
 }
 </script>
