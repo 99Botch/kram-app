@@ -18,6 +18,7 @@
 
 <script>
     import axios from 'axios';
+    import { URI } from '@/plugins/url.js';
 
     export default {
         name: 'Users',
@@ -34,7 +35,7 @@
 
         methods: {
             getUsers(){
-                axios.get( `http://localhost:3000/users/` )
+                axios.get( `${ URI }/users/` )
                     .then(response => {
                         this.users = response.data;
                     })

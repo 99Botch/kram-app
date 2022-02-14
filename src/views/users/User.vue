@@ -13,6 +13,7 @@
 
 <script>
     import axios from 'axios';
+    import { URI } from '@/plugins/url.js';
 
     export default {
         name: 'User',
@@ -30,12 +31,11 @@
 
         methods: {
             getUser(){
-                axios.get( `http://localhost:3000/users/${this.id}` )
+                axios.get( `${ URI }/users/${ this.id }` )
                     .then(response => {
-                        this.user = response.data;
                         this.user = {
-                            username: this.user.username,
-                            email: this.user.email,
+                            username: response.data.username,
+                            email: response.data.email,
                         }
                     })
                     .catch(error => {

@@ -1,18 +1,24 @@
 <template>
     <h1>Kram</h1>
+    <button><router-link to="/register">Register</router-link></button>
 
+    <Navigation />
+    <!--<h2>Navigation</h2>
     <div id="nav">
         <router-link to="/">Home</router-link> |
         <router-link to="/users">Users</router-link>
     </div>
 
-  <router-view/>
+  <router-view/>-->
 </template>
 
 <script>
+import Navigation from '@/components/Navigation.vue';
 
 export default {
-  components: {}
+    components: {
+        Navigation
+    }
 }
 </script>
 
@@ -24,8 +30,5 @@ export default {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
-        a{
-            color: #42b883;
-        }
     }
 </style>
