@@ -1,17 +1,17 @@
 <template>
-    <Home msg="Welcome to Kram" />
     <h1>Kram</h1>
+
     <div id="nav">
         <router-link to="/">Home</router-link> |
         <router-link to="/users">Users</router-link>
     </div>
+
   <router-view/>
 </template>
 
 <script>
 
 export default {
-
   components: {}
 }
 </script>
