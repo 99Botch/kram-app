@@ -1,27 +1,20 @@
 <template>
-    <div class="" id="register">
+    <div class="" id="login">
 
-        <p>Register form</p>
+        <p>Login form</p>
 
         <div>
-            <form>
-                <label for="username">Username:</label><br>
-                <input type="text" id="username" name="username" v-model="form.username" required><br>                
-                
+            <form>                          
                 <label for="email">Email:</label><br>
                 <input type="text" id="email" name="email" v-model="form.email" required><br>
                 
                 <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password" v-model="form.password" required><br>
-                
-                <label for="repeat_password">Repeat password:</label><br>
-                <input type="password" id="repeat_password" name="repeat_password" v-model="form.repeat_password" required><br>
-
                 <br>
             </form>
             
             <div class="button">
-                <button class="submit" type="submit" @click="submitForm">Sign up</button>
+                <button class="submit" type="submit" @click="submitForm">Login</button>
             </div>
         </div>
 
@@ -33,15 +26,13 @@
     import { URI } from '@/plugins/url.js';
 
     export default {
-        name: 'Register',
+        name: 'Login',
         
         data () {
             return {
                 form: {
-                    username: "",
                     email: "",
-                    password: "",
-                    repeat_password: ""
+                    password: ""
                 }
             }
         },
@@ -55,12 +46,13 @@
                 const json = JSON.stringify(this.form);
                 console.log(json);
 
-                await axios.post(`${ URI }/users/register`, json, {
+                await axios.post(`${ URI }/users/login`, json, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
                 .then((res) => {
+                    sessionStorage.setItem('_id', res.data.user_id);
                     if(res.status === 200) {
                         this.$router.push({ path : '/' });
                     }
