@@ -41,6 +41,7 @@
                             .then((res) => {
                                 if(res.status === 200) {
                                     sessionStorage.removeItem('_id');
+                                    this.token = null;
                                     this.$router.push({ path : '/' });
                                 }
                             })

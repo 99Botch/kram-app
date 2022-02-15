@@ -8,6 +8,11 @@
             <p> {{ user.email }} </p>
         </div>
 
+        <div v-if="!loading">
+            <router-link :to="{ name:'EditUser', params:{ id: this.id } }"> update my profile </router-link>
+            <button @click="deleteProfile"> Delete my profile</button>
+        </div>
+
     </div>
 </template>
 
@@ -20,6 +25,7 @@
         
         data () {
             return {
+                loading: true,
                 id: this.$route.params.id,
                 user: []
             }
@@ -37,11 +43,49 @@
                             username: response.data.username,
                             email: response.data.email,
                         }
+                        this.loading = !this.loading;
                     })
                     .catch(error => {
                         console.log(error)
                         console.log(error.response.data)
                     })
+            },
+            
+            async deleteProfile(){
+                await axios.get(`${ URI }/users/session/${ this.id }`)
+                    .then((res) => { 
+                        if(res.status === 200) { 
+                            this.token = res.data.token; 
+
+                            axios.delete(`${ URI }/users/${ this.id }`, {
+                                headers: {
+                                        Authorization: `Bearer ${this.token}`,
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then((res) => {
+                                    if(res.status === 200) {
+                                        axios.delete(`${ URI }/users/logout/${ this.id }`, {
+                                            headers: {
+                                                    Authorization: `Bearer ${this.token}`,
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            })
+                                            .then((res) => {
+                                                if(res.status === 200) {
+                                                    sessionStorage.removeItem('_id');
+                                                    this.token = null;
+                                                    this.id = null;
+                                                    this.$router.push({ path : '/' });
+                                                }
+                                            })
+                                    }
+                                })
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("error: " + error);
+                    });
             }
         }
     }
@@ -51,5 +95,9 @@
 <style scoped lang="scss">
     ul{
         list-style-type: none;
+    }
+    button{
+        color: red;
+        cursor: pointer;
     }
 </style>
