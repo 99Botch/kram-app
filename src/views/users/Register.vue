@@ -46,9 +46,7 @@
             }
         },
 
-        mounted () {
-            this.submitForm();
-        },
+        mounted () {},
 
         methods: {
             async submitForm(){

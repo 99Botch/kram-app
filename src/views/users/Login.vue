@@ -37,9 +37,7 @@
             }
         },
 
-        mounted () {
-            this.submitForm();
-        },
+        mounted () {},
 
         methods: {
             async submitForm(){
@@ -52,8 +50,8 @@
                     }
                 })
                 .then((res) => {
-                    sessionStorage.setItem('_id', res.data.user_id);
                     if(res.status === 200) {
+                        sessionStorage.setItem('_id', res.data.user_id);
                         this.$router.push({ path : '/' });
                     }
                 })
