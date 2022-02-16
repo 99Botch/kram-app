@@ -47,10 +47,6 @@
                 async getUser(){
                 await axios.get( `${ URI }/users/${ this.id }` )
                     .then(response => {
-                        // this.user = {
-                        //     username: response.data.username,
-                        //     email: response.data.email,
-                        // }
                         this.form.username = response.data.username;
                         this.form.email = response.data.email;
                     })
@@ -62,23 +58,30 @@
 
             async submitForm(){
 
-                // const json = JSON.stringify(this.form);
-                // console.log(json);
+                const json = JSON.stringify(this.form);
 
-                // await axios.post(`${ URI }/users/login`, json, {
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     }
-                // })
-                // .then((res) => {
-                //     if(res.status === 200) {
-                //         sessionStorage.setItem('_id', res.data.user_id);
-                //          this.$router.push({ path : `/users/${ this.id }` });
-                //     }
-                // })
-                // .catch((error) => {
-                //     console.log(error);
-                // });
+                await axios.get(`${ URI }/users/session/${ this.id }`)
+                    .then((res) => { 
+                        if(res.status === 200) { 
+                            this.token = res.data.token; 
+
+                            axios.put(`${ URI }/users/${ this.id }`, json, {
+                                headers: {
+                                        Authorization: `Bearer ${ this.token }`,
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then((res) => {
+                                    if(res.status === 200) {
+                                        this.token = null;
+                                        this.$router.push({ path : `/users/${ this.id }` });
+                                    }
+                                })
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("error: " + error);
+                    });
             }
         }
     }
