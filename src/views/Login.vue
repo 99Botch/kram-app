@@ -1,7 +1,9 @@
 <template>
+    <Navigation/>
+
     <div class="" id="login">
 
-        <p>Login form</p>
+        <h1>Login form</h1>
 
         <div>
             <form>                          
@@ -22,6 +24,7 @@
 </template>
 
 <script>
+    import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
 
@@ -35,6 +38,10 @@
                     password: ""
                 }
             }
+        },
+
+        components: {
+            Navigation,
         },
 
         mounted () {},

@@ -1,7 +1,9 @@
 <template>
-    <div class="users" id="users">
+    <Navigation/>
 
-        <p>Users</p>
+    <div class="" id="users">
+
+        <h1>Users</h1>
         <hr/>
 
         <div v-for="user of users" 
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+    import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
 
@@ -27,6 +30,10 @@
             return {
                 users: []
             }
+        },
+
+        components: {
+            Navigation,
         },
 
         mounted () {

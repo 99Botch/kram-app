@@ -1,7 +1,9 @@
 <template>
+    <Navigation/>
+
     <div class="" id="register">
 
-        <p>Register form</p>
+        <h1>Register form</h1>
 
         <div>
             <form>
@@ -29,6 +31,7 @@
 </template>
 
 <script>
+    import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
 
@@ -44,6 +47,10 @@
                     repeat_password: ""
                 }
             }
+        },
+
+        components: {
+            Navigation,
         },
 
         mounted () {},

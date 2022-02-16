@@ -1,7 +1,9 @@
 <template>
-    <div class="users" id="user">
+    <Navigation/>
 
-        <p>User's Profile</p>
+    <div class="" id="user">
+
+        <h1>User's Profile</h1>
 
         <div>
             <p> {{ user.username }} </p>
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+    import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
 
@@ -29,6 +32,10 @@
                 id: this.$route.params.id,
                 user: []
             }
+        },
+
+        components: {
+            Navigation,
         },
 
         mounted () {

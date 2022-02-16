@@ -1,7 +1,9 @@
 <template>
-    <div class="" id="login">
+    <Navigation/>
+    
+    <div class="" id="update_profile">
 
-        <p>Update form</p>
+        <h1>Update Profile</h1>
 
         <div>
             <form>        
@@ -23,6 +25,7 @@
 </template>
 
 <script>
+    import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
 
@@ -37,6 +40,10 @@
                     email: ""
                 }
             }
+        },
+
+        components: {
+            Navigation,
         },
 
         mounted () {

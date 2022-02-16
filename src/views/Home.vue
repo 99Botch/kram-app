@@ -1,20 +1,27 @@
 <template>
-    <div class="home">
-        <p>Welcome to Kram</p>
+    <Navigation/>
+
+    <div class="" id="home_view">
+        <h1>Welcome to Kram</h1>
     </div>
+
 </template>
 
 <script>
-export default {
+    import Navigation from '@/components/Navigation.vue';
 
-    data() {
-        return {
-            objectOfAttrs: {}
-        }
-    },
+    export default {
 
-  props: {}
-}
+        data() {
+            return {}
+        },
+
+        components: {
+            Navigation,
+        },
+
+        props: {}
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
