@@ -2,11 +2,17 @@
     <div id="nav">
         
         <router-link to="/">Home</router-link> |
-        <router-link to="/users">Users</router-link> |
-        <router-link to="/register">Register</router-link> |
-        <router-link to="/login">Login</router-link> | 
+        <router-link to="/users">Users</router-link> 
+
+        <span v-if="$store.state.login">
+            |   <router-link to="/register">Register</router-link> |
+                <router-link to="/login">Login</router-link> 
+        </span>
+
+        <span v-else>
+            <Logout />
+        </span>
         
-        <Logout />
     </div>
 </template>
 

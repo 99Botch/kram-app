@@ -27,6 +27,7 @@
     import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
+    import store from '@/store/index.js';
 
     export default {
         name: 'Login',
@@ -40,6 +41,12 @@
             }
         },
 
+        computed: {
+            signIn () {
+                return store.state.login // get state
+            }
+        },
+
         components: {
             Navigation,
         },
@@ -48,6 +55,7 @@
 
         methods: {
             async submitForm(){
+                console.log(!store.state.login)
                 const json = JSON.stringify(this.form);
                 console.log(json);
 
@@ -59,7 +67,8 @@
                 .then((res) => {
                     if(res.status === 200) {
                         sessionStorage.setItem('_id', res.data.user_id);
-                        this.$router.push({ path : '/' });
+                        store.commit(!store.state.login)
+                        // this.$router.push({ path : '/' });
                     }
                 })
                 .catch((error) => {
