@@ -6,19 +6,20 @@
         <h1>Users</h1>
         <hr/>
 
-        <div v-for="user of users" 
+       <div v-for="user of users" 
             :key="user.id"
         >
             <router-link :to="{ name:'User', params:{ id: user._id } }"> {{ user.username }} </router-link>
             <p> {{ user.email }} </p>
             <hr/>
         </div>
-
     </div>
 
 </template>
 
+
 <script>
+
     import Navigation from '@/components/Navigation.vue';
     import axios from 'axios';
     import { URI } from '@/plugins/url.js';
@@ -44,10 +45,15 @@
             getUsers(){
                 axios.get( `${ URI }/users/` )
                     .then(response => {
+                console.log(response)
+
                         this.users = response.data;
                     })
-                    .catch(e => { this.errors.push(e) })
-            }
+                    .catch(e => { 
+                console.log(e)
+
+                     })
+        }
         }
     }
 </script>
