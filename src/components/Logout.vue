@@ -42,6 +42,7 @@
                                 if(res.status === 200) {
                                     sessionStorage.removeItem('_id');
                                     this.token = null;
+                                    sessionStorage.setItem('session', false);
                                     this.$router.push({ path : '/' });
                                 }
                             })

@@ -2,23 +2,25 @@ import { createStore } from 'vuex';
 
 export default createStore({
     state: {
-        login: false,
+        sessionState: false,
     },
     
     mutations: {
         SIGN_IN(state, payload) {
-            state.login = payload
+            state.sessionState = payload
         }
     },
     
     actions: {
         signIn(context, payload){
-            const login = payload;
-            context.commit('SIGN_IN', login);
+            const sessionUpd = payload;
+            context.commit('SIGN_IN', sessionUpd);
         }
     },
     
     getters: {
-    
+        getSession(state){
+            return state.sessionState;
+        }
     }
 })

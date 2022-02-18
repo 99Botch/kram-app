@@ -22,6 +22,26 @@
             Navigation,
         },
 
+        mounted () {
+            this.setSession()
+        },
+
+        computed: {
+            signIn () { 
+                // get state
+                return this.$store.getters.getSession 
+            }
+        },
+
+        methods: {
+            setSession(){
+                var session = sessionStorage.getItem("session");
+                (session === 'false') ? 
+                    this.$store.dispatch('signIn', false) : 
+                    this.$store.dispatch('signIn', true);
+            }
+        },
+
         props: {}
     }
 </script>
