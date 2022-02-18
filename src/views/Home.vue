@@ -3,8 +3,6 @@
 
     <div class="" id="home_view">
         <h1>Welcome to Kram</h1>
-        <p>{{ $store.state.login }} </p>
-        <!--<button @click="$store.dispatch('signIn', !$store.state.login)">login</button>-->
     </div>
 
 </template>

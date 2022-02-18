@@ -22,7 +22,7 @@ const routes = [
     {
         path: '/users',
         name: 'Users',
-        component: () => import('@/views/users/Users.vue')
+        component: () => import('@/views/users/Users.vue'),
     },
     {
         path: '/users/:id',

@@ -5,6 +5,8 @@ import axios from 'axios';
 import store from './store'
 
 createApp(App).use(store).use(router).mount('#app')
-sessionStorage.setItem('session', false);
+
+const session = sessionStorage.getItem('session');
+(session === null) ? sessionStorage.setItem('session', false) : null;
 
 App.prototype.$http = axios
