@@ -15,9 +15,6 @@
                 <input type="text" id="email" name="email" v-model="form.email" required><br>
                 <br>
 
-                <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password" v-model="form.password" required><br>
-                <br>
             </form>
             
             <div class="button">
@@ -42,7 +39,6 @@
                 form: {
                     username: "",
                     email: "",
-                    password: "",
                 }
             }
         },
