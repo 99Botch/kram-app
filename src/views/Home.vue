@@ -9,6 +9,8 @@
 
 <script>
     import Navigation from '@/components/Navigation.vue';
+    import axios from 'axios';
+    import { URI } from '@/plugins/url.js';
 
     export default {
 
@@ -21,7 +23,8 @@
         },
 
         mounted () {
-            this.setSession()
+            this.getSession();
+            this.setSession();
         },
 
         computed: {
@@ -32,6 +35,23 @@
         },
 
         methods: {
+            async getSession(){
+                let id = sessionStorage.getItem("_id");
+                console.log(id)
+                if(id){
+                    await axios.get( `${ URI }/users/session/${ id }` )
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        console.log(error.response.data)
+                        sessionStorage.removeItem('_id');
+                        sessionStorage.setItem('session', false);
+                        this.$store.dispatch('signIn', false);
+                    })
+                }
+            },
             setSession(){
                 var session = sessionStorage.getItem("session");
                 (session === 'false') ? 

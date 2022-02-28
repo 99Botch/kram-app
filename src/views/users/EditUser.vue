@@ -88,7 +88,8 @@
                         }
                     })
                     .catch((error) => {
-                        console.log("error: " + error);
+                        this.$router.push({ path : `/` });
+                        console.log( error);
                     });
             }
         }
