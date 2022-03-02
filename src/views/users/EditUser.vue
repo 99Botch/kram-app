@@ -75,7 +75,7 @@
 
                             axios.put(`${ URI }/users/${ this.id }`, json, {
                                 headers: {
-                                        Authorization: `Bearer ${ this.token }`,
+                                        authorization: `Bearer ${ this.token }`,
                                         'Content-Type': 'application/json'
                                     }
                                 })

@@ -9,8 +9,10 @@
        <div v-for="deck of decks" 
             :key="deck.id"
         >
-            <!--<router-link :to="{ name:'User', params:{ id: user._id } }"> {{ user.username }} </router-link>-->
-            <p> {{ deck.name }} {{ deck.category }} {{ deck.sub_category }}</p>
+            <p>             
+                <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"> {{ deck.name }} </router-link>
+                {{ deck.category }} {{ deck.sub_category }}
+            </p>
             <hr/>
         </div>
     </div>

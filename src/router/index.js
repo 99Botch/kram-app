@@ -57,6 +57,12 @@ const routes = [
         name: 'Cards',
         component: () => import('@/views/cards/Index.vue')
     },
+    // REVIEW
+    {
+        path: '/review/:deckId',
+        name: 'Review',
+        component: () => import('@/views/reviews/Index.vue')
+    },
 ]
 
 const router = createRouter({
