@@ -44,7 +44,19 @@ const routes = [
         path: '/edit/:id',
         name: 'EditUser',
         component: () => import('@/views/users/EditUser.vue')
-    }
+    },
+    // DECKS
+    {
+        path: '/decks',
+        name: 'Decks',
+        component: () => import('@/views/decks/Index.vue')
+    },
+    // CARDS
+    {
+        path: '/cards',
+        name: 'Cards',
+        component: () => import('@/views/cards/Index.vue')
+    },
 ]
 
 const router = createRouter({

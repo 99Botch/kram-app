@@ -45,14 +45,9 @@
             getUsers(){
                 axios.get( `${ URI }/users/` )
                     .then(response => {
-                console.log(response)
-
                         this.users = response.data;
                     })
-                    .catch(e => { 
-                console.log(e)
-
-                     })
+                    .catch(e => { console.log(e) })
             }
         }
     }
