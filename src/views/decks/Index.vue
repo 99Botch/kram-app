@@ -11,7 +11,7 @@
         >
             <p>             
                 <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"> {{ deck.name }} </router-link>
-                {{ deck.category }} {{ deck.sub_category }}
+                {{ deck.category }} 
             </p>
             <hr/>
         </div>
