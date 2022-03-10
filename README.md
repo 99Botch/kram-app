@@ -1,5 +1,9 @@
 # kram-app
 
+Kram is a Vue based web application for flashcards, using a Spaced repetition algorithm to ease the learning curve of any vocabulary type.
+
+It also has an online repository for users to import and export decks of cards.
+
 ## Project setup
 ```
 npm install
