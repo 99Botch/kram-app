@@ -1,32 +1,30 @@
-import moment from 'moment';
+const { DateTime } = require("luxon");
 
 // export API URI
 function spacedRepetition(_card, _event){
-    let learning_cue = ['1mn', '15mn'];
-    // let learning_cue = ['1mn', '15mn', '1d', '2d', '7d', '14d', '30d'];
-    let is_learning = learning_cue.indexOf(_card.interval, 0)
-
+    let learning_cue = [null, 60, 15, 1, 2, 7, 14, 30];
+    let is_learning = learning_cue.indexOf(_card.interval, 0);
+    
     if(_event == 'ArrowRight'){
-        console.log(is_learning)
-        
-        if(_card.next_session == null){
-            _card.interval = '15mn';
-            let newt_interval = moment().add(15, 'minutes').calendar();  
-            _card.next_session = newt_interval;
-        }
-        else if (is_learning < learning_cue.length) {
-            _card.interval = learning_cue[++is_learning];
 
-        } 
-        else if (is_learning == learning_cue.length) {
-            _card.interval = '30d';
+        if(_card.next_session == null || _card.interval == 60){
+            _card.interval = 15;
+            let date = DateTime.local().plus({ minutes: _card.interval }).toString();  
+            let new_interval = date.slice(0,10) + " " + date.slice(11,16);  
+            _card.next_session = new_interval;
         }
+        else if (is_learning < learning_cue.length - 1) {
+            _card.interval = learning_cue[++is_learning];
+            _card.next_session = DateTime.local().plus({ days: _card.interval }).toISODate();
+        }   
 
     } 
     else if (_event == 'ArrowLeft'){
-        _card.interval = '1mn';
+        _card.interval = 60;
+        let date = DateTime.local().plus({ seconds: _card.interval }).toString();  
+        let new_interval = date.slice(0,10) + " " + date.slice(11,16);  
+        _card.next_session = new_interval;
     }
-
 
     return _card
 }
