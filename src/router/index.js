@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
+// import store from '@/store/index.js'
 
 const routes = [
     {
@@ -30,16 +31,16 @@ const routes = [
         props: true,
         component: () => import('@/views/users/User.vue')
     },
-    {
-        path: '/register',
-        name: 'Register',
-        component: () => import('@/views/users/Register.vue')
-    },
-    {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/Login.vue')
-    },
+    // {
+    //     path: '/register',
+    //     name: 'Register',
+    //     component: () => import('@/views/users/Register.vue')
+    // },
+    // {
+    //     path: '/login',
+    //     name: 'Login',
+    //     component: () => import('@/views/Login.vue')
+    // },
     {
         path: '/edit/:id',
         name: 'EditUser',
@@ -69,5 +70,6 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
 
 export default router;

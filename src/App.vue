@@ -10,12 +10,50 @@
 </script>
 
 <style lang="scss">
-    #app {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        text-align: center;
-        margin-top: 60px;
+    *{
         padding: 0;
         margin: 0;
         box-sizing: border-box;
+
+        h1{
+            font-size: 48px;
+            font-weight: 400;
+        }
+
+        h2{
+            font-size: 36px;
+            font-weight: 400;
+        }
+
+        h3{
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+        h4{
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        h5{
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        h6{
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        a, p{
+            font-size: 16px;
+        }
+    }
+    
+    body{}
+
+    #app {
+        font-family: Arial;
     }
 </style>

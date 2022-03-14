@@ -21,8 +21,7 @@
 
 <script>
     import Navigation from '@/components/Navigation.vue';
-    import axios from 'axios';
-    import { URI } from '@/plugins/url.js';
+    import { URI, axios } from '@/plugins/index.js';
 
     export default {
         name: 'Decks',

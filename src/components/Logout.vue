@@ -5,8 +5,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    import { URI } from '@/plugins/url.js';
+    import { URI, axios } from '@/plugins/index.js';
 
 
     export default {
