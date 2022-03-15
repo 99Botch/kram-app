@@ -10,6 +10,9 @@
 </script>
 
 <style lang="scss">
+
+@import "@/scss/components/_form.scss";
+
     *{
         padding: 0;
         margin: 0;

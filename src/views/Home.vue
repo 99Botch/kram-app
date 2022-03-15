@@ -1,13 +1,15 @@
 <template>
-
     <div>
     
         <span v-if="login">
-            <Login @clicked="closeLoginForm" />
+            <Login @clicked="closeForm" />
         </span>
 
-        <div class="" id="home-page">
-            
+        <span v-if="register">
+            <Register @clicked="closeForm"/>
+        </span>
+
+        <div class="" id="home-page">            
             <div id="home-nav">
                 <div id="home-btn">
                     <router-link to="/">
@@ -21,21 +23,20 @@
 
             <div id="home-main">
                 <h1>Unfold Memory</h1>
-                    <button class="register-btn" >Create account</button> 
+                    <button class="register-btn" @click="displayRegister">Create account</button> 
                     <button class="login-btn" @click="displayLogin">Log in</button>
-            </div>
-        
+            </div>        
         </div>  
-    </div>
 
+    </div>
 </template>
 
 <script>
     import Login from '@/components/Login.vue';
+    import Register from '@/components/Register.vue';
 
 
     export default {
-
         data() {
             return {
                 login: false,
@@ -44,24 +45,21 @@
         },
 
         components: {
-            Login
+            Login,
+            Register
         },
-
-        mounted () {},
-
-        computed: {},
 
         methods: {
-            async displayLogin(){
+            displayLogin(){
                 this.login = true;
             },
-
-            closeLoginForm (_value) {
-                this.login = _value;
-            }
+            displayRegister(){
+                this.register = true;
+            },
+            closeForm (_event) {
+                (_event == "CloseLogin") ? this.login = false : (_event == "CloseRegister") ? this.register = false : (_event == "Switch") ? (this.login = false, this.register = true) : null;
+            },
         },
-
-        props: {}
     }
 </script>
 

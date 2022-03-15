@@ -1,6 +1,10 @@
-import axios from 'axios';
-
-
-// export API URI
+// import axios
+let axios = require('axios');
+// import email-validator
+let validator = require("email-validator");
+// store localchost 
 const URI = "http://localhost:3000";
-export { URI , axios };
+
+
+// functions
+export { URI , axios, validator };
