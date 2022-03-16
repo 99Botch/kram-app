@@ -38,7 +38,7 @@
         methods: {
             async getCards(){
                 let token;
-                console.log(token)
+                // console.log(token)
 
                 await axios.get(`${ URI }/users/session/${ this.id }`)
                     .then((res) => { 

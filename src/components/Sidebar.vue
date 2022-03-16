@@ -2,23 +2,15 @@
     <div class="sidebar" v-if="$store.state.sessionState || null">
         
         <div class="links">    
-            <div @click="switchPage($event)" 
-                @mouseover="this.deckHover = !this.deckHover" 
-                @mouseleave="this.deckHover = !this.deckHover" 
-                class="frgDeck"
-            >
-                <img src="@/assets/tab.svg" class="frgDeck" v-if="!this.deckHover"/> 
-                <img src="@/assets/tabHover.svg" class="frgDeck" v-if="this.deckHover"/> 
+            <div @click="switchPage($event)" class="frgDeck">
+                <img src="@/assets/tab.svg" class="frgDeck" /> 
                 <p class="frgDeck">My decks</p>
             </div>
 
-            <span @mouseover="this.cardHover = !this.cardHover" @mouseleave="this.cardHover = !this.cardHover" >
-                <div @click="switchPage($event)" class="frgCard">
-                        <img src="@/assets/transcript.svg" class="frgCard" v-if="!this.cardHover"/>
-                        <img src="@/assets/transcriptHover.svg" class="frgCard" v-if="this.cardHover"/> 
-                        <span class="frgCard">Cards</span>
-                </div>
-            </span>
+            <div @click="switchPage($event)" class="frgCard">
+                <img src="@/assets/transcript.svg" class="frgCard" /> 
+                <span class="frgCard">Cards</span>
+            </div>
         </div>
         
         <div class="logout">

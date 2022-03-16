@@ -1,7 +1,7 @@
 <template>
     <button>
         <router-link to="/logout" @click="logout">
-            <img src="@/assets/log-off.svg"/> <p>Sign out </p>
+            <img src="@/assets/log-off.svg" id="logoff"/> <p id="signout">Sign out </p>
         </router-link>
     </button>
 </template>
@@ -73,6 +73,16 @@
             margin-right: 4px;
         }
     }
+
+    @media (max-width: 480px) {
+        #logoff{
+            height: 25px;
+        }
+        #signout{
+            display: none;
+        }
+    }
+
 
 @media (min-width: 480px) {
     button:hover{

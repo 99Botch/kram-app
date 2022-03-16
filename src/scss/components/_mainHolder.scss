@@ -11,6 +11,9 @@
 }
 
 @media (min-width: 480px) {
+    .ham-btn{
+        display: none;
+    }
     .main-holder{
         display: grid;
         grid-template-columns: 150px 1fr 75px;
