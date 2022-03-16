@@ -12,6 +12,7 @@
 <style lang="scss">
 
 @import "@/scss/components/_form.scss";
+@import "@/scss/components/_mainHolder.scss";
 
     *{
         padding: 0;
@@ -56,7 +57,7 @@
     
     body{}
 
-    #app {
+    #app, a, p, h1, h2, h3, h4, h5, h6 {
         font-family: Arial;
     }
 </style>

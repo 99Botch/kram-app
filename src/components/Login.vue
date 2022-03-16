@@ -67,7 +67,7 @@
                     if(res.status === 200) {
                         sessionStorage.setItem('_id', res.data.user_id);
                         sessionStorage.setItem('session', true);
-                        this.$router.push({ path : '/decks' });
+                        this.$router.push({ path : '/kram' });
                     }
                 })
                 .catch((error) => {

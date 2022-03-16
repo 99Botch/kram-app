@@ -1,26 +1,17 @@
 <template>
-    <Navigation/>
 
-    <div class="" id="decks_index">
-
-        <h1>My decks</h1>
-        <hr/>
-
-       <div v-for="deck of decks" 
-            :key="deck.id"
-        >
-            <p>             
-                <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"> {{ deck.name }} </router-link>
-                {{ deck.category }} 
-            </p>
-            <hr/>
-        </div>
+    <div v-for="deck of decks" :key="deck.id">
+        <p>             
+            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"> {{ deck.name }} </router-link>
+            {{ deck.category }} 
+        </p>
+        <hr />
     </div>
+
 
 </template>
 
 <script>
-    import Navigation from '@/components/Navigation.vue';
     import { URI, axios } from '@/plugins/index.js';
 
     export default {
@@ -33,9 +24,7 @@
             }
         },
 
-        components: {
-            Navigation,
-        },
+        components: {},
 
         mounted () {
             this.getDecks();
@@ -64,9 +53,9 @@
             }
         },
 
-        props: {}
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
+
+<style lang="scss">
+</style>

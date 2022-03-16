@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
-// import store from '@/store/index.js'
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home,
+    },
+    {
+        path: '/kram',
+        name: 'MainCnt',
+        component: () => import('@/views/Kram.vue')
     },
     {
         path: '/:pathMatch(.*)*',
@@ -31,32 +35,10 @@ const routes = [
         props: true,
         component: () => import('@/views/users/User.vue')
     },
-    // {
-    //     path: '/register',
-    //     name: 'Register',
-    //     component: () => import('@/views/users/Register.vue')
-    // },
-    // {
-    //     path: '/login',
-    //     name: 'Login',
-    //     component: () => import('@/views/Login.vue')
-    // },
     {
         path: '/edit/:id',
         name: 'EditUser',
         component: () => import('@/views/users/EditUser.vue')
-    },
-    // DECKS
-    {
-        path: '/decks',
-        name: 'Decks',
-        component: () => import('@/views/decks/Index.vue')
-    },
-    // CARDS
-    {
-        path: '/cards',
-        name: 'Cards',
-        component: () => import('@/views/cards/Index.vue')
     },
     // REVIEW
     {

@@ -147,7 +147,7 @@
                                 })
                             .catch(err => { console.log(err) })
                         })();
-                        this.$router.push({ path : `/decks` });
+                        this.$router.push({ path : `/kram` });
                     }
                 } else { null }
             },

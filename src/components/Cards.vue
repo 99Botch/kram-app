@@ -1,15 +1,5 @@
 <template>
-    <Navigation/>
-
-    <div class="" id="cards_index">
-
-        <h1>Cards</h1>
-        <hr/>
-
-       <div v-for="card of cards" 
-            :key="card.id"
-        >
-
+       <div v-for="card of cards" :key="card.id" >
             <div>            
                 <h5>Question</h5>
                 <p> {{ card.question }}</p>
@@ -19,15 +9,12 @@
                 <h5>Answer</h5>
                 <p> {{ card.answer }}</p>
             </div>
-            <hr/>
-
+            <hr />
         </div>
-    </div>
 
 </template>
 
 <script>
-    import Navigation from '@/components/Navigation.vue';
     import { URI, axios } from '@/plugins/index.js';
 
     export default {
@@ -40,9 +27,7 @@
             }
         },
 
-        components: {
-            Navigation,
-        },
+        components: {},
 
         mounted () {
             this.getCards();
@@ -53,6 +38,7 @@
         methods: {
             async getCards(){
                 let token;
+                console.log(token)
 
                 await axios.get(`${ URI }/users/session/${ this.id }`)
                     .then((res) => { 
