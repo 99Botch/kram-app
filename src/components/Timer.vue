@@ -30,18 +30,29 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-    @media (min-width: 480px) {
         .timer{
             position: absolute;
             right: 0;
+            &-end{
+                color: #DB3C3A;
+            }
+        }
+
+    @media (max-width: 480px) {
+        .timer{
+            padding: 20px;
+            p{
+                font-size: 18px;
+            }
+        }
+    }
+
+    @media (min-width: 480px) {
+        .timer{
             padding: 25px;
             p{
                 font-size: 20px;
-            }
-            &-end{
-                color: #DB3C3A;
             }
         }
     }

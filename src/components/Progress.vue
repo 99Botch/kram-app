@@ -43,6 +43,12 @@
         border-radius: 50%;
     }
 
+    @media (max-width: 480px) {
+        .save-btn, .save-exit{
+            display: none;
+        }   
+    }
+
     @media (min-width: 480px) {
         .save-exit{
             position: absolute;
