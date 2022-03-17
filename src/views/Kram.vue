@@ -38,7 +38,7 @@
             return {
                 cards: false,
                 decks: true,
-                menu: true,
+                menu: false,
             }
         },
 
