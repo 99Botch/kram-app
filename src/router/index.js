@@ -25,17 +25,6 @@ const routes = [
         component: () => import('@/views/Signout.vue')
     },
     {
-        path: '/users',
-        name: 'Users',
-        component: () => import('@/views/users/Users.vue'),
-    },
-    {
-        path: '/users/:id',
-        name: 'User',
-        props: true,
-        component: () => import('@/views/users/User.vue')
-    },
-    {
         path: '/edit/:id',
         name: 'EditUser',
         component: () => import('@/views/users/EditUser.vue')

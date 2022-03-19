@@ -1,6 +1,6 @@
 <template>
 
-    <Navigation/>
+    <Navigation @clicked="switchPage"/>
 
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
@@ -22,6 +22,10 @@
             <span v-if="cards">
                 <Cards />
             </span>
+
+            <span v-if="profile">
+                <Profile />
+            </span>
         </main>
 
         <b></b>
@@ -34,6 +38,7 @@
     import Navigation from '@/components/Navigation.vue';
     import Decks from '@/components/Decks.vue';
     import Cards from '@/components/Cards.vue';
+    import Profile from '@/components/Profile.vue';
     import Hamburger from '@/components/Hamburger.vue';
     import Sidebar from '@/components/Sidebar.vue';
 
@@ -42,10 +47,10 @@
 
         data() {
             return {
+                decks: false,
                 cards: false,
-                decks: true,
+                profile: true,
                 menu: false,
-                openMenu: false,
             }
         },
 
@@ -53,6 +58,7 @@
             Navigation,
             Decks,
             Cards,
+            Profile,
             Sidebar,
             Hamburger
         },
@@ -70,7 +76,21 @@
             },
             // SWITCH PAGE
             switchPage (_event) {
-                (_event == "Decks") ? (this.decks = true, this.cards = false) : (this.decks = false, this.cards = true);
+                if(_event == "Decks") {
+                    this.decks = true; 
+                    this.cards = false;
+                    this.profile = false; 
+                }
+                else if(_event == "Cards") {
+                    this.cards = true; 
+                    this.decks = false;
+                    this.profile = false; 
+                }
+                else if(_event == "Profile") {
+                    this.profile = true; 
+                    this.cards = false
+                    this.decks = false
+                }
             },
             switchPageMobile (_event) {
                 (_event == "Decks") ? (this.decks = true, this.cards = false) : (this.decks = false, this.cards = true);
@@ -131,5 +151,10 @@
             transform: rotate(-45deg);
         }
     }
-    
+
+    @media (min-width: 1024px) {
+        .ham-btn{
+            display: none;
+        }
+    }
 </style>

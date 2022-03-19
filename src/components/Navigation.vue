@@ -20,7 +20,7 @@
         </div>
 
         <div class="left-side">
-            <img src="@/assets/User.svg"/>
+            <img src="@/assets/User.svg" @click="profile($event)" />
         </div>
         
     </nav>
@@ -97,6 +97,9 @@
                     document.getElementById('searchBar').placeholder = "Search a card..";
                     this.page = "card";
                 }
+            },
+            profile(){
+                this.$emit('clicked', 'Profile')
             },
             searchItem(){}
         },        
