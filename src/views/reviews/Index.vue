@@ -21,14 +21,14 @@
             </div>
 
             <div class="card-btn">
-                <div class="card-btn-holder">
+                <div class="card-btn-holder card-btn-holder-spacebar">
 
-                    <div class="spacebar">
+                    <div class="spacebar" :class="reveal ? 'hide-btn' : '' ">
                         <p>spacebar</p>
                         <button id="spacebar">Reveal</button>
                     </div>
 
-                    <div class="result">
+                    <div class="result result-fail" :class="!reveal ? 'hide-btn' : '' ">
                         <div class="arrow">
                             <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -40,7 +40,7 @@
                         <button id="fail">Fail</button>
                     </div>
 
-                    <div class="result">
+                    <div class="result result-pass" :class="!reveal ? 'hide-btn' : '' ">
                         <div class="arrow">
                             <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -241,11 +241,26 @@
                     background-position: center;
                 }
             }
-            &-btn-holder{
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+            &-btn{
                 width: 100%;
             }
+            &-btn-holder{
+                display: flex;
+                border-top: 1px solid #222;
+                cursor: pointer;
+                &-spacebar{
+                }
+            }
+            button{
+                background-color: transparent;
+                border-width: 0px;
+                font-size: 20px;
+                cursor: pointer;
+                color: #222;
+            }
+        }
+        .spacebar p, .arrow, .hide-btn{
+            display: none;
         }
     }
 

@@ -79,7 +79,7 @@ form input{
 }
 
 
-@media (max-width: 480px) {
+@media (max-width: 1024px) {
     .form-pop{
         position: absolute;
         width: 100%;
@@ -88,7 +88,7 @@ form input{
     }
 }
 
-@media (min-width: 480px) {
+@media (min-width: 1024px) {
     .form-pop{
         position: absolute;
         display: flex;
