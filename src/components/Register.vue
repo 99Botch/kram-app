@@ -14,16 +14,16 @@
             <div>
                 <form>
                     <p class="form-error" id="registerUsernameError">{{ this.usernameError }}</p>
-                    <input type="text" id="usernameRegister" name="username" v-model="form.username" placeholder="Username" v-on:keyup="validation(); usernameValidation()"><br>                
+                    <input type="text" id="usernameRegister" name="username" v-model="form.username" placeholder="Username" v-on:keyup="validation(); usernameValidation()" class="log"><br>                
                     
                     <p class="form-error" id="registerMailError">{{ this.emailError }}</p>
-                    <input type="text" id="emailRegister" name="email" v-model="form.email" placeholder="Mail address" v-on:keyup="validation(); mailValidation()"><br>
+                    <input type="text" id="emailRegister" name="email" v-model="form.email" placeholder="Mail address" v-on:keyup="validation(); mailValidation()" class="log"><br>
                     
                     <p class="form-error" id="registerPassError">{{ this.passError }}</p>
-                    <input type="password" id="passwordRegister" name="password" v-model="form.password" placeholder="Password" v-on:keyup="validation(); passValidation()"><br>
+                    <input type="password" id="passwordRegister" name="password" v-model="form.password" placeholder="Password" v-on:keyup="validation(); passValidation()" class="log"><br>
                     
                     <p class="form-error" id="registerRePassError">{{ this.rePassError }}</p>
-                    <input type="password" id="rePassRegister" name="repeat_password" v-model="form.repeat_password" placeholder="Confirm Password" v-on:keyup="validation(); rePassValidation()"><br>
+                    <input type="password" id="rePassRegister" name="repeat_password" v-model="form.repeat_password" placeholder="Confirm Password" v-on:keyup="validation(); rePassValidation()" class="log"><br>
 
                     <br>
                 </form>

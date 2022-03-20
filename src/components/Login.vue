@@ -13,10 +13,10 @@
             <div>
                 <form>           
                     <p class="form-error" id="login-mail-error">{{ this.emailError }}</p>
-                    <input type="text" id="email-login" name="email" v-model="form.email" required placeholder="AllanSmithee@mail.com" v-on:keyup="validation(); mailValidation();">
+                    <input type="text" id="email-login" name="email" v-model="form.email" required placeholder="AllanSmithee@mail.com" v-on:keyup="validation(); mailValidation();" class="log">
                     
                     <p class="form-error" id="login-password-error">{{ this.passwordError }}</p>
-                    <input type="password" id="password-login" name="password" v-model="form.password" required placeholder="Password" v-on:keyup="validation(); passwordValidation()">
+                    <input type="password" id="password-login" name="password" v-model="form.password" required placeholder="Password" v-on:keyup="validation(); passwordValidation()" class="log">
                 </form>
 
                 <div class="form-modal-btn">

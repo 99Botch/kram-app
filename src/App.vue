@@ -53,6 +53,11 @@
         a, p{
             font-size: 16px;
         }
+        .sub-header{
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
     }
     
     body{}
