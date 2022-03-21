@@ -24,11 +24,6 @@ const routes = [
         name: 'Signout',
         component: () => import('@/views/Signout.vue')
     },
-    {
-        path: '/edit/:id',
-        name: 'EditUser',
-        component: () => import('@/views/users/EditUser.vue')
-    },
     // REVIEW
     {
         path: '/review/:deckId',
