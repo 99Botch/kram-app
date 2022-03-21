@@ -47,9 +47,9 @@
 
         data() {
             return {
-                decks: false,
+                decks: true,
                 cards: false,
-                profile: true,
+                profile: false,
                 menu: false,
             }
         },

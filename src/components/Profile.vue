@@ -142,24 +142,23 @@
                 if (!event) {
                     this.deleteBox = false
                 } else {
-                    this.feedback();
-                // axios.delete(`${ URI }/users/logout/${ this.id }`, {
-                //     headers: {
-                //             Authorization: `Bearer ${this.token}`,
-                //             'Content-Type': 'application/json'
-                //         }
-                //     })
-                //     .then((res) => {
-                //         if(res.status === 200) {
-                //             sessionStorage.removeItem('_id');
-                //             this.token = null;
-                //             this.id = null;
-                //             this.$router.push({ path : '/' });
-                //         }
-                //     })
-                //     .catch((error) => {
-                //         console.log("error: " + error);
-                //     });
+                    axios.delete(`${ URI }/users/${ this.id }`, {
+                        headers: {
+                                Authorization: `Bearer ${this.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then((res) => {
+                            if(res.status === 200) {
+                                sessionStorage.removeItem('_id');
+                                this.token = null;
+                                this.id = null;
+                                this.$router.push({ path : '/' });
+                            }
+                        })
+                        .catch((error) => {
+                            console.log("error: " + error);
+                        });
                 }
             },
 
