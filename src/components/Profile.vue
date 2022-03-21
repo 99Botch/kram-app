@@ -1,4 +1,9 @@
 <template>
+
+    <Deletion v-if="deleteBox" :username="this.user.username" @clicked="deletion"/>
+
+    <Feedback v-if="saved"/>
+
     <div class="hld-profile" v-if="!loading">
 
         <div>
@@ -26,7 +31,7 @@
             
             <div>
                 <p class="error">{{ this.profileError }}</p>
-                <button class="submit submit-profile" type="submit" @click="submitProfile" id="submitProfile" disabled>Update</button>
+                <button disabled class="submit submit-profile" type="submit" @click="submitProfile" id="submitProfile" >Update</button>
             </div>
         </div>
 
@@ -34,20 +39,29 @@
             <p class="sub-header">Password</p>
 
             <form class="password-upd">
-                <input type="password" id="username" name="pass" v-model="user.new_password" required @focus="btnSub" @blur="checkPass" placeholder="password" class="passSubmission"/>
-                <input type="password" id="email" name="re" v-model="user.repeat_password" required @focus="btnSub" @blur="checkRePass" placeholder="password" class="passSubmission"/>
-                <input type="password" id="email" name="re" v-model="user.old_password" required @focus="btnSub" placeholder="password" class="passSubmission"/>
+                <input type="password" id="username" name="pass" v-model="user.new_password" required @focus="btnSub" @blur="checkPass" placeholder="New password" class="passSubmission"/>
+                <input type="password" id="email" name="re" v-model="user.repeat_password" required @focus="btnSub" @blur="checkRePass" placeholder="Repeat password" class="passSubmission"/>
+                <input type="password" id="email" name="re" v-model="user.old_password" required @focus="btnSub" placeholder="Old password" class="passSubmission"/>
             </form>
             
             <div>
                 <p class="error">{{ this.passError }}</p>
-                <button class="submit submit-profile" type="submit" @click="submitPass" id="submitPass" disabled>Change password</button>
+                <button disabled class="submit submit-profile" type="submit" @click="submitPass" id="submitPass" >Update</button>
             </div>
         </div>
 
-        <div class="forms">
-            <!--<button @click="deleteProfile"> Delete my profile</button>-->
-            delete
+        <div class="forms warning-del">
+            <p class="sub-header" style="color: #DB3C3ADD">Delete Profile</p>
+            <p>Be careful. By deleting your profile, you risk of loosing all of your infromation !</p>
+            <button @click="deleteBox = true"> 
+                <svg  width="24" height="24" viewBox="0 0 24 24" fill="none"  xmlns="http://www.w3.org/2000/svg" >
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
+                            fill="currentColor" />
+                        <path d="M9 9H11V17H9V9Z" fill="currentColor" />
+                        <path d="M13 9H15V17H13V9Z" fill="currentColor" />
+                </svg>
+                Delete 
+            </button>
         </div>
 
     </div>
@@ -55,9 +69,17 @@
 
 <script>
     import { URI, axios, validator } from '@/plugins/index.js';
+    import Deletion from '@/components/Deletion.vue';
+    import Feedback from '@/components/Feedback.vue';
 
     export default {
         name: 'Profile',
+
+        components: {
+            Deletion,
+            Feedback
+        },
+
 
         data () {
             return {
@@ -67,6 +89,8 @@
                 user: [],
                 profileError: "",
                 passError: "",
+                deleteBox: false,
+                saved: false
             }
         },
 
@@ -102,8 +126,41 @@
 
             // SUBMIT FORM PROFILE UPDATE VALIDATION RULES
             btnSub(){
-                if(event.target.classList.value == 'profileSubmission') document.getElementById("submitProfile").disabled = false;
-                if(event.target.classList.value == 'passSubmission') document.getElementById("submitPass").disabled = false;
+                if(event.target.classList.value == 'profileSubmission') {
+                    document.getElementById("submitProfile").disabled = false;
+                    document.getElementById("submitPass").disabled = true;
+                    this.passError= '';
+                }
+                if(event.target.classList.value == 'passSubmission'){
+                    document.getElementById("submitPass").disabled = false;
+                    document.getElementById("submitProfile").disabled = true;
+                    this.profileError= '';
+                }
+            },
+
+            deletion(event){
+                if (!event) {
+                    this.deleteBox = false
+                } else {
+                    this.feedback();
+                // axios.delete(`${ URI }/users/logout/${ this.id }`, {
+                //     headers: {
+                //             Authorization: `Bearer ${this.token}`,
+                //             'Content-Type': 'application/json'
+                //         }
+                //     })
+                //     .then((res) => {
+                //         if(res.status === 200) {
+                //             sessionStorage.removeItem('_id');
+                //             this.token = null;
+                //             this.id = null;
+                //             this.$router.push({ path : '/' });
+                //         }
+                //     })
+                //     .catch((error) => {
+                //         console.log("error: " + error);
+                //     });
+                }
             },
 
             // SUBMIT FORM PROFILE UPDATE
@@ -128,6 +185,16 @@
                             if(res.status === 200) {
                                 document.getElementById("submitProfile").disabled = true;
                                 this.profileError = '';
+                                let counter = 5;
+
+                                const timer = setInterval(() => {
+                                    counter--;
+                                    this.saved= true;
+                                    if (counter === 0) {
+                                        clearInterval(timer);
+                                        this.saved= false;
+                                    }
+                                }, 1000);
                             }
                         })
                         .catch((error) => {
@@ -138,7 +205,7 @@
 
             checkPass(){
                 const REG_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-ZÀ-ȕ])([a-zA-ZÀ-ȕ0-9(),-_.,@ ]+)$";
-                (!this.user.new_password.match(REG_PATTERN)) ? this.passError = 'bite' : this.passError = 'none';
+                (!this.user.new_password.match(REG_PATTERN)) ? this.passError = 'Password must be 8 characters long, witn a one lowercase/uppercase character and a number' : this.passError = '';
             },
 
             checkRePass(){
@@ -153,8 +220,6 @@
                     current_password: this.user.current_password
                 });
 
-                // if(error.response.data.type === 'string.pattern.base') this.passError = "Password must be 6 characters long, with minimum one lowercase &uppercase character and a number";
-
                 if(this.user.username.length == 0 || this.user.email.length == 0) this.profileError = "Username and email can't be empty";                
                 else {
                     axios.put(`${ URI }/users/password/${ this.id }`, json, {
@@ -166,53 +231,26 @@
                         .then((res) => {
                             if(res.status === 200) {
                                 document.getElementById("submitProfile").disabled = true;
-                                this.profileError = '';
+                                [this.profileError, this.user.new_password, this.user.old_password, this.user.repeat_password] = '';
+                                let counter = 5;
+
+                                const timer = setInterval(() => {
+                                    counter--;
+                                    this.saved= true;
+                                    if (counter === 0) {
+                                        clearInterval(timer);
+                                        this.saved= false;
+                                    }
+                                }, 1000);
                             }
                         })
                         .catch((error) => {
                             if(error.response.data === 'Old password is not matching database') this.passError = "Error: wrong password";
                             if(error.response.data.type === 'string.pattern.base') this.passError = "Password must be 6 characters long, with minimum one lowercase &uppercase character and a number";
+                            if(error.response.data.type === 'any.required') this.passError = "Fill in the form !";
                         });
                 }
             },
-            
-            // DELETE USER PROFILE
-            async deleteProfile(){
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                    .then((res) => { 
-                        if(res.status === 200) { 
-                            this.token = res.data.token; 
-
-                            axios.delete(`${ URI }/users/${ this.id }`, {
-                                headers: {
-                                        Authorization: `Bearer ${this.token}`,
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
-                                .then((res) => {
-                                    if(res.status === 200) {
-                                        axios.delete(`${ URI }/users/logout/${ this.id }`, {
-                                            headers: {
-                                                    Authorization: `Bearer ${this.token}`,
-                                                    'Content-Type': 'application/json'
-                                                }
-                                            })
-                                            .then((res) => {
-                                                if(res.status === 200) {
-                                                    sessionStorage.removeItem('_id');
-                                                    this.token = null;
-                                                    this.id = null;
-                                                    this.$router.push({ path : '/' });
-                                                }
-                                            })
-                                    }
-                                })
-                        }
-                    })
-                    .catch((error) => {
-                        console.log("error: " + error);
-                    });
-            }
         }    
     }
     
@@ -226,16 +264,12 @@
             border-bottom: 1px solid #DDD;
         }
 
-        .forms{
-            padding: 10px 15px;
-        }
-            
         .profile-pic{
             position: relative;
             width: 100px;
             height: 100px;
             cursor: pointer;
-            margin: 15px;
+            margin: 30px 15px 15px 15px;
 
             .content-overlay {
                 background: rgba(0,0,0,0.7);
@@ -273,19 +307,28 @@
     }
 
     .sub-header{
-        // padding-bottom: 30px;
+        padding: 30px 0px 20px 0px;
+    }
+
+    .forms{
+        padding: 10px 15px;
     }
 
     form{
-        width: 250px;
         
         input{
             width: 100%;
             border-width: 0px 0px 1px 0px;
-            border-bottom-color: transparent;
+            border-bottom-color: #2222;
             outline: 0;
             font-size: 16px;
-            // padding: 5px;
+            padding: 5px 0px;
+            margin-bottom: 20px;
+
+        }
+
+        & :last-child{
+            margin-bottom: 25px;
         }
 
         input:focus{
@@ -294,20 +337,43 @@
     }
     
     .error{
-        // padding-bottom: 5px;
         color: #DB3C3A;
-        height: 14px;
+        height: 24px;
         font-size: 14px;
+        text-transform: capitalize;
     }
 
+    .warning-del{
+        & :nth-child(2){
+            font-size: 14px;
+            padding-bottom: 35px;
+        }
+        & :nth-child(3){
+            color: white;
+            background-color: #DB3C3ADD;
+            border: 0px;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 7px;
+            cursor: pointer;
 
-            // margin-bottom: 30px;
-            // margin: 5px 0px 30px 0px;
-        
+            svg{
+                color: white;
+                height: 18px;
+                width: 18px;
+                margin-right: 7px;
+            }
+
+            &:hover{
+                background-color: #DB3C3A;
+            }
+        }
+    }
 
     .submit-profile{
         border-width: 0px;
-        background-color: #0079C2;
+        background-color: #0079C2DD;
         color: #FFF;
         font-size: 16px;
         padding: 5px 10px;
@@ -320,14 +386,31 @@
         }
     }
 
-
-
     @media (max-width: 480px) {
 
     }
 
-    @media (min-width: 480px) {
+    @media (max-width: 1024px) {
+        .hld-profile{
+            margin: 0px 10px;
+        }
+        .forms form{
+            display: flex;
+            flex-direction: column;
+            input{
+                width: 300px;
+            }
+        }
+    }
 
+    @media (min-width: 1024px) {
+        .forms form{
+            display: flex;
+            flex-direction: column;
+            input{
+                width: 300px;
+            }
+        }
     }
 
 </style>

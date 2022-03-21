@@ -55,7 +55,7 @@
 
 <style scoped lang="scss">
     .menu{
-        position: absolute;
+        position: fixed;
         bottom: 0;
         right: 0;
         height: auto;
@@ -77,5 +77,12 @@
             }
         }
     }
+
+    @media (max-width: 1024px) {
+        .menu{
+        margin-bottom: 10px;
+        }
+    }
+
 
 </style>

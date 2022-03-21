@@ -109,7 +109,7 @@
     }
 
     .ham-btn{
-        position: absolute;
+        position: fixed;
         bottom: 0;
         right: 0;
         width: 36px;
@@ -149,6 +149,12 @@
         .two{
             top: 50%;
             transform: rotate(-45deg);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .ham-btn{
+            margin-bottom: 10px;
         }
     }
 
