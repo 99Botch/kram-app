@@ -24,7 +24,7 @@
 
                         <div class="spacebar" :class="reveal ? 'hide-btn' : '' ">
                             <p>spacebar</p>
-                            <button id="spacebar">Show answer</button>
+                            <button id="spacebar" @click="cardReview">Show answer</button>
                         </div>
 
                         <div class="result result-fail" :class="!reveal ? 'hide-btn' : '' ">
@@ -36,7 +36,7 @@
                                     />
                                 </svg>
                             </div>
-                            <button id="fail">Fail</button>
+                            <button id="fail" @click="cardReview">Fail</button>
                         </div>
 
                         <div class="result result-pass" :class="!reveal ? 'hide-btn' : '' ">
@@ -48,7 +48,7 @@
                                     />
                                 </svg>
                             </div>
-                            <button id="pass">Pass</button>
+                            <button id="pass" @click="cardReview">Pass</button>
                         </div>
 
                 </div>
@@ -140,22 +140,30 @@
 
             // ------------------------------ REVIEW SESSION
             cardReview(){
+                const WIDTH = window.innerWidth;
 
-                if(!this.reveal && event.key == " ") {
+                if(!this.reveal && event.key == " " && WIDTH >= 1200 || !this.reveal && event.target.id == "spacebar" && WIDTH <= 1200 ) {
                     this.reveal = !this.reveal;
-                } else if (this.reveal && event.key == "ArrowRight" || this.reveal && event.key == "ArrowLeft" ) {
-                    
-                    this.cards[this.card_index] = spacedRepetition(this.cards[this.card_index], event.key)
+                } 
+                else if (this.reveal && event.key == "ArrowRight" && WIDTH >= 1200 || 
+                    this.reveal && event.key == "ArrowLeft" && WIDTH >= 1200 ||
+                    this.reveal && event.target.id == "pass" && WIDTH <= 1200 ||
+                    this.reveal && event.target.id == "fail" && WIDTH <= 1200) {
+                        this.updateCard();
+                }
+            },
 
-                    if(this.cardIds.length > 0){
-                        this.reveal = !this.reveal;
-                        this.card_index =  this.cardIds.shift();
-                    }   
+            updateCard(){
+                this.cards[this.card_index] = spacedRepetition(this.cards[this.card_index], event.key, event.target.id)
 
-                    if(this.cardIds.length == 0 && this.reveal == true){
-                        this.cardUpdate();
-                    }
-                } else { null }
+                if(this.cardIds.length > 0){
+                    this.reveal = !this.reveal;
+                    this.card_index =  this.cardIds.shift();
+                }   
+
+                if(this.cardIds.length == 0 && this.reveal == true){
+                    this.cardUpdate();
+                }
             },
 
             // ------------------------------ SEND JSON
