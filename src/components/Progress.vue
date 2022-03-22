@@ -35,6 +35,8 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
+
     .extra-layer{
         height: 100%;
         width: 100%;
@@ -43,18 +45,12 @@
         border-radius: 50%;
     }
 
-    @media (max-width: 480px) {
-        .save-btn, .save-exit{
-            display: none;
-        }   
-    }
 
-    @media (min-width: 480px) {
+
         .save-exit{
-            position: absolute;
+            position: fixed;
             bottom: 0;
             right: 0;
-            margin-bottom: 52px;
             margin-right: 85px;
             background-color: #222;
             padding: 5px 10px;
@@ -64,10 +60,9 @@
         }
 
         .save-btn{
-            position: absolute;
+            position: fixed;
             bottom: 0;
             right: 0;
-            margin-bottom: 37px;
             margin-right: 25px;
             background-color: #DDD;
             padding: 10px;
@@ -83,6 +78,45 @@
                 background-color: #222;
             }
         }
+
+    @media (min-width: 480px) {
+        .save-btn{
+            background-color: #222;
+            margin-bottom: 10%;
+        }
     }
+
+    @media (max-width: 1200px) {
+        .save-btn{
+            margin-bottom: 8%;
+        }
+        .save-exit{
+            display: none
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .save-btn{
+            margin-bottom: 34px;
+        }
+        .save-exit{
+            margin-bottom: 47px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .save-btn{
+            background-color: #222;
+            margin-bottom: 20%;
+        }
+    }
+
+    @media (max-height: 560px) {
+        .save-btn{
+            margin-bottom: 10%;
+        }
+    }
+
+
 
 </style>

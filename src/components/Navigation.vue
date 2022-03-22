@@ -28,13 +28,11 @@
 
 <script>
     import { URI, axios } from '@/plugins/index.js';
-    // import Logout from '@/components/Logout.vue';
 
     export default {
         name: 'Navigation',
 
         components: {
-            // Logout
         },
 
         data () {

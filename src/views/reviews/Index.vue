@@ -8,7 +8,6 @@
         <div class="card" v-if="!loading">
 
             <div class="card-image" >
-                <!-- :class="!cards.img_url ? ' show' : '' " -->
                 <img src="@/assets/undraw_images_re_0kll.svg"/>
             </div>
 
@@ -21,36 +20,37 @@
             </div>
 
             <div class="card-btn">
-                <div class="card-btn-holder card-btn-holder-spacebar">
+                <div class="card-btn-holder">
 
-                    <div class="spacebar" :class="reveal ? 'hide-btn' : '' ">
-                        <p>spacebar</p>
-                        <button id="spacebar">Reveal</button>
-                    </div>
-
-                    <div class="result result-fail" :class="!reveal ? 'hide-btn' : '' ">
-                        <div class="arrow">
-                            <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M20.3284 11.0001V13.0001L7.50011 13.0001L10.7426 16.2426L9.32842 17.6568L3.67157 12L9.32842 6.34314L10.7426 7.75735L7.49988 11.0001L20.3284 11.0001Z"
-                                    fill="#8885"
-                                />
-                            </svg>
+                        <div class="spacebar" :class="reveal ? 'hide-btn' : '' ">
+                            <p>spacebar</p>
+                            <button id="spacebar">Show answer</button>
                         </div>
-                        <button id="fail">Fail</button>
-                    </div>
 
-                    <div class="result result-pass" :class="!reveal ? 'hide-btn' : '' ">
-                        <div class="arrow">
-                            <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M15.0378 6.34317L13.6269 7.76069L16.8972 11.0157L3.29211 11.0293L3.29413 13.0293L16.8619 13.0157L13.6467 16.2459L15.0643 17.6568L20.7079 11.9868L15.0378 6.34317Z"
-                                    fill="#8885"
-                                />
-                            </svg>
+                        <div class="result result-fail" :class="!reveal ? 'hide-btn' : '' ">
+                            <div class="arrow">
+                                <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M20.3284 11.0001V13.0001L7.50011 13.0001L10.7426 16.2426L9.32842 17.6568L3.67157 12L9.32842 6.34314L10.7426 7.75735L7.49988 11.0001L20.3284 11.0001Z"
+                                        fill="#8885"
+                                    />
+                                </svg>
+                            </div>
+                            <button id="fail">Fail</button>
                         </div>
-                        <button id="pass">Pass</button>
-                    </div>
+
+                        <div class="result result-pass" :class="!reveal ? 'hide-btn' : '' ">
+                            <div class="arrow">
+                                <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M15.0378 6.34317L13.6269 7.76069L16.8972 11.0157L3.29211 11.0293L3.29413 13.0293L16.8619 13.0157L13.6467 16.2459L15.0643 17.6568L20.7079 11.9868L15.0378 6.34317Z"
+                                        fill="#8885"
+                                    />
+                                </svg>
+                            </div>
+                            <button id="pass">Pass</button>
+                        </div>
+
                 </div>
             </div>     
 
@@ -80,7 +80,6 @@
                 finished: false,
                 cardIds: [],
                 session_length: null,
-                feedback: null
             }
         },
 
@@ -93,7 +92,11 @@
             this.getDeckCards();
         },
 
-        computed: {},
+        computed: {
+            feedback () { 
+                return this.$store.getters.getFeedback 
+            }
+        },
 
         methods: {
 
@@ -188,7 +191,7 @@
                     })
                     .catch(err => { console.log(err) })
                 })();
-                
+                this.$store.dispatch('feedback', true);
                 this.$router.push({ path : `/kram` });
             }
         },
@@ -228,7 +231,7 @@
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 1200px) {
         .card{
             &-image{
                 margin-top: 65px;
@@ -246,26 +249,43 @@
             }
             &-btn-holder{
                 display: flex;
-                border-top: 1px solid #222;
                 cursor: pointer;
-                &-spacebar{
-                }
+                justify-content: center;
             }
             button{
-                background-color: transparent;
                 border-width: 0px;
-                font-size: 20px;
+                font-size: 16px;
+                text-transform: uppercase;
                 cursor: pointer;
-                color: #222;
+                padding: 20px 0px;
+                background-color: transparent;
+                width: 100%;
+                color: white;
             }
-        }
-        .spacebar p, .arrow, .hide-btn{
-            display: none;
+            .spacebar{
+                background-color: #0079c2DD;
+                width: 100%;
+            }
+            .result-fail{
+                background-color: #DB3C3AEE;
+                &{
+                    width: 100%;
+                }
+            }
+            .result-pass{
+                background-color: #29AB87EE;
+                &{
+                    width: 100%;
+                }
+            }
+            .spacebar p, .arrow, .hide-btn{
+                display: none;
+            }
         }
     }
 
 
-    @media (min-width: 480px) {
+    @media (min-width: 1200px) {
 
         .cards{
             display: flex;
@@ -355,6 +375,18 @@
             width: 30px;
             padding: 1px;
             border-radius: 4px;
+        }
+    }
+
+    @media (max-height: 560px) {
+        .card{
+            &-image{
+                margin-top: 65px;
+                
+                & img{
+                    width: 150px; 
+                }
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 <template>
 
+    <Feedback v-if="saved"/>
+
     <Navigation @clicked="switchPage"/>
 
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
@@ -41,18 +43,10 @@
     import Profile from '@/components/Profile.vue';
     import Hamburger from '@/components/Hamburger.vue';
     import Sidebar from '@/components/Sidebar.vue';
+    import Feedback from '@/components/Feedback.vue';
 
     export default {
         name: 'MainCnt',
-
-        data() {
-            return {
-                decks: true,
-                cards: false,
-                profile: false,
-                menu: false,
-            }
-        },
 
         components: {
             Navigation,
@@ -60,11 +54,23 @@
             Cards,
             Profile,
             Sidebar,
-            Hamburger
+            Hamburger,
+            Feedback,
+        },
+
+        data() {
+            return {
+                decks: true,
+                cards: false,
+                profile: false,
+                menu: false,
+                saved: this.$store.getters.getFeedback
+            }
         },
 
         mounted () {
             this.page();
+            this.feedback();
         },
 
         computed: {},
@@ -74,6 +80,7 @@
                 let page = window.location.href.slice(22,27);
                 (page == "decks") ? (this.decks = true, this.cards = false) : (page == "cards") ? (this.decks = false, this.cards = true) : null;
             },
+
             // SWITCH PAGE
             switchPage (_event) {
                 if(_event == "Decks") {
@@ -92,10 +99,25 @@
                     this.decks = false
                 }
             },
+
             switchPageMobile (_event) {
                 (_event == "Decks") ? (this.decks = true, this.cards = false) : (this.decks = false, this.cards = true);
                 this.menu = false;
             },
+
+            feedback(){
+                if(this.saved){
+                    let counter = 5;
+                    const timer = setInterval(() => {
+                        counter--;
+                        if (counter === 0) {
+                            clearInterval(timer);
+                            this.saved = false
+                            this.$store.dispatch('feedback', false);
+                        }
+                    }, 1000);
+                }
+            }
         },
     }
 </script>
