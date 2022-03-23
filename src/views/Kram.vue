@@ -1,9 +1,7 @@
 <template>
 
     <Feedback v-if="saved"/>
-
     <Navigation @clicked="switchPage"/>
-
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
     <div class="ham-btn" @click="menu = !menu" >
@@ -17,21 +15,12 @@
         </aside>
 
         <main>
-            <span v-if="decks">
-                <Decks />
-            </span>
-
-            <span v-if="cards">
-                <Cards />
-            </span>
-
-            <span v-if="profile">
-                <Profile />
-            </span>
+                <Decks v-if="decks"/>
+                <Cards v-if="cards"/>
+                <Profile v-if="profile"/>
         </main>
 
-        <b></b>
-        
+        <b></b>        
     </div>
 
 </template>
