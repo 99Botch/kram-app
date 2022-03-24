@@ -50,6 +50,7 @@
                                     localStorage.removeItem('_id');
                                     this.token = null;
                                     localStorage.setItem('session', false);
+                                    localStorage.removeItem('page');
                                     this.$router.push({ path : '/' });
                                 }
                             })

@@ -51,21 +51,26 @@
             return {
                 menu: false,
                 saved: this.$store.getters.getFeedback,
-                mountPage: this.$store.getters.getPage
+                mountPage: null
             }
         },
 
         mounted () {
             this.feedback();
+            this.page();
         },
 
         computed: {},
 
         methods: {
-
+            page(){
+                this.mountPage = localStorage.getItem('page')
+                this.$store.dispatch('page', this.mountPage);
+            },
             // SWITCH PAGE
             switchPage (_event) {
                 localStorage.setItem('page', _event);
+                this.$store.dispatch('page', _event);
                 this.mountPage = _event;
             },
 

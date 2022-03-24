@@ -38,7 +38,6 @@
                 <p class="holder-decks-category">{{ deck.category }} </p>
                 <p class="holder-decks-count">110 cards</p>
                 <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">Review</router-link>
-                <!--<button :id="deck._id" @click="deleteDeck(deck.index)">Delete</button>-->
             </div>
         </div>
     </div>
@@ -48,6 +47,7 @@
         @clicked="popMenu" 
         @deletion="deleteDeck"
         @cards="switchPage"
+        @update-deck="updateDeck"
     />
 
 </template>
@@ -88,7 +88,7 @@
 
         methods: {
             popMenu(_deck){
-                (!this.popMenuDeck) ? this.popMenuDeck = JSON.parse(JSON.stringify(_deck)) : this.popMenuDeck = false;
+                (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)), token: this.token} : this.popMenuDeck = false;
             },
 
             renderDeck(event){
@@ -107,6 +107,13 @@
 
             switchPage(event){
                 this.$emit('clicked', event);
+            },
+
+            updateDeck(_form, _index){
+                this.popMenuDeck = false;
+                this.feedback();
+                this.decks[_index].name = _form.name;
+                this.decks[_index].category = _form.category;
             },
 
             async getDecks(){

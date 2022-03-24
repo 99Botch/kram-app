@@ -4,7 +4,8 @@ export default createStore({
     state: {
         sessionState: false,
         feedback: false,
-        page: localStorage.getItem('page')
+        page: null,
+        deckCardsId: null,
     },
     
     mutations: {
@@ -16,6 +17,9 @@ export default createStore({
         },
         PAGE(state, payload) {
             state.page = payload;
+        },
+        CARDS_DECK_ID(state, payload) {
+            state.deckCardsId = payload;
         }
     },
     
@@ -31,6 +35,10 @@ export default createStore({
         page(context, payload){
             const setPage = payload;
             context.commit('PAGE', setPage);
+        },
+        deckCardsId(context, payload){
+            const setCardsDeckId = payload;
+            context.commit('CARDS_DECK_ID', setCardsDeckId);
         }
     },
     
@@ -43,6 +51,9 @@ export default createStore({
         },
         getPage(state){
             return state.page;
+        },
+        getCardsDeckId(state){
+            return state.deckCardsId;
         },
     }
 })

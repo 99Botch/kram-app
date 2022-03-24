@@ -25,6 +25,7 @@
             return {
                 cards: [],
                 id: localStorage.getItem('_id'),
+                deck_id: this.$store.getters.deckCardsId,
             }
         },
 
