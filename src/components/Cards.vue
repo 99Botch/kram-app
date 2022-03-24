@@ -19,11 +19,12 @@
 
     export default {
         name: 'Cards',
+        props: ['deckId'],
 
         data() {
             return {
                 cards: [],
-                id: sessionStorage.getItem('_id'),
+                id: localStorage.getItem('_id'),
             }
         },
 
@@ -56,10 +57,7 @@
                     .catch(err => { console.log(err) })
             }
         },
-
-        props: {}
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss"></style>

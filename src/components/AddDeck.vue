@@ -54,7 +54,7 @@
         methods: {
             // GET TOKEN
             async getToken(){
-                await axios.get(`${ URI }/users/session/${ sessionStorage.getItem('_id') }`)
+                await axios.get(`${ URI }/users/session/${ localStorage.getItem('_id') }`)
                     .then((res) => { 
                         if(res.status === 200) { 
                             this.token = res.data.token; 
@@ -70,7 +70,7 @@
                 if (this.form.name.length < 6 || this.form.name.length > 31) this.nameError = 'Name must be between 6 and 30 characters';
                 else if (this.form.category.length == ' ') this.categoryError = 'Pick a category';
                 else {
-                    await axios.post(`${ URI }/decks/${ sessionStorage.getItem('_id') }`, json, {
+                    await axios.post(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
                         headers: {
                             Authorization: `Bearer ${ this.token }`,
                             'Content-Type': 'application/json'
@@ -153,6 +153,7 @@
                 font-size: 12px;
                 border: 1px solid #0079C2CC;
                 border-radius: 7px;
+                cursor: pointer;
             }
 
             & :nth-child(1){

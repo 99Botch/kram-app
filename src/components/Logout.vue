@@ -31,7 +31,7 @@
         methods: {
             async logout(){
                 
-                let _id = sessionStorage.getItem('_id');
+                let _id = localStorage.getItem('_id');
                 this.id = _id;
                 
                 await axios.get(`${ URI }/users/session/${ this.id }`)
@@ -47,9 +47,9 @@
                             })
                             .then((res) => {
                                 if(res.status === 200) {
-                                    sessionStorage.removeItem('_id');
+                                    localStorage.removeItem('_id');
                                     this.token = null;
-                                    sessionStorage.setItem('session', false);
+                                    localStorage.setItem('session', false);
                                     this.$router.push({ path : '/' });
                                 }
                             })

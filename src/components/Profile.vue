@@ -84,7 +84,7 @@
         data () {
             return {
                 loading: true,
-                id: sessionStorage.getItem("_id"),
+                id: localStorage.getItem("_id"),
                 token: '',
                 user: [],
                 profileError: "",
@@ -150,7 +150,7 @@
                         })
                         .then((res) => {
                             if(res.status === 200) {
-                                sessionStorage.removeItem('_id');
+                                localStorage.removeItem('_id');
                                 this.token = null;
                                 this.id = null;
                                 this.$router.push({ path : '/' });

@@ -65,8 +65,8 @@
                 })
                 .then((res) => {
                     if(res.status === 200) {
-                        sessionStorage.setItem('_id', res.data.user_id);
-                        sessionStorage.setItem('session', true);
+                        localStorage.setItem('_id', res.data.user_id);
+                        localStorage.setItem('session', true);
                         this.$router.push({ path : '/kram' });
                     }
                 })

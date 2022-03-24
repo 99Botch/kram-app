@@ -15,9 +15,9 @@
         </aside>
 
         <main>
-                <Decks v-if="decks"/>
-                <Cards v-if="cards"/>
-                <Profile v-if="profile"/>
+                <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile"/>
+                <Cards v-if="mountPage == 'card' "/>
+                <Profile v-if="mountPage == 'profile' "/>
         </main>
 
         <b></b>        
@@ -49,49 +49,29 @@
 
         data() {
             return {
-                decks: true,
-                cards: false,
-                profile: false,
                 menu: false,
-                saved: this.$store.getters.getFeedback
+                saved: this.$store.getters.getFeedback,
+                mountPage: this.$store.getters.getPage
             }
         },
 
         mounted () {
-            this.page();
             this.feedback();
         },
 
         computed: {},
 
         methods: {
-            page(){
-                let page = window.location.href.slice(22,27);
-                (page == "decks") ? (this.decks = true, this.cards = false) : (page == "cards") ? (this.decks = false, this.cards = true) : null;
-            },
 
             // SWITCH PAGE
             switchPage (_event) {
-                if(_event == "Decks") {
-                    this.decks = true; 
-                    this.cards = false;
-                    this.profile = false; 
-                }
-                else if(_event == "Cards") {
-                    this.cards = true; 
-                    this.decks = false;
-                    this.profile = false; 
-                }
-                else if(_event == "Profile") {
-                    this.profile = true; 
-                    this.cards = false
-                    this.decks = false
-                }
+                localStorage.setItem('page', _event);
+                this.mountPage = _event;
             },
 
             switchPageMobile (_event) {
-                (_event == "Decks") ? (this.decks = true, this.cards = false) : (this.decks = false, this.cards = true);
-                this.menu = false;
+                localStorage.setItem('page', _event);
+                [this.mountPage, this.menu] = [_event, false]
             },
 
             feedback(){

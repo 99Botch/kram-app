@@ -62,7 +62,7 @@
 
         methods: {
             async getSession(){
-                let id = sessionStorage.getItem("_id");
+                let id = localStorage.getItem("_id");
 
                 if(id){
                     await axios.get( `${ URI }/users/session/${ id }` )
@@ -72,14 +72,14 @@
                     .catch(error => {
                         console.log(error)
                         console.log(error.response.data)
-                        sessionStorage.removeItem('_id');
-                        sessionStorage.setItem('session', false);
+                        localStorage.removeItem('_id');
+                        localStorage.setItem('session', false);
                         this.$store.dispatch('signIn', false);
                     })
                 }
             },
             setSession(){
-                var session = sessionStorage.getItem("session");
+                var session = localStorage.getItem("session");
                 (session === 'false') ? 
                     this.$store.dispatch('signIn', false) : 
                     this.$store.dispatch('signIn', true);
@@ -97,7 +97,7 @@
                 }
             },
             profile(){
-                this.$emit('clicked', 'Profile')
+                this.$emit('clicked', 'profile')
             },
             searchItem(){}
         },        

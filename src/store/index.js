@@ -3,7 +3,8 @@ import { createStore } from 'vuex';
 export default createStore({
     state: {
         sessionState: false,
-        feedback: false
+        feedback: false,
+        page: localStorage.getItem('page')
     },
     
     mutations: {
@@ -12,6 +13,9 @@ export default createStore({
         },
         FEEDBACK(state, payload) {
             state.feedback = payload;
+        },
+        PAGE(state, payload) {
+            state.page = payload;
         }
     },
     
@@ -23,6 +27,10 @@ export default createStore({
         feedback(context, payload){
             const saved = payload;
             context.commit('FEEDBACK', saved);
+        },
+        page(context, payload){
+            const setPage = payload;
+            context.commit('PAGE', setPage);
         }
     },
     
@@ -32,6 +40,9 @@ export default createStore({
         },
         getFeedback(state){
             return state.feedback;
+        },
+        getPage(state){
+            return state.page;
         },
     }
 })

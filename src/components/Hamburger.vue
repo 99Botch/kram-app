@@ -45,7 +45,7 @@
 
         methods: {
             switchPageMobile(){
-                (event.currentTarget.id == "frgDeck") ? this.$emit('clicked', 'Decks') : this.$emit('clicked', 'Cards');
+                (event.currentTarget.id == "frgDeck") ? this.$emit('clicked', 'deck') : this.$emit('clicked', 'card');
             },
         },
 

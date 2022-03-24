@@ -6,7 +6,10 @@ import store from './store';
 
 createApp(App).use(store).use(router).mount('#app');
 
-const session = sessionStorage.getItem('session');
-(session === null) ? sessionStorage.setItem('session', false) : null;
+const session = localStorage.getItem('session');
+(session === null) ? localStorage.setItem('session', false) : null;
+
+const page = localStorage.getItem('page');
+(page === null) ? localStorage.setItem('page', 'deck') : null;
 
 App.prototype.$http = axios;

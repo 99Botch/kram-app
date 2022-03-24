@@ -71,7 +71,7 @@
         data() {
             return {
                 cards: [],
-                id: sessionStorage.getItem('_id'),
+                id: localStorage.getItem('_id'),
                 deck_id: this.$route.params.deckId,
                 token: null,
                 loading: true,

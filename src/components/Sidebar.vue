@@ -56,7 +56,7 @@
 
         methods: {
             switchPage(){
-                (event.currentTarget.id == "frgDeck") ? this.$emit('clicked', 'Decks') : this.$emit('clicked', 'Cards');
+                (event.currentTarget.id == "frgDeck") ? this.$emit('clicked', 'deck') : this.$emit('clicked', 'card');
             },
         },
 
@@ -89,7 +89,6 @@
             border-left: 5px solid transparent;
             &:hover{
                 color: #0079C2;
-                border-left-color: #0079C2;
             }
         }       
         p{
