@@ -10,43 +10,58 @@
                     </svg>
                 </div>
                 
-                <p @click="switchPage(this.deck._id)" class="switch-page">Cards</p>
+                <span class="animated-hover">
+                    <button @click="switchPage(this.deck._id)" class="switch-page">Cards</button>
+                </span>
 
                 <div class="pop-menu-deck-form">
-                    <p class="pop-menu-deck-section">Update deck</p>
+                    <label class="pop-menu-deck-section" for="deckName">
+                        <p>Update deck</p>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                            <path d="M10.5858 6.34317L12 4.92896L19.0711 12L12 19.0711L10.5858 17.6569L16.2427 12L10.5858 6.34317Z" fill="currentColor" />
+                        </svg>
+                    </label>
 
                     <form>
-                        <input type="text" name="" v-model="form.name" required placeholder="Name" />
+                        <input type="text" name="" v-model="form.name" required placeholder="Name" id="deckName"/>
                         <p class="form-items-error">{{ this.nameError }}</p>
 
                         <select v-model="form.category">
                             <option disabled>Pick a category</option>
                             <option v-for="category of categories" :key="category"> {{ category }}</option>
                         </select>
-                        <p class="form-items-error">{{ this.categoryError }}</p>
                     </form>
 
-                    <div class="">
+                    <div class="pop-menu-deck-btn" style="margin-top: 7px;">
                         <button type="submit" @click="submitDeck">Update deck</button>
                     </div>
                 </div>
 
                 <div class="pop-menu-deck-form">
-                    <p class="pop-menu-deck-section">Change privacy setting</p>
-                    <form>
-                        <input type="checkbox" name="privacy" id="privacy" @click="checkbox">
+                    <label class="pop-menu-deck-section" for="deckDescription">
+                        <p>Privacy setting</p>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                            <path d="M10.5858 6.34317L12 4.92896L19.0711 12L12 19.0711L10.5858 17.6569L16.2427 12L10.5858 6.34317Z" fill="currentColor" />
+                        </svg>
+                    </label>
 
-                        <textarea v-model="privacy.description"></textarea>
+                    <form>
+                        <textarea v-model="privacy.description" id="deckDescription"></textarea>
                         <p class="form-items-error">{{ this.descriptionErr }}</p>
+
+                        <label class="switch">
+                            <input type="checkbox" name="privacy" id="privacy" @click="checkbox">
+                            <span class="slider round"></span>
+                        </label>    
                     </form>
-                    <div class="">
+                    <div class="pop-menu-deck-btn">
                         <button type="submit" @click="setPrivacy">Set privacy</button>
                     </div>
                 </div>
 
-                <div class="pop-menu-deck-form">
+                <div class="pop-menu-deck-form pop-menu-deck-form-del">
                     <p class="pop-menu-deck-section">Delete</p>
-                    <button @click="$emit('deletion', this.deck._id, this.deck.index )">Delete</button>
+                    <button @click="$emit('deletion', this.$props.deck.deck._id, this.$props.deck.deck.index )">Delete</button>
                 </div>
             </div>
 
@@ -72,9 +87,8 @@
                     description: '',
                 },
                 categories: ['Language', 'Mathematics', 'Science', 'History', 'Geography', 'Literature', 'Culture', 'Other'],
-                nameError: "Err",
-                categoryError: "Err",
-                descriptionErr: "Err",
+                nameError: "",
+                descriptionErr: "",
             }
         },
 
@@ -117,47 +131,55 @@
 
             setPrivacy(){
                 let pr = document.getElementById('privacy')
-                
-                if (pr.checked) {
-                    this.privacy.private = false
-                }  else {
-                    this.privacy.private = true;
+
+                if(pr.checked) this.privacy.private = false 
+                else  this.privacy.private = true;
+
+                if (!this.privacy.private && this.privacy.description.length < 5){
+                    this.descriptionErr = 'w/ Please, provide a short description'
+                } else {
+                    let json = JSON.stringify(this.privacy);
+                    axios.put(`${ URI }/decks/privacy/${ localStorage.getItem('_id') }`, json, {
+                    headers: {
+                            Authorization: `Bearer ${ this.$props.deck.token }`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        if(res.status === 200) {
+                            this.$emit('update-deck', JSON.parse(JSON.stringify(this.form)), this.$props.deck.deck.index);
+                            this.descriptionErr = ''
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
                 }
-                
-                let json = JSON.stringify(this.privacy);
-                axios.put(`${ URI }/decks/privacy/${ localStorage.getItem('_id') }`, json, {
-                headers: {
-                        Authorization: `Bearer ${ this.$props.deck.token }`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then((res) => {
-                    if(res.status === 200) {
-                        this.$emit('update-deck', JSON.parse(JSON.stringify(this.form)), this.$props.deck.deck.index);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
             },
 
             submitDeck(){
-                let json = JSON.stringify(this.form);
 
-                axios.put(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
-                headers: {
-                        Authorization: `Bearer ${ this.$props.deck.token }`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then((res) => {
-                    if(res.status === 200) {
-                        this.$emit('update-deck', JSON.parse(JSON.stringify(this.form)), this.$props.deck.deck.index);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
+                if(this.form.name.length < 6){
+                    this.nameError = "Deck's name must be 6 characters long"
+                } else {
+                    let json = JSON.stringify(this.form);
+
+                    axios.put(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
+                    headers: {
+                            Authorization: `Bearer ${ this.$props.deck.token }`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        if(res.status === 200) {
+                            this.nameError = ''
+                            this.$emit('update-deck', JSON.parse(JSON.stringify(this.form)), this.$props.deck.deck.index);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+                }
             }
         },
 
@@ -167,7 +189,7 @@
 
 <style scoped lang="scss">
     .pop-menu-deck{
-        position: absolute;
+        position: fixed;
         top: 0;
         right: 0;
         height: 100%;
@@ -178,9 +200,8 @@
         width: 100%;
 
         &-holder{
-            width: 25%;
-            background-color: whitesmoke;
-            // padding: 0px 15px;
+            width: 40%;
+            background-color: #FFF;
         }
 
         svg{
@@ -189,10 +210,12 @@
         }
 
         .switch-page{
-            padding: 30px 15px 15px 15px;
+            margin: 30px 15px 10px 15px;
             text-transform: uppercase;
             font-size: 16px;
             cursor: pointer;
+            background-color: transparent;
+            border-width: 0px;
         }
 
         &-top{
@@ -214,38 +237,153 @@
         .pop-menu-deck-section{
             text-transform: uppercase;
             padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            svg{
+                width: 14px;
+            }
+            &:hover{
+                p{
+                    margin-right: 7px;
+                }
+            }
         }
 
         .form-items-error{
             color: #DB3C3A;
             font-size: 12px;
-            padding: 3px 0px 8px 0px;
+            padding: 3px 0px 8px 5px;
+            height: 25px;
         }
 
-        input{
+        .pop-menu-deck-btn{
+            padding: 7px 0px;
+
+            button{
+                padding: 7px 14px;
+                background-color: #0079C2CC;
+                border-width: 0px;
+                color: #FFF;
+                border-radius: 4px;
+                cursor: pointer;
+
+                &:hover{
+                    background-color:  #0079C2;
+                }
+            }
+        }
+
+        input, select, textarea{
             width: 100%;
-            padding: 5px;
+            padding: 7px;
             border-radius: 0px;
-            border-width: 0px;
-            background-color: whitesmoke;
+            border: 1px solid transparent;
+            background-color: #FFFFFF;
             font-size: 14px;
             outline: 0;
+            border: 1px solid #2222;
+            border-radius: 5px;
 
             &:focus{
-                border-bottom: 1px solid #222
+                border: 1px solid #2228;
             }
         }
     }
 
-    @media (max-width: 480px) {
-        .pop-menu-deck div{
-            width: 90%;
-        }    
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 14px;
+    }
+
+    .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 10px;
+        width: 10px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(16px);
+        -ms-transform: translateX(16px);
+        transform: translateX(16px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    .pop-menu-deck-form-del{
+        p{
+            color: #DB3C3AEE;
+        }
+        button{
+            font-size: 12px;
+            text-transform: uppercase;
+            color: white;
+            border-width: 0px;
+            background-color: #DB3C3ACC;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover{
+                background-color: #DB3C3A;
+            }
+        }
     }
 
     @media (max-width: 1024px) {
         .pop-menu-deck div{
             width: 75%;
+            .pop-menu-deck-top, .pop-menu-deck-form{
+                width: 100%;
+            }  
+        }    
+
+    }
+
+    @media (max-width: 480px) {
+        .pop-menu-deck div{
+            width: 100%;
         }    
     }
 

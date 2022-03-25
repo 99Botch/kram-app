@@ -13,6 +13,7 @@
 
 @import "@/scss/components/_form.scss";
 @import "@/scss/components/_mainHolder.scss";
+@import "@/scss/components/_animated.scss";
 
     *{
         padding: 0;

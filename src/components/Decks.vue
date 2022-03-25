@@ -1,6 +1,8 @@
 <template>
 
     <Feedback v-if="saved"/>
+
+    
     
     <div class="holder" >
         <div class="holder-btn ">
@@ -27,16 +29,18 @@
         </p>
         
         <div class="holder-decks" v-if="!loading">
-            <div v-for="deck of decks" :key="deck._id">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
-                    <path d="M8 6.9834C7.44772 6.9834 7 7.43111 7 7.9834C7 8.53568 7.44772 8.9834 8 8.9834H16C16.5523 8.9834 17 8.53568 17 7.9834C17 7.43111 16.5523 6.9834 16 6.9834H8Z" fill="currentColor" />
-                    <path d="M7 12C7 11.4477 7.44772 11 8 11H16C16.5523 11 17 11.4477 17 12C17 12.5523 16.5523 13 16 13H8C7.44772 13 7 12.5523 7 12Z" fill="currentColor" />
-                    <path d="M8 15.017C7.44772 15.017 7 15.4647 7 16.017C7 16.5693 7.44772 17.017 8 17.017H16C16.5523 17.017 17 16.5693 17 16.017C17 15.4647 16.5523 15.017 16 15.017H8Z" fill="currentColor" />
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor" />
-                 </svg>  
-                <p class="holder-decks-name">{{ deck.name }} </p>
+            <div v-for="deck of decks" :key="deck._id" class="holder-deck">
+                <span>
+                    <p class="holder-decks-name" :class="(deck.name.length > 25) ? 'overflow-name': null ">{{ deck.name }} </p>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                        <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                     </svg>  
+                </span>
+
                 <p class="holder-decks-category">{{ deck.category }} </p>
-                <p class="holder-decks-count">110 cards</p>
+                
+                <p class="holder-decks-count" title="Number of cards in this deck">100 cards</p>
+
                 <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">Review</router-link>
             </div>
         </div>
@@ -110,10 +114,11 @@
             },
 
             updateDeck(_form, _index){
-                this.popMenuDeck = false;
                 this.feedback();
                 this.decks[_index].name = _form.name;
                 this.decks[_index].category = _form.category;
+                this.decks[_index].desctiption = _form.desctiption;
+                this.decks[_index].private = _form.private;
             },
 
             async getDecks(){
@@ -136,13 +141,16 @@
 
             // DELETE DECK
             async deleteDeck(_id, _index){
-                await axios.delete(`${ URI }/decks/${ this.id }/${ _id }`,  { headers: { Authorization: `Bearer ${ this.token }` } })
-                .then(async() => { 
-                    this.popMenuDeck = false
-                    this.decks.splice(_index, 1);
-                    this.feedback();
-                })
-                .catch(err => { console.log(err.request) })
+                let isExecuted = confirm("Hey! Are you sure you want to delete that deck? All the information & styling will be lost forever:");
+                if (isExecuted){
+                    await axios.delete(`${ URI }/decks/${ this.id }/${ _id }`,  { headers: { Authorization: `Bearer ${ this.token }` } })
+                    .then(async() => { 
+                        this.popMenuDeck = false
+                        this.decks.splice(_index, 1);
+                        this.feedback();
+                    })
+                    .catch(err => { console.log(err.request) })
+                }
             },
 
             //  REQUEST FEEDBACK 
@@ -205,6 +213,29 @@
         padding: 0px 20px;
     }
 
+    .holder-deck{
+        span{
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 7px 0px 7px;
+            align-items: center;
+
+            p{
+                font-size: 16px;
+                text-transform: uppercase;
+            }
+            svg{
+                width: 16px;
+            }
+        }
+
+        .holder-decks-category{
+            font-size: 14px;
+            color: #222A;
+            padding: 3px 7px 15px 7px;
+        }
+    }
+
     @media (max-width: 600px) {
         .holder{
             &-decks{
@@ -231,6 +262,13 @@
                 grid-template-columns: repeat(3, minmax(200px, 250px));
             }
         }
+    }
+
+    .overflow-name{
+        width: 24ch;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     @media (max-width: 1024px) {
@@ -278,58 +316,4 @@
         margin-right: 15px;
     }
 
-    $blue: #0079C2;
-    $black: #222D;
-    $whitey: #f0f0f0;
-
-    $duration: .2s;
-    $distance: 8px;
-    $easeOutBack: cubic-bezier(0.175, 0.885, 0.320, 1.275);
-
-    .animated-hover {
-        list-style-type: none;
-        margin: 0;
-        text-align: center;
-        
-        button {
-            color: $black;
-            position: relative;
-            text-transform: uppercase;
-            text-decoration: none;
-            padding-bottom: 8px;
-
-            &:before, &:after {
-                content: '';
-                position: absolute;
-                bottom: 2px;
-                left: 0; right: 0;
-                height: 2px;
-                background-color: $blue;
-            }
-            &:before {
-                opacity: 0;
-                transform: translateY(- $distance);
-                transition: transform 0s $easeOutBack, opacity 0s;
-            }
-            &:after {
-                opacity: 0;
-                transform: translateY($distance/2);
-                transition: transform $duration $easeOutBack, opacity $duration;
-            }
-            &:hover, &:focus {
-                color: #0079C2;
-
-                &:before, &:after {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-                &:before {
-                    transition: transform $duration $easeOutBack, opacity $duration;
-                }
-                &:after {
-                    transition: transform 0s $duration $easeOutBack, opacity 0s $duration;
-                }
-            }
-        }
-    }
 </style>

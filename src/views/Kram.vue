@@ -18,6 +18,7 @@
                 <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile"/>
                 <Cards v-if="mountPage == 'card' "/>
                 <Profile v-if="mountPage == 'profile' "/>
+                <Repository v-if="mountPage == 'repository' "/>
         </main>
 
         <b></b>        
@@ -33,6 +34,7 @@
     import Hamburger from '@/components/Hamburger.vue';
     import Sidebar from '@/components/Sidebar.vue';
     import Feedback from '@/components/Feedback.vue';
+    import Repository from '@/components/Repository.vue';
 
     export default {
         name: 'MainCnt',
@@ -42,6 +44,7 @@
             Decks,
             Cards,
             Profile,
+            Repository,
             Sidebar,
             Hamburger,
             Feedback,
