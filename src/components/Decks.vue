@@ -1,8 +1,6 @@
 <template>
 
     <Feedback v-if="saved"/>
-
-    
     
     <div class="holder" >
         <div class="holder-btn ">

@@ -63,11 +63,23 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                .then((res) => {
+                .then(async (res) => {
                     if(res.status === 200) {
                         localStorage.setItem('_id', res.data.user_id);
                         localStorage.setItem('session', true);
-                        this.$router.push({ path : '/kram' });
+                        this.$store.dispatch('page', 'deck');
+                        await axios.get(`${ URI }/users/${ res.data.user_id }`, {
+                            headers: { Authorization: `Bearer ${ res.data.token }` }
+                        })
+                        .then((res) => {
+                            if(res.status === 200) {
+                                localStorage.setItem('own_ids', JSON.stringify(res.data.deck_ids));
+                                this.$router.push({ path : '/kram' });
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        });
                     }
                 })
                 .catch((error) => {

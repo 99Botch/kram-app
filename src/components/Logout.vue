@@ -50,7 +50,9 @@
                                     localStorage.removeItem('_id');
                                     this.token = null;
                                     localStorage.setItem('session', false);
-                                    localStorage.removeItem('page');
+                                    localStorage.setItem('page', 'deck');
+                                    localStorage.removeItem('own_ids');
+                                    this.$store.dispatch('page', 'deck');
                                     this.$router.push({ path : '/' });
                                 }
                             })
