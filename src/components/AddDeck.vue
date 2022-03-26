@@ -36,7 +36,6 @@
         
         data () {
             return {
-                token: null,
                 form: {
                     name: "",
                     category: "",
@@ -47,22 +46,9 @@
             }
         },
 
-        mounted () {
-            this.getToken();
-        },
+        mounted () {},
 
         methods: {
-            // GET TOKEN
-            async getToken(){
-                await axios.get(`${ URI }/users/session/${ localStorage.getItem('_id') }`)
-                    .then((res) => { 
-                        if(res.status === 200) { 
-                            this.token = res.data.token; 
-                        }
-                    })
-                    .catch(err => { console.log(err) });
-            },
-
             // SUBMIT DECK FORM
             async submitForm(){
                 const json = JSON.stringify(this.form);
@@ -72,13 +58,16 @@
                 else {
                     await axios.post(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
                         headers: {
-                            Authorization: `Bearer ${ this.token }`,
+                            Authorization: `Bearer ${ localStorage.getItem('token') }`,
                             'Content-Type': 'application/json'
                         }
                     })
                     .then((res) => {
                         if(res.status === 200) {
                             [this.form.name, this.form.category] = '';
+                            let arr = JSON.parse(localStorage.getItem('own_ids'));
+                            arr.push(res.data.deckCards.deck_id);
+                            localStorage.setItem('own_ids', JSON.stringify(arr));
                             this.$emit('clicked', res.data.deck);
                         }
                     })

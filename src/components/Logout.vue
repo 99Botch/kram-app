@@ -20,47 +20,32 @@
         name: 'Logout',
         
         data () {
-            return {
-                id: null,
-                token: null
-            }
+            return {}
         },
 
         mounted () {},
 
         methods: {
             async logout(){
-                
-                let _id = localStorage.getItem('_id');
-                this.id = _id;
-                
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                    .then((res) => { 
-                        if(res.status === 200) { 
-                            this.token = res.data.token; 
-                        
-                            axios.delete(`${ URI }/users/logout/${ this.id }`, {
-                            headers: {
-                                    Authorization: `Bearer ${this.token}`,
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then((res) => {
-                                if(res.status === 200) {
-                                    localStorage.removeItem('_id');
-                                    this.token = null;
-                                    localStorage.setItem('session', false);
-                                    localStorage.setItem('page', 'deck');
-                                    localStorage.removeItem('own_ids');
-                                    this.$store.dispatch('page', 'deck');
-                                    this.$router.push({ path : '/' });
-                                }
-                            })
-                        }
-                    })
-                    .catch((error) => {
-                        console.log("error: " + error);
-                    });
+                let [id, token] = [localStorage.getItem('_id'), localStorage.getItem('token')]
+
+                await axios.delete(`${ URI }/users/logout/${ id }`, {
+                headers: {
+                        Authorization: `Bearer ${ token }`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then((res) => {
+                    if(res.status === 200) {
+                        localStorage.removeItem('_id');
+                        localStorage.setItem('session', false);
+                        localStorage.setItem('page', 'deck');
+                        localStorage.removeItem('own_ids');
+                        localStorage.removeItem('token');
+                        this.$store.dispatch('page', 'deck');
+                        this.$router.push({ path : '/' });
+                    }
+                })
             }
         }
     }

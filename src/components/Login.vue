@@ -65,6 +65,7 @@
                 })
                 .then(async (res) => {
                     if(res.status === 200) {
+                        localStorage.setItem('token', res.data.token);
                         localStorage.setItem('_id', res.data.user_id);
                         localStorage.setItem('session', true);
                         this.$store.dispatch('page', 'deck');

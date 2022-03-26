@@ -20,7 +20,7 @@
 
             <p>{{deck.votes}}</p>
 
-            <button @click="addDeck(deck._id)" v-if="deck._id != owned.find(element => element == deck._id)">add</button>
+            <button @click="addDeck(deck._id)">add</button>
 
             <hr />
         </div>
@@ -38,7 +38,6 @@
             return {
                 loading: true,
                 id: localStorage.getItem('_id'),
-                token: null,
                 decks: [],
                 owned: JSON.parse(localStorage.own_ids),
                 saved: false,
@@ -55,22 +54,21 @@
 
         computed: {},
 
+        beforeUpdate(){
+            this.addBtn();
+        },
+
         methods: {
             async getDecks(){              
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                .then(async (res) => { 
-                        this.token = res.data.token;
-                        await axios.get( `${ URI }/decks/repository/${ this.id }`, {
-                            headers: { Authorization: `Bearer ${ this.token }` }
-                        })
-                        .then(async response => {
-                            this.decks = await response.data;
-                            this.loading = false;
+                await axios.get( `${ URI }/decks/repository/${ this.id }`, {
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(async response => {
+                    this.decks = await response.data;
+                    this.loading = false;
 
-                            let i = 0;
-                            this.decks.forEach(deck => deck.index = i++);
-                        })
-                        .catch(err => { console.log(err) })
+                    let i = 0;
+                    this.decks.forEach(deck => deck.index = i++);
                 })
                 .catch(err => { console.log(err) })
             },
@@ -80,14 +78,18 @@
                     deck_id: _id, ids: this.owned 
                 });
 
-                axios.put(`${ URI }/decks/add/${ this.id }`, json, {
+                await axios.put(`${ URI }/decks/add/${ this.id }`, json, {
                 headers: {
-                        Authorization: `Bearer ${ this.token }`,
+                        Authorization: `Bearer ${ localStorage.getItem('token') }`,
                         'Content-Type': 'application/json'
                     }
                 })
                 .then((res) => {
                     if(res.status === 200) {
+                        let arr = JSON.parse(localStorage.getItem('own_ids'));
+                        arr.push(res.data.deckCards._id);
+                        localStorage.setItem('own_ids', JSON.stringify(arr));
+                        this.addBtn(res.data.deckCards._id)
                         this.saved = true;
                         let counter = 2;
                         const timer = setInterval(() => {
@@ -104,7 +106,11 @@
                 });
             },
 
-            vote(_index, _vote){
+            addBtn(_id){
+                this.owned.push(_id);
+            },
+
+            async vote(_index, _vote){
                 if(_vote == 'up'){
                     ++this.decks[_index].votes;
                     this.decks[_index].voters.find(elem => {
@@ -124,9 +130,9 @@
                     vote: this.decks[_index].voters[0].vote
                 });
                 
-                axios.put(`${ URI }/decks/vote/${ this.id }`, json, {
+                await axios.put(`${ URI }/decks/vote/${ this.id }`, json, {
                 headers: {
-                        Authorization: `Bearer ${ this.token }`,
+                        Authorization: `Bearer ${ localStorage.getItem('token') }`,
                         'Content-Type': 'application/json'
                     }
                 })

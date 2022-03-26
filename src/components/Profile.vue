@@ -85,7 +85,6 @@
             return {
                 loading: true,
                 id: localStorage.getItem("_id"),
-                token: '',
                 user: [],
                 profileError: "",
                 passError: "",
@@ -100,28 +99,20 @@
 
         methods: {
             async getUser(){
-
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                    .then((res) => { 
-                        if(res.status === 200) { 
-                            this.token = res.data.token; 
-                        }
-                    })
-
                 await axios.get( `${ URI }/users/${ this.id }` , {
-                    headers: { Authorization: `Bearer ${ this.token }` }
-                    })
-                    .then(response => {
-                        this.user = {
-                            username: response.data.username,
-                            email: response.data.email,
-                            current_password: response.data.password,
-                        }
-                        this.loading = !this.loading;
-                    })
-                    .catch(error => {
-                        console.log(error.response.data)
-                    })
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(response => {
+                    this.user = {
+                        username: response.data.username,
+                        email: response.data.email,
+                        current_password: response.data.password,
+                    }
+                    this.loading = !this.loading;
+                })
+                .catch(error => {
+                    console.log(error.response.data)
+                })
             },
 
             // SUBMIT FORM PROFILE UPDATE VALIDATION RULES
@@ -144,14 +135,15 @@
                 } else {
                     axios.delete(`${ URI }/users/${ this.id }`, {
                         headers: {
-                                Authorization: `Bearer ${this.token}`,
+                                Authorization: `Bearer ${ localStorage.getItem('token') }`,
                                 'Content-Type': 'application/json'
                             }
                         })
                         .then((res) => {
                             if(res.status === 200) {
+                                localStorage.removeItem('token');
                                 localStorage.removeItem('_id');
-                                this.token = null;
+                                localStorage.setItem('page', 'deck');
                                 this.id = null;
                                 this.$router.push({ path : '/' });
                             }
@@ -176,7 +168,7 @@
                 else if (this.user.username.length > 6 && validator.validate(this.user.email)){
                     axios.put(`${ URI }/users/${ this.id }`, json, {
                         headers: {
-                                authorization: `Bearer ${ this.token }`,
+                                authorization: `Bearer ${ localStorage.getItem('token') }`,
                                 'Content-Type': 'application/json'
                             }
                         })
@@ -223,7 +215,7 @@
                 else {
                     axios.put(`${ URI }/users/password/${ this.id }`, json, {
                         headers: {
-                                authorization: `Bearer ${ this.token }`,
+                                authorization: `Bearer ${ localStorage.getItem('token') }`,
                                 'Content-Type': 'application/json'
                             }
                         })

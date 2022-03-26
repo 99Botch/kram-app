@@ -73,7 +73,6 @@
                 cards: [],
                 id: localStorage.getItem('_id'),
                 deck_id: this.$route.params.deckId,
-                token: null,
                 loading: true,
                 reveal: false,
                 card_index: null,
@@ -104,31 +103,25 @@
             async getDeckCards(){
                 const json = JSON.stringify({ deck_id: this.deck_id});
 
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                    .then((res) => { 
-                        if(res.status === 200) { this.token = res.data.token; }
-
-                        axios.post( `${ URI }/cards/deck/${ this.id }`,  json, {
-                            headers: { 
-                                    'Authorization': `Bearer ${ this.token }`,
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(async (res) => { 
-                                this.cards = res.data.userDeck.cards; 
-                                this.loading = false;
-
-                                this.session_length = res.data.userDeck.cards.length -1;
-
-                                for(let i = 0; i <= this.session_length ; i++){
-                                    this.cardIds.push(i)
-                                }
-
-                                this.shuffleArray(this.cardIds)
-                                this.card_index =  this.cardIds.shift();
-                            })
+                await axios.post( `${ URI }/cards/deck/${ this.id }`,  json, {
+                headers: { 
+                        'Authorization': `Bearer ${ localStorage.getItem('token') }`,
+                        'Content-Type': 'application/json'
+                    }
                 })
-                .catch(err => { console.log(err) });
+                .then(async (res) => { 
+                    this.cards = res.data.userDeck.cards; 
+                    this.loading = false;
+
+                    this.session_length = res.data.userDeck.cards.length -1;
+
+                    for(let i = 0; i <= this.session_length ; i++){
+                        this.cardIds.push(i)
+                    }
+
+                    this.shuffleArray(this.cardIds)
+                    this.card_index =  this.cardIds.shift();
+                })
             },
             
             shuffleArray(_array) {
@@ -167,9 +160,8 @@
             },
 
             // ------------------------------ SEND JSON
-            cardUpdate(){
+            async cardUpdate(){
                 let id = this.id;
-                let token = this.token;
 
                 let cards = this.cards.map( card => {
                     let item = {
@@ -188,9 +180,9 @@
                 const json = JSON.stringify({ cards: cards });
                 
                 ( async function (){
-                    axios.put( `${ URI }/cards/review-session/${ id }`,  json, {
+                    await axios.put( `${ URI }/cards/review-session/${ id }`,  json, {
                     headers: { 
-                            'Authorization': `Bearer ${ token }`,
+                            'Authorization': `Bearer ${ localStorage.getItem('token') }`,
                             'Content-Type': 'application/json'
                         }
                     })

@@ -39,18 +39,8 @@
 
         methods: {
             async getCards(){
-                let token;
-                // console.log(token)
-
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                    .then((res) => { 
-                        if(res.status === 200) { 
-                            token = res.data.token; 
-                        }
-                    })
-
                 await axios.get( `${ URI }/cards/${ this.id }`, {
-                    headers: { Authorization: `Bearer ${ token }` }
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
                     })
                     .then(response => {
                         this.cards = response.data;

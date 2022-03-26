@@ -129,7 +129,7 @@
                 this.privacy.private = false
             },
 
-            setPrivacy(){
+            async setPrivacy(){
                 let pr = document.getElementById('privacy')
 
                 if(pr.checked) this.privacy.private = false 
@@ -139,9 +139,9 @@
                     this.descriptionErr = 'w/ Please, provide a short description'
                 } else {
                     let json = JSON.stringify(this.privacy);
-                    axios.put(`${ URI }/decks/privacy/${ localStorage.getItem('_id') }`, json, {
+                    await axios.put(`${ URI }/decks/privacy/${ localStorage.getItem('_id') }`, json, {
                     headers: {
-                            Authorization: `Bearer ${ this.$props.deck.token }`,
+                            Authorization: `Bearer ${ localStorage.getItem('token') }`,
                             'Content-Type': 'application/json'
                         }
                     })
@@ -157,16 +157,16 @@
                 }
             },
 
-            submitDeck(){
+            async submitDeck(){
 
                 if(this.form.name.length < 6){
                     this.nameError = "Deck's name must be 6 characters long"
                 } else {
                     let json = JSON.stringify(this.form);
 
-                    axios.put(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
+                    await axios.put(`${ URI }/decks/${ localStorage.getItem('_id') }`, json, {
                     headers: {
-                            Authorization: `Bearer ${ this.$props.deck.token }`,
+                            Authorization: `Bearer ${ localStorage.getItem('token') }`,
                             'Content-Type': 'application/json'
                         }
                     })

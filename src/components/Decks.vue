@@ -68,7 +68,6 @@
             return {
                 decks: [],
                 id: localStorage.getItem('_id'),
-                token: null,
                 saved: false,
                 formAddDeck: false,
                 loading: true,
@@ -90,7 +89,7 @@
 
         methods: {
             popMenu(_deck){
-                (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)), token: this.token} : this.popMenuDeck = false;
+                (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
             },
 
             renderDeck(event){
@@ -120,19 +119,14 @@
             },
 
             async getDecks(){
-                await axios.get(`${ URI }/users/session/${ this.id }`)
-                .then(async (res) => { 
-                        this.token = res.data.token
-                        await axios.get( `${ URI }/decks/${ this.id }`, {
-                            headers: { Authorization: `Bearer ${ this.token }` }
-                        })
-                        .then(async response => {
-                            this.decks = await response.data;
-                            let i = 0;
-                            this.loading = false;
-                            this.decks.forEach(deck => deck.index = i++)
-                        })
-                        .catch(err => { console.log(err) })
+                await axios.get( `${ URI }/decks/${ this.id }`, {
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(async response => {
+                    this.decks = await response.data;
+                    let i = 0;
+                    this.loading = false;
+                    this.decks.forEach(deck => deck.index = i++)
                 })
                 .catch(err => { console.log(err) })
             },
@@ -141,9 +135,14 @@
             async deleteDeck(_id, _index){
                 let isExecuted = confirm("Hey! Are you sure you want to delete that deck? All the information & styling will be lost forever:");
                 if (isExecuted){
-                    await axios.delete(`${ URI }/decks/${ this.id }/${ _id }`,  { headers: { Authorization: `Bearer ${ this.token }` } })
+                    await axios.delete(`${ URI }/decks/${ this.id }/${ _id }`,  { headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` } })
                     .then(async() => { 
-                        this.popMenuDeck = false
+                        this.popMenuDeck = false;
+
+                        let arr = JSON.parse(localStorage.getItem('own_ids'));
+                        let filtered = arr.filter(id => id != _id)
+                        localStorage.setItem('own_ids', JSON.stringify(filtered));
+
                         this.decks.splice(_index, 1);
                         this.feedback();
                     })
