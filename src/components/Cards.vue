@@ -24,11 +24,12 @@
                     <td>X</td>
                     <td>X</td>
                     <td>
-                        <p  @click="revealCollapse" :id="card._id">Collapse</p>
-                        <div class="collapse-belong" >
-                            <span v-for="deck of decks" :key="deck.deck_id" >
-                                <input type="checkbox" :id="deck.deck_id" @click="cardToDeck(card._id)"/>
-                                {{deck.name}}
+                        <button @click="boxReveal(card._id)" :id="card._id">Collapse</button>
+                        <div class="collapse-belong" v-if="revealed == card._id">
+                            <span v-for="(deck, index) of decks" :key="deck.deck_id" >
+                                <input type="checkbox" :id="deck.deck_id" @click="cardToDeck(card._id, index)" 
+                                     :checked="deck.card_ids.find(elem => elem == card._id)"/>
+                                {{ deck.name }}
                             </span>
                         </div>
                     </td>
@@ -61,7 +62,7 @@
                 deck_id: this.$store.getters.deckCardsId,
                 saved: false,
                 loading: true,
-                collapse: false
+                revealed: false
             }
         },
 
@@ -72,23 +73,36 @@
         computed: {},
 
         methods: {
-            revealCollapse(){
-                let display = event.target.nextElementSibling.style.display;
-                (display == '') ? event.target.nextElementSibling.style.display= 'flex' : 
-                    event.target.nextElementSibling.style.display= '';
+            boxReveal(_id){
+                if(!this.revealed){
+                    this.revealed = _id;
+                }
+                else if(this.revealed != _id){
+                    this.revealed = _id;
+                }
+                else{
+                    this.revealed = false;
+                }
             },
             
-            async cardToDeck(_id){
-                console.log(event.target)
-                console.log(event.target.id)
-                console.log(_id)
-
+            async cardToDeck(_id, _index){
                 const json = JSON.stringify({
                     deck_id: event.target.id,
                     card_id: _id
                 });
 
-                await axios.put(`${ URI }/cards/add-to-deck/${ this.id }`, json, {
+                if(event.target.checked){
+                    this.decks[_index].card_ids.push(_id);
+                } else {
+                    this.decks[_index].card_ids.find( elem => {
+                        if (elem == _id) this.decks[_index].card_ids.splice(this.decks[_index].card_ids.indexOf(elem), 1);
+                    })
+                }
+
+                let url_one = `${ URI }/cards/add-to-deck/${ this.id }`;
+                let url_two = `${ URI }/cards/deck/${ this.id }`;
+
+                await axios.put( (event.target.checked) ? url_one : url_two, json, {
                     headers: {
                         Authorization: `Bearer ${ localStorage.getItem('token') }`,
                         'Content-Type': 'application/json'
@@ -96,13 +110,10 @@
                 })
                 .then((res) => {
                     if(res.status === 200) {
-                        console.log(res)
+                        this.feedback();
                     }
                 })
-                .catch((error) => {
-                    [this.form.question, this.form.answer] = '';
-                    if (error) this.formError = "Email or password invalid"
-                });
+                .catch((error) => {console.log(error)});
             },
 
             async getCards(){
@@ -137,7 +148,7 @@
             //  REQUEST FEEDBACK 
             feedback(){
                 this.saved = true;
-                let counter = 3;
+                let counter = 1;
                 const timer = setInterval(() => {
                     counter--;
                     if (counter === 0) {
@@ -152,7 +163,6 @@
 
 <style scoped lang="scss">
     .collapse-belong{
-        display: none;
         position: absolute;
         flex-direction: column;
         background-color: aquamarine;
