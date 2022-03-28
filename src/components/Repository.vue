@@ -39,7 +39,7 @@
                 loading: true,
                 id: localStorage.getItem('_id'),
                 decks: [],
-                owned: JSON.parse(localStorage.own_ids),
+                owned: [],
                 saved: false,
             }
         },
@@ -54,10 +54,6 @@
 
         computed: {},
 
-        beforeUpdate(){
-            this.addBtn();
-        },
-
         methods: {
             async getDecks(){              
                 await axios.get( `${ URI }/decks/repository/${ this.id }`, {
@@ -69,6 +65,7 @@
 
                     let i = 0;
                     this.decks.forEach(deck => deck.index = i++);
+                    this.owned = JSON.parse(localStorage.own_ids);
                 })
                 .catch(err => { console.log(err) })
             },

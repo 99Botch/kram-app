@@ -71,6 +71,7 @@
         data() {
             return {
                 cards: [],
+                user_cards: [],
                 id: localStorage.getItem('_id'),
                 deck_id: this.$route.params.deckId,
                 loading: true,
@@ -112,16 +113,22 @@
                 .then(async (res) => { 
                     this.cards = res.data.userDeck.cards; 
                     this.loading = false;
-
                     this.session_length = res.data.userDeck.cards.length -1;
-
                     for(let i = 0; i <= this.session_length ; i++){
                         this.cardIds.push(i)
                     }
-
                     this.shuffleArray(this.cardIds)
                     this.card_index =  this.cardIds.shift();
+
+                        await axios.get( `${ URI }/cards/user/${ this.id }`,  {
+                        headers: { 'Authorization': `Bearer ${ localStorage.getItem('token') }`}
+                        })
+                        .then(async (res) => { 
+                            this.user_cards = res.data; 
+                        })
+                        .catch(err => { console.log(err) })
                 })
+                .catch(err => { console.log(err) })
             },
             
             shuffleArray(_array) {
@@ -162,6 +169,7 @@
             // ------------------------------ SEND JSON
             async cardUpdate(){
                 let id = this.id;
+                let user_cards = JSON.parse(JSON.stringify(this.user_cards));
 
                 let cards = this.cards.map( card => {
                     let item = {
@@ -177,7 +185,15 @@
                     return item
                 });
 
-                const json = JSON.stringify({ cards: cards });
+                cards.forEach(elem => {
+                    user_cards.cards.find( item => {
+                        if(elem.card_id == item.card_id){
+                            user_cards.cards[user_cards.cards.indexOf(item)] = elem;
+                        }
+                    })
+                })
+
+                const json = JSON.stringify(user_cards);
                 
                 ( async function (){
                     await axios.put( `${ URI }/cards/review-session/${ id }`,  json, {

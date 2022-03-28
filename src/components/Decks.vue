@@ -39,7 +39,7 @@
                 
                 <p class="holder-decks-count" title="Number of cards in this deck">100 cards</p>
 
-                <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">Review</router-link>
+                <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"><button :disabled="deck.card_count == 0">Review</button></router-link>
             </div>
         </div>
     </div>
