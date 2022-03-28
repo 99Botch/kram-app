@@ -61,15 +61,23 @@
         mounted () {
             this.feedback();
             this.page();
+            this.redirect();
         },
 
         computed: {},
 
         methods: {
+            redirect(){
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                }
+            },
+
             page(){
                 this.mountPage = localStorage.getItem('page')
                 this.$store.dispatch('page', this.mountPage);
             },
+
             // SWITCH PAGE
             switchPage (_event) {
                 localStorage.setItem('page', _event);
@@ -77,6 +85,7 @@
                 this.mountPage = _event;
             },
 
+            // SWITCH PAGE MOBILE
             switchPageMobile (_event) {
                 localStorage.setItem('page', _event);
                 [this.mountPage, this.menu] = [_event, false]
