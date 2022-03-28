@@ -59,9 +59,9 @@
         },
 
         mounted () {
+            this.redirect();
             this.feedback();
             this.page();
-            this.redirect();
         },
 
         computed: {},

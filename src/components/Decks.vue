@@ -88,6 +88,7 @@
         computed: {},
 
         methods: {
+
             popMenu(_deck){
                 (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
             },
@@ -119,16 +120,21 @@
             },
 
             async getDecks(){
-                await axios.get( `${ URI }/decks/${ this.id }`, {
-                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                })
-                .then(async response => {
-                    this.decks = await response.data;
-                    let i = 0;
-                    this.loading = false;
-                    this.decks.forEach(deck => deck.index = i++)
-                })
-                .catch(err => { console.log(err) })
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                } else {
+                    await axios.get( `${ URI }/decks/${ this.id }`, {
+                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                    })
+                    .then(async response => {
+                        this.decks = await response.data;
+                        let i = 0;
+                        this.loading = false;
+                        this.decks.forEach(deck => deck.index = i++)
+                    })
+                    .catch(err => { console.log(err) })
+                }
+
             },
 
             // DELETE DECK

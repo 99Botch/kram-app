@@ -117,21 +117,25 @@
             },
 
             async getCards(){
-                const promise1 = await axios.get( `${ URI }/cards/${ this.id }`, {
-                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                })
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                } else {
+                    const promise1 = await axios.get( `${ URI }/cards/${ this.id }`, {
+                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                    });
 
-                const promise2 = await axios.get( `${ URI }/decks/table/${ this.id }`, {
-                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                })
+                    const promise2 = await axios.get( `${ URI }/decks/table/${ this.id }`, {
+                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                    });
 
-                Promise.all([promise1, promise2])
+                    Promise.all([promise1, promise2])
                     .then(async values => {
                         this.cards = await values[0].data;
                         this.decks = await values[1].data;
                         this.loading = false;
                     })
                     .catch(err => { console.log(err) })
+                }
             },
 
             renderCard(event){

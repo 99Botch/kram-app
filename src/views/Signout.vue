@@ -12,9 +12,17 @@
             return {}
         },
 
-        mounted () {},
+        mounted () {
+            this.redirect();
+        },
 
-        methods: {}
+        methods: {
+            redirect(){
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                }
+            },
+        }
     }
 </script>
 

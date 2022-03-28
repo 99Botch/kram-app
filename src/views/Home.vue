@@ -49,7 +49,16 @@
             Register
         },
 
+        mounted () {
+            this.redirect();
+        },
+
         methods: {
+            redirect(){
+                if (localStorage.getItem('token')) {
+                    this.$router.push({ path : `/kram` });
+                }
+            },
             displayLogin(){
                 this.login = true;
             },

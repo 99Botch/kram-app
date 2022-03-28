@@ -55,19 +55,23 @@
         computed: {},
 
         methods: {
-            async getDecks(){              
-                await axios.get( `${ URI }/decks/repository/${ this.id }`, {
-                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                })
-                .then(async response => {
-                    this.decks = await response.data;
-                    this.loading = false;
+            async getDecks(){    
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                } else {
+                    await axios.get( `${ URI }/decks/repository/${ this.id }`, {
+                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                    })
+                    .then(async response => {
+                        this.decks = await response.data;
+                        this.loading = false;
 
-                    let i = 0;
-                    this.decks.forEach(deck => deck.index = i++);
-                    this.owned = JSON.parse(localStorage.own_ids);
-                })
-                .catch(err => { console.log(err) })
+                        let i = 0;
+                        this.decks.forEach(deck => deck.index = i++);
+                        this.owned = JSON.parse(localStorage.own_ids);
+                    })
+                    .catch(err => { console.log(err) })
+                }
             },
 
             async addDeck(_id){

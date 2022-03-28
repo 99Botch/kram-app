@@ -110,33 +110,40 @@
         methods: {
             // ------------------------------ GET DECK DATA
             async getDeckCards(){
-                const json = JSON.stringify({ deck_id: this.deck_id});
+                if (!localStorage.getItem('token')) {
+                    this.$router.push({ path : `/` });
+                } else {
+                    const json = JSON.stringify({ deck_id: this.deck_id});
+                    await axios.post( `${ URI }/cards/deck/${ this.id }`,  json, {
+                    headers: { 
+                            'Authorization': `Bearer ${ localStorage.getItem('token') }`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(async (res) => { 
+                        console.log(res.data)
+                        this.cards = res.data.userDeck.cards; 
+                        this.loading = false;
+                        this.session_length = res.data.userDeck.cards.length -1;
+                        for(let i = 0; i <= this.session_length ; i++){
+                            this.cardIds.push(i)
+                        }
+                        this.shuffleArray(this.cardIds)
+                        this.card_index =  this.cardIds.shift();
 
-                await axios.post( `${ URI }/cards/deck/${ this.id }`,  json, {
-                headers: { 
-                        'Authorization': `Bearer ${ localStorage.getItem('token') }`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(async (res) => { 
-                    this.cards = res.data.userDeck.cards; 
-                    this.loading = false;
-                    this.session_length = res.data.userDeck.cards.length -1;
-                    for(let i = 0; i <= this.session_length ; i++){
-                        this.cardIds.push(i)
-                    }
-                    this.shuffleArray(this.cardIds)
-                    this.card_index =  this.cardIds.shift();
-
-                        await axios.get( `${ URI }/cards/user/${ this.id }`,  {
-                        headers: { 'Authorization': `Bearer ${ localStorage.getItem('token') }`}
-                        })
-                        .then(async (res) => { 
-                            this.user_cards = res.data; 
-                        })
-                        .catch(err => { console.log(err) })
-                })
-                .catch(err => { console.log(err) })
+                            await axios.get( `${ URI }/cards/user/${ this.id }`,  {
+                            headers: { 'Authorization': `Bearer ${ localStorage.getItem('token') }`}
+                            })
+                            .then(async (res) => { 
+                                this.user_cards = res.data; 
+                            })
+                            .catch(err => { console.log(err) })
+                    })
+                    .catch(err => { 
+                        if (err) this.$router.push({ path : `/kram` })
+                        // console.log(err) 
+                    })
+                }
             },
             
             shuffleArray(_array) {

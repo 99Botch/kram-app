@@ -2,6 +2,7 @@
     <div class="" id="page_not_found">
 
         <h1>Error 404 | Page not found</h1>
+        <p>You will be redirected in 5 seconds</p>
 
     </div>
 </template>
@@ -14,9 +15,22 @@
             return {}
         },
 
-        mounted () {},
+        mounted () {
+            this.redirect();
+        },
 
-        methods: {}
+        methods: {
+            redirect(){
+                let counter = 5;
+                const timer = setInterval(() => {
+                    counter--;
+                    if (counter === 0) {
+                        clearInterval(timer);
+                        (localStorage.getItem('token')) ? this.$router.push({ path : `/kram` }) : this.$router.push({ path : `/` });
+                    }
+                }, 1000);
+            }
+        }
     }
 </script>
 
