@@ -3,7 +3,9 @@
 
         <Progress  @save-and-exit="cardUpdate"/>
 
-        <Timer  />
+        <div class="timer">
+            <p :class="this.timer == '00:00' ? ' timer-end' : '' "> {{ this.timer }} </p>
+        </div>
 
         <div class="card" v-if="!loading">
 
@@ -62,7 +64,6 @@
 <script>
     import { URI, axios } from '@/plugins/index.js';
     import { spacedRepetition } from '@/plugins/spaced_repetition.js';
-    import Timer from '@/components/Timer.vue';
     import Progress from '@/components/Progress.vue';
 
     export default {
@@ -80,16 +81,24 @@
                 finished: false,
                 cardIds: [],
                 session_length: null,
+                timer: '01:00',
+                timeCount: 60,
             }
         },
 
         components: {
-            Timer,
             Progress,
         },
 
         mounted () {
             this.getDeckCards();
+            const timer = setInterval(() => {
+                this.timeCount--;
+                (this.timeCount > 9) ? this.timer = `00:${this.timeCount}` : this.timer = `00:0${this.timeCount}` ;
+                if (this.timeCount === 0) {
+                    clearInterval(timer);
+                }
+            }, 1000);
         },
 
         computed: {
@@ -99,7 +108,6 @@
         },
 
         methods: {
-
             // ------------------------------ GET DECK DATA
             async getDeckCards(){
                 const json = JSON.stringify({ deck_id: this.deck_id});
@@ -159,6 +167,8 @@
                 if(this.cardIds.length > 0){
                     this.reveal = !this.reveal;
                     this.card_index =  this.cardIds.shift();
+                    this.timer = '01:00';
+                    this.timeCount = 60;
                 }   
 
                 if(this.cardIds.length == 0 && this.reveal == true){
@@ -219,6 +229,32 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
+        .timer{
+            position: absolute;
+            right: 0;
+            &-end{
+                color: #DB3C3A;
+            }
+        }
+
+    @media (max-width: 480px) {
+        .timer{
+            padding: 20px;
+            p{
+                font-size: 18px;
+            }
+        }
+    }
+
+    @media (min-width: 480px) {
+        .timer{
+            padding: 25px;
+            p{
+                font-size: 20px;
+            }
+        }
+    }
 
     .cards{
         height: 100vh;

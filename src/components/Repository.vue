@@ -20,7 +20,7 @@
 
             <p>{{deck.votes}}</p>
 
-            <button @click="addDeck(deck._id)">add</button>
+            <button @click="addDeck(deck._id)" :disabled="owned.find(elem => elem ==deck._id)">add</button>
 
             <hr />
         </div>
@@ -108,25 +108,40 @@
             },
 
             async vote(_index, _vote){
+                let json;
                 if(_vote == 'up'){
-                    ++this.decks[_index].votes;
-                    this.decks[_index].voters.find(elem => {
-                        if(elem.voter_id == this.id) elem.vote = 'up';
+                    json = JSON.stringify({ 
+                        deck_id: this.decks[_index]._id,
+                        votes: this.decks[_index].votes += 1,
+                        vote: this.decks[_index].voters[0].vote = 'up'
                     });
+
+                    this.decks[_index].voters.find(elem => {
+                        if (elem.voter_id == this.id){
+                            elem.vote = 'up';
+                        }else{
+                            this.decks[_index].voters[0].voter_id = this.id;
+                            elem.vote = 'up';
+                        }
+                    })
                 }
                 else if(_vote == 'down'){
-                    --this.decks[_index].votes;
-                    this.decks[_index].voters.find(elem => {
-                        if(elem.voter_id == this.id) elem.vote = 'down';
+                    json = JSON.stringify({ 
+                        deck_id: this.decks[_index]._id,
+                        votes: this.decks[_index].votes -= 1,
+                        vote: this.decks[_index].voters[0].vote = 'down'
                     });
+
+                    this.decks[_index].voters.find(elem => {
+                        if (elem.voter_id == this.id){
+                            elem.vote = 'down';
+                        }else{
+                            this.decks[_index].voters[0].voter_id = this.id;
+                            elem.vote = 'down';
+                        }
+                    })
                 }
 
-                let json = JSON.stringify({ 
-                    deck_id: this.decks[_index]._id,
-                    votes: this.decks[_index].votes,
-                    vote: this.decks[_index].voters[0].vote
-                });
-                
                 await axios.put(`${ URI }/decks/vote/${ this.id }`, json, {
                 headers: {
                         Authorization: `Bearer ${ localStorage.getItem('token') }`,
