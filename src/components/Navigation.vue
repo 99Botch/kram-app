@@ -20,7 +20,8 @@
         </div>
 
         <div class="left-side">
-            <img src="@/assets/User.svg" @click="profile($event)" />
+            <img v-if="this.url" :src="this.url" @click="profile($event)" />
+            <img v-else src="@/assets/User.svg"  class="content-image"/>
         </div>
         
     </nav>
@@ -38,7 +39,8 @@
         data () {
             return {
                 page: "",
-                searchInput: ""
+                searchInput: "",
+                url: null
             }
         },
 
@@ -46,6 +48,7 @@
             this.getSession();
             this.setSession();
             this.placeholder();
+            this.pic();
         },
 
         computed: {
@@ -71,19 +74,33 @@
                     // })
                     .catch(error => {
                         console.log(error)
-                        console.log(error.response.data)
                         localStorage.removeItem('_id');
                         localStorage.setItem('session', false);
                         this.$store.dispatch('signIn', false);
-                    })
+                    });
+
+                    
+                
                 }
             },
+
+            async pic(){
+                let id = localStorage.getItem("_id");
+
+                await axios.get( `${ URI }/users/pic/${ id }` , {
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(res => { this.url = res.data.profile_pic_url; })
+                .catch(error => { console.log(error.response.data) })
+            },
+
             setSession(){
                 var session = localStorage.getItem("session");
                 (session === 'false') ? 
                     this.$store.dispatch('signIn', false) : 
                     this.$store.dispatch('signIn', true);
             },
+
             placeholder(){
                 let page = window.location.href.slice(22,26);
 
@@ -96,9 +113,11 @@
                     this.page = "card";
                 }
             },
+
             profile(){
                 this.$emit('clicked', 'profile')
             },
+
             searchItem(){}
         },        
     }

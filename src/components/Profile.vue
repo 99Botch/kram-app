@@ -11,15 +11,23 @@
         </div>
 
         <div class="profile-pic">
-            <div class="content-overlay">
+            <div class="content-overlay" @click="inputPic">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z"  fill="currentColor" />
                     <path d="M2 22.9502L4.12171 15.1717L9.77817 20.8289L2 22.9502Z" fill="currentColor" />
                 </svg>
             </div>
 
-            <img src="@/assets/User.svg"  class="content-image"/>
+            <img v-if="user.profile_pic_url" :src="user.profile_pic_url" @click="profile($event)" class="content-image" multiple />
+            <img v-else src="@/assets/User.svg"  class="content-image"/>
+
+            <input type="file" id="file-input" name="avatar" accept="image/png, image/jpeg" style="display: none;" @change="handleFileChange($event)">
+
         </div>
+
+    </div>
+
+    <div>
 
         <div class="forms">
             <p class="sub-header">Profile</p>
@@ -89,7 +97,12 @@
                 profileError: "",
                 passError: "",
                 deleteBox: false,
-                saved: false
+                saved: false,
+                errors: [],
+                file: null,
+                cloudName: "deedfk00w",
+                fileContents: null,
+                formData: null
             }
         },
 
@@ -98,15 +111,98 @@
         },
 
         methods: {
+            async inputPic(){
+                document.getElementById('file-input').click();
+            },
+
+            // function to handle file info obtained from local
+            // file system and set the file state
+            handleFileChange: function(event) {
+                //returns an array of files even though multiple not used
+                this.file = event.target.files[0];
+                this.upload();
+            },
+
+            prepareFormData: function() {
+                this.formData = new FormData();
+                this.formData.append("upload_preset", "kram-upload");
+                this.formData.append("file", this.fileContents);
+            },
+
+            upload: function() {
+
+                let reader = new FileReader();
+
+                reader.addEventListener(
+                    "load",
+                    function() {
+                        this.fileContents = reader.result;
+                        this.prepareFormData();
+                        let cloudinaryUploadURL = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
+                        
+                        let requestObj = {
+                            url: cloudinaryUploadURL,
+                            method: "POST",
+                            data: this.formData,
+                        };
+
+                        axios(requestObj)
+                            .then(response => {
+                                let results = response.data.secure_url;
+                                this.updUrlDB(results);
+                            })
+                            .catch(error => {
+                                this.errors.push(error);
+                                console.log(this.error);
+                            })
+                        }
+                    .bind(this), false 
+                );
+
+                // call for file read if there is a file
+                if (this.file && this.file.name) {
+                    reader.readAsDataURL(this.file);
+                }
+            },
+
+            updUrlDB(_results){
+                let json = { 
+                    profile_pic_url: _results
+                };
+
+                axios.put(`${ URI }/users/pic/${ this.id }`, json, {
+                    headers: {
+                            authorization: `Bearer ${ localStorage.getItem('token') }`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        if(res.status === 200) {
+                            this.user.profile_pic_url = _results;
+                            let counter = 2;
+                            const timer = setInterval(() => {
+                                counter--;
+                                this.saved= true;
+                                if (counter === 0) {
+                                    clearInterval(timer);
+                                    this.saved= false;
+                                }
+                            }, 1000);
+                        }
+                    })
+                    .catch((error) => { console.log(error) });
+            },
+ 
             async getUser(){
                 await axios.get( `${ URI }/users/${ this.id }` , {
                     headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
                 })
-                .then(response => {
+                .then(res => {
                     this.user = {
-                        username: response.data.username,
-                        email: response.data.email,
-                        current_password: response.data.password,
+                        username: res.data.username,
+                        email: res.data.email,
+                        current_password: res.data.password,
+                        profile_pic_url: res.data.profile_pic_url
                     }
                     this.loading = !this.loading;
                 })
