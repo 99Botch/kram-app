@@ -10,8 +10,8 @@
         <div class="card" v-if="!loading">
 
             <div class="card-image" >
-                <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url"/>
-                <img v-else src="@/assets/undraw_images_re_0kll.svg" class="image-fit"/>
+                <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url" class="image-fit"/>
+                <img v-else src="@/assets/undraw_images_re_0kll.svg" class="svg-fit"/>
             </div>
 
             <div class="card-question">
@@ -242,6 +242,12 @@
         width: 350px;
         height: 300px;
         object-fit: cover;
+    }
+
+    .svg-fit{
+        width: 350px;
+        height: 300px;
+        object-fit: contain;
     }
 
     .timer{

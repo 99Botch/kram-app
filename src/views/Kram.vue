@@ -1,7 +1,7 @@
 <template>
 
     <Feedback v-if="saved"/>
-    <Navigation @clicked="switchPage" :picUrl="this.pic_url"/>
+    <!--<Navigation @clicked="switchPage" :picUrl="this.pic_url"/>
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
     <div class="ham-btn" @click="menu = !menu" >
@@ -12,41 +12,41 @@
     <div class="main-holder">
         <aside>
             <Sidebar @clicked="switchPage"/>
-        </aside>
+        </aside>-->
 
-        <main>
+        <!--<main>-->
                 <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile"/>
-                <Cards v-if="mountPage == 'card' "/>
+                <!--<Cards v-if="mountPage == 'card' "/>
                 <Profile v-if="mountPage == 'profile' " @pic-url="updPic"/>
                 <Repository v-if="mountPage == 'repository' "/>
         </main>
 
         <b></b>        
-    </div>
+    </div>-->
 
 </template>
 
 <script>
     import { URI, axios } from '@/plugins/index.js';
-    import Navigation from '@/components/Navigation.vue';
+    // import Navigation from '@/components/Navigation.vue';
     import Decks from '@/components/Decks.vue';
-    import Cards from '@/components/Cards.vue';
-    import Profile from '@/components/Profile.vue';
-    import Hamburger from '@/components/Hamburger.vue';
-    import Sidebar from '@/components/Sidebar.vue';
+    // import Cards from '@/components/Cards.vue';
+    // import Profile from '@/components/Profile.vue';
+    // import Hamburger from '@/components/Hamburger.vue';
+    // import Sidebar from '@/components/Sidebar.vue';
     import Feedback from '@/components/Feedback.vue';
-    import Repository from '@/components/Repository.vue';
+    // import Repository from '@/components/Repository.vue';
 
     export default {
         name: 'MainCnt',
         components: {
-            Navigation,
+            // Navigation,
             Decks,
-            Cards,
-            Profile,
-            Repository,
-            Sidebar,
-            Hamburger,
+            // Cards,
+            // Profile,
+            // Repository,
+            // Sidebar,
+            // Hamburger,
             Feedback,
         },
 

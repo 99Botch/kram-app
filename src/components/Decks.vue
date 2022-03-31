@@ -3,7 +3,7 @@
     <Feedback v-if="saved"/>
     
     <div class="holder" >
-        <div class="holder-btn ">
+        <!--<div class="holder-btn ">
             <span class="animated-hover">
                 <button @click="popForm('AddDeck')">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -20,7 +20,7 @@
                 </svg>
             </button>
             <AddDeck @clicked="renderDeck" @close="closePop" v-if="formAddDeck" />
-        </div>
+        </div>-->
 
         <p v-if="!decks.length && !loading" class="empty-msg" >
                 /W You don't have any deck as of yet ! Click the 'new deck' button or get one from our Kram community
@@ -56,7 +56,7 @@
 
 <script>
     import { URI, axios } from '@/plugins/index.js';
-    import AddDeck from '@/components/AddDeck.vue';
+    // import AddDeck from '@/components/AddDeck.vue';
     import Feedback from '@/components/Feedback.vue';
     import PopDeck from '@/components/PopDeck.vue';
 
@@ -76,7 +76,7 @@
         },
 
         components: {
-            AddDeck,
+            // AddDeck,
             Feedback,
             PopDeck,
         },
