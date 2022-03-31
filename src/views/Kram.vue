@@ -1,7 +1,7 @@
 <template>
 
     <Feedback v-if="saved"/>
-    <Navigation @clicked="switchPage"/>
+    <Navigation @clicked="switchPage" :picUrl="this.pic_url"/>
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
     <div class="ham-btn" @click="menu = !menu" >
@@ -17,7 +17,7 @@
         <main>
                 <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile"/>
                 <Cards v-if="mountPage == 'card' "/>
-                <Profile v-if="mountPage == 'profile' "/>
+                <Profile v-if="mountPage == 'profile' " @pic-url="updPic"/>
                 <Repository v-if="mountPage == 'repository' "/>
         </main>
 
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+    import { URI, axios } from '@/plugins/index.js';
     import Navigation from '@/components/Navigation.vue';
     import Decks from '@/components/Decks.vue';
     import Cards from '@/components/Cards.vue';
@@ -38,7 +39,6 @@
 
     export default {
         name: 'MainCnt',
-
         components: {
             Navigation,
             Decks,
@@ -54,7 +54,8 @@
             return {
                 menu: false,
                 saved: this.$store.getters.getFeedback,
-                mountPage: null
+                mountPage: null,
+                pic_url: null
             }
         },
 
@@ -62,11 +63,27 @@
             this.redirect();
             this.feedback();
             this.page();
+            this.pic();
         },
 
         computed: {},
 
         methods: {
+            updPic(event){
+                console.log(event);
+                this.pic_url = event;
+            },
+
+            async pic(){
+                let id = localStorage.getItem("_id");
+
+                await axios.get( `${ URI }/users/pic/${ id }` , {
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(res => { this.pic_url = res.data.profile_pic_url; })
+                .catch(error => { console.log(error.response.data) })
+            },
+
             redirect(){
                 if (!localStorage.getItem('token')) {
                     this.$router.push({ path : `/` });

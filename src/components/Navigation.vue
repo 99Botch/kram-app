@@ -20,7 +20,7 @@
         </div>
 
         <div class="left-side">
-            <img v-if="this.url" :src="this.url" @click="profile($event)" />
+            <img v-if="this.$props.picUrl" :src="this.$props.picUrl" @click="profile($event)" />
             <img v-else src="@/assets/User.svg"  class="content-image" @click="profile($event)"/>
         </div>
         
@@ -32,15 +32,14 @@
 
     export default {
         name: 'Navigation',
-
-        components: {
-        },
+        props: ['picUrl'],
+        components: {},
 
         data () {
             return {
                 page: "",
                 searchInput: "",
-                url: null
+                // url: this.$props.pic_url
             }
         },
 
@@ -48,7 +47,6 @@
             this.getSession();
             this.setSession();
             this.placeholder();
-            this.pic();
         },
 
         computed: {
@@ -61,6 +59,7 @@
         beforeUpdate(){
             (this.searchInput != "") ? document.getElementById('lensePath').setAttribute("fill", "#222") : 
                 document.getElementById('lensePath').setAttribute("fill", "#DDD");
+                console.log(this.$props.pic_url)
         },
 
         methods: {
@@ -78,20 +77,7 @@
                         localStorage.setItem('session', false);
                         this.$store.dispatch('signIn', false);
                     });
-
-                    
-                
-                }
-            },
-
-            async pic(){
-                let id = localStorage.getItem("_id");
-
-                await axios.get( `${ URI }/users/pic/${ id }` , {
-                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                })
-                .then(res => { this.url = res.data.profile_pic_url; })
-                .catch(error => { console.log(error.response.data) })
+}
             },
 
             setSession(){

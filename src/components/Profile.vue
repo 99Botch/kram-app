@@ -179,6 +179,7 @@
                     .then((res) => {
                         if(res.status === 200) {
                             this.user.profile_pic_url = _results;
+                            this.$emit('picUrl', _results);
                             let counter = 2;
                             const timer = setInterval(() => {
                                 counter--;
