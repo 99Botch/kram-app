@@ -14,6 +14,7 @@
                 <tr>
                     <th>Question</th>
                     <th>Answer</th>
+                    <th>Image</th>
                     <th>Fail Counter</th>
                     <th>Burry</th>
                     <th>Add/remove</th>
@@ -21,6 +22,10 @@
                 <tr v-for="card of cards" :key="card.id" >
                     <td>{{ card.question }}</td>
                     <td>{{ card.answer }}</td>
+                    <td>
+                        <img v-if="card.img_url" :src="card.img_url" class="tab-img"/>
+                        <p v-else> No image </p>
+                    </td>
                     <td>X</td>
                     <td>X</td>
                     <td>
@@ -170,5 +175,9 @@
         position: absolute;
         flex-direction: column;
         background-color: aquamarine;
+    }
+    .tab-img{
+        width: 125px;
+        height: auto;
     }
 </style>

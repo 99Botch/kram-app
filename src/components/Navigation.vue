@@ -21,7 +21,7 @@
 
         <div class="left-side">
             <img v-if="this.url" :src="this.url" @click="profile($event)" />
-            <img v-else src="@/assets/User.svg"  class="content-image"/>
+            <img v-else src="@/assets/User.svg"  class="content-image" @click="profile($event)"/>
         </div>
         
     </nav>
