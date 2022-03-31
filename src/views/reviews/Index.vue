@@ -10,7 +10,8 @@
         <div class="card" v-if="!loading">
 
             <div class="card-image" >
-                <img src="@/assets/undraw_images_re_0kll.svg"/>
+                <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url"/>
+                <img v-else src="@/assets/undraw_images_re_0kll.svg" class="image-fit"/>
             </div>
 
             <div class="card-question">
@@ -237,13 +238,19 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 
-        .timer{
-            position: absolute;
-            right: 0;
-            &-end{
-                color: #DB3C3A;
-            }
+    .image-fit{
+        width: 350px;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .timer{
+        position: absolute;
+        right: 0;
+        &-end{
+            color: #DB3C3A;
         }
+    }
 
     @media (max-width: 480px) {
         .timer{
@@ -296,7 +303,7 @@
                 margin-top: 65px;
                 
                 & img{
-                    width: 250px; 
+                    // width: 250px; 
                     border-radius: 4px;        
                     background-size: cover;
                     background-repeat: no-repeat;
@@ -381,7 +388,7 @@
                 margin-top: 100px;
                 
                 & img{
-                    width: 250px; 
+                    // width: 250px; 
                     border-radius: 4px;        
                     background-size: cover;
                     background-repeat: no-repeat;
@@ -443,10 +450,12 @@
                 margin-top: 65px;
                 
                 & img{
-                    width: 150px; 
+                    // width: 150px; 
                 }
             }
         }
     }
+
+
 
 </style>
