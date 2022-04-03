@@ -72,8 +72,7 @@
                 saved: false,
                 formAddDeck: false,
                 loading: true,
-                popMenuDeck: false,
-                searched: null
+                popMenuDeck: false
             }
         },
 
@@ -90,14 +89,10 @@
         computed: {},
 
         beforeUpdate(){
-            (!this.$props.query) ? this.searched = null : this.querying();
+            if (this.$props.query.length != 0) this.decks = this.$props.query;
         },
 
         methods: {
-            querying(){
-                this.decks =  this.$props.query;
-            },
-
             popMenu(_deck){
                 (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
             },

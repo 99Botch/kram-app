@@ -33,6 +33,7 @@
 
     export default {
         name: 'Repository',
+        props: ['query'],
 
         data() {
             return {
@@ -40,7 +41,7 @@
                 id: localStorage.getItem('_id'),
                 decks: [],
                 owned: [],
-                saved: false,
+                saved: false
             }
         },
 
@@ -53,6 +54,10 @@
         },
 
         computed: {},
+
+        beforeUpdate(){
+            if (this.$props.query.length != 0) this.decks = this.$props.query;
+        },
 
         methods: {
             async getDecks(){    

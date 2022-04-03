@@ -1,7 +1,7 @@
 <template>
 
     <Feedback v-if="saved"/>
-    <Navigation @clicked="switchPage" :picUrl="this.pic_url" @enter="query" />
+    <Navigation @clicked="switchPage" :picUrl="this.pic_url" @keyup="query" />
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
     <div class="ham-btn" @click="menu = !menu" >
@@ -16,9 +16,9 @@
 
         <main>
             <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile" :query="this.decks"/>
-            <Cards v-if="mountPage == 'card' "/>
-            <Profile v-if="mountPage == 'profile' " @pic-url="updPic"/>
-            <Repository v-if="mountPage == 'repository' "/>
+            <Cards v-if="mountPage == 'card' " :query="this.cards"/>
+            <Profile v-if="mountPage == 'profile' " @pic-url="updPic" />
+            <Repository v-if="mountPage == 'repository' " :query="this.repository"/>
         </main>
 
         <b></b>        
@@ -57,6 +57,8 @@
                 mountPage: null,
                 pic_url: null,
                 decks: [],
+                repository: [],
+                cards: [],
             }
         },
 
@@ -72,7 +74,9 @@
         methods: {
             query(items, query){
                 // console.log(items)
-                if(query == 'my_decks') this.decks =  items                
+                if(query == 'my_decks') this.decks =  items;
+                if(query == 'repository') this.repository =  items;
+                if(query == 'cards') this.cards =  items;
             },
 
             updPic(event){

@@ -52,7 +52,7 @@
 
     export default {
         name: 'Cards',
-        props: ['deckId'],
+        props: ['deckId', 'query'],
         components: {
             AddCard,
             Feedback
@@ -76,6 +76,10 @@
         },
 
         computed: {},
+
+        beforeUpdate(){
+            if (this.$props.query.length != 0) this.cards = this.$props.query;
+        },
 
         methods: {
             boxReveal(_id){

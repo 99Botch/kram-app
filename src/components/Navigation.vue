@@ -16,7 +16,7 @@
                     />
                 </svg>
             </div>
-            <input type="text" placeholder="Search " id="searchBar" @keypress.enter="searchItem"  v-model="searchInput"/>
+            <input type="text" placeholder="Search " id="searchBar" @keyup="searchItem"  v-model="searchInput"/>
         </div>
 
         <div class="left-side">
@@ -45,7 +45,6 @@
         mounted () {
             this.getSession();
             this.setSession();
-            this.placeholder();
         },
 
         computed: {
@@ -85,32 +84,25 @@
                     this.$store.dispatch('signIn', true);
             },
 
-            placeholder(){
-                let page = window.location.href.slice(22,26);
-
-                if(page == "deck") {
-                    document.getElementById('searchBar').placeholder = "Search a deck..";
-                    this.page = "deck";
-                }
-                else if(page == "card") {
-                    document.getElementById('searchBar').placeholder = "Search a card..";
-                    this.page = "card";
-                }
-            },
-
             profile(){
                 this.$emit('clicked', 'profile')
             },
 
             async searchItem(){
-                await axios.get( `${ URI }/decks/${ event.target.value }/${ localStorage.getItem("_id") }`, {
+                let msg, url;
+
+                (localStorage.getItem('page') == 'deck') ? (msg  = 'my_decks', url = 'decks') : 
+                (localStorage.getItem('page') == 'repository') ? (msg  = 'repository', url = 'decks/repository') : 
+                (msg = 'cards', url = 'cards'); 
+
+                await axios.get( `${ URI }/${ url }/${ event.target.value }/${ localStorage.getItem("_id") }`, {
                     headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
                 })
                 .then(async res => {
                     let found_decks = await res.data;
                     let i = 0;
                     found_decks.forEach(deck => deck.index = i++);
-                    this.$emit('enter', found_decks, 'my_decks')
+                    this.$emit('keyup', found_decks, msg)
                 })
                 .catch(err => { console.log(err) })
             }
