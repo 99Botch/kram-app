@@ -10,8 +10,8 @@
         <div class="card" v-if="!loading">
 
             <div class="card-image" >
-                <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url"/>
-                <img v-else src="@/assets/undraw_images_re_0kll.svg" class="image-fit"/>
+                <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url" class="image-fit"/>
+                <img v-else src="@/assets/undraw_images_re_0kll.svg" class="svg-fit"/>
             </div>
 
             <div class="card-question">
@@ -122,7 +122,6 @@
                         }
                     })
                     .then(async (res) => { 
-                        console.log(res.data)
                         this.cards = res.data.userDeck.cards; 
                         this.loading = false;
                         this.session_length = res.data.userDeck.cards.length -1;
@@ -171,16 +170,29 @@
 
             updateCard(){
                 this.cards[this.card_index] = spacedRepetition(this.cards[this.card_index], event.key, event.target.id)
-
-                if(this.cardIds.length > 0){
+                
+                if(this.cardIds.length == 0 && this.cards[this.card_index].interval == 15  || this.cardIds.length == 0 && this.cards[this.card_index].interval == 60 ){
                     this.reveal = !this.reveal;
-                    this.card_index =  this.cardIds.shift();
-                    this.timer = '01:00';
                     this.timeCount = 60;
+                    this.timer = '01:00';
+                }
+
+                else if(this.cardIds.length > 0){
+                    if (this.cards[this.card_index].interval == 15  || this.cards[this.card_index].interval == 60 ){
+                        this.cardIds.push(this.card_index);
+                        this.card_index =  this.cardIds.shift(); 
+                    }
+                    else this.card_index =  this.cardIds.shift();
+
+                    this.reveal = !this.reveal;
+                    this.timeCount = 60;
+                    this.timer = '01:00';
                 }   
 
-                if(this.cardIds.length == 0 && this.reveal == true){
-                    this.cardUpdate();
+
+                    
+                else if(this.cardIds.length == 0 && this.reveal == true){
+                     this.cardUpdate();
                 }
             },
 
@@ -242,6 +254,11 @@
         width: 350px;
         height: 300px;
         object-fit: cover;
+    }
+    .svg-fit{
+        width: 350px;
+        height: 300px;
+        object-fit: contain;
     }
 
     .timer{

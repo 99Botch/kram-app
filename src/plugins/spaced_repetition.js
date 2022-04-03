@@ -4,7 +4,6 @@ const { DateTime } = require("luxon");
 function spacedRepetition(_card, _event, _id){
     let learning_cue = [null, 60, 15, 1, 2, 7, 14, 30];
     let is_learning = learning_cue.indexOf(_card.interval, 0);
-    console.log(_id)
     if(_event == 'ArrowRight' || _id == 'pass'){
 
         if(_card.next_session == null || _card.interval == 60){
