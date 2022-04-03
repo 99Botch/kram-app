@@ -16,7 +16,7 @@
                     />
                 </svg>
             </div>
-            <input type="text" placeholder="Search " id="searchBar" @keypress="searchItem" v-model="searchInput"/>
+            <input type="text" placeholder="Search " id="searchBar" @keypress.enter="searchItem"  v-model="searchInput"/>
         </div>
 
         <div class="left-side">
@@ -38,8 +38,7 @@
         data () {
             return {
                 page: "",
-                searchInput: "",
-                // url: this.$props.pic_url
+                searchInput: ""
             }
         },
 
@@ -59,7 +58,6 @@
         beforeUpdate(){
             (this.searchInput != "") ? document.getElementById('lensePath').setAttribute("fill", "#222") : 
                 document.getElementById('lensePath').setAttribute("fill", "#DDD");
-                console.log(this.$props.pic_url)
         },
 
         methods: {
@@ -77,7 +75,7 @@
                         localStorage.setItem('session', false);
                         this.$store.dispatch('signIn', false);
                     });
-}
+                }
             },
 
             setSession(){
@@ -104,7 +102,18 @@
                 this.$emit('clicked', 'profile')
             },
 
-            searchItem(){}
+            async searchItem(){
+                await axios.get( `${ URI }/decks/${ event.target.value }/${ localStorage.getItem("_id") }`, {
+                    headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
+                })
+                .then(async res => {
+                    let found_decks = await res.data;
+                    let i = 0;
+                    found_decks.forEach(deck => deck.index = i++);
+                    this.$emit('enter', found_decks, 'my_decks')
+                })
+                .catch(err => { console.log(err) })
+            }
         },        
     }
     

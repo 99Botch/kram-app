@@ -62,6 +62,7 @@
 
     export default {
         name: 'Decks',
+        props: ['query'],
         emits: ['clicked'],
 
         data() {
@@ -72,6 +73,7 @@
                 formAddDeck: false,
                 loading: true,
                 popMenuDeck: false,
+                searched: null
             }
         },
 
@@ -87,7 +89,14 @@
 
         computed: {},
 
+        beforeUpdate(){
+            (!this.$props.query) ? this.searched = null : this.querying();
+        },
+
         methods: {
+            querying(){
+                this.decks =  this.$props.query;
+            },
 
             popMenu(_deck){
                 (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
