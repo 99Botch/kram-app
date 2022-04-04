@@ -72,8 +72,8 @@
 
         data() {
             return {
-                cards: [],
                 user_cards: [],
+                cards: [],
                 id: localStorage.getItem('_id'),
                 deck_id: this.$route.params.deckId,
                 loading: true,
@@ -135,6 +135,7 @@
                             headers: { 'Authorization': `Bearer ${ localStorage.getItem('token') }`}
                             })
                             .then(async (res) => { 
+                                console.log(res.data)
                                 this.user_cards = res.data; 
                             })
                             .catch(err => { console.log(err) })
@@ -189,10 +190,9 @@
                     this.timer = '01:00';
                 }   
 
-
-                    
                 else if(this.cardIds.length == 0 && this.reveal == true){
-                     this.cardUpdate();
+                    console.log()
+                    this.cardUpdate();
                 }
             },
 

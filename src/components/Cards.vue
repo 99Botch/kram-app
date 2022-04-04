@@ -30,6 +30,7 @@
                     <td>X</td>
                     <td>
                         <button @click="boxReveal(card._id)" :id="card._id">Collapse</button>
+
                         <div class="collapse-belong" v-if="revealed == card._id">
                             <span v-for="(deck, index) of decks" :key="deck.deck_id" >
                                 <input type="checkbox" :id="deck.deck_id" @click="cardToDeck(card._id, index)" 
@@ -37,6 +38,7 @@
                                 {{ deck.name }}
                             </span>
                         </div>
+
                     </td>
                 </tr>
             </table>
@@ -83,6 +85,7 @@
 
         methods: {
             boxReveal(_id){
+                console.log(true)
                 if(!this.revealed){
                     this.revealed = _id;
                 }
@@ -139,6 +142,7 @@
 
                     Promise.all([promise1, promise2])
                     .then(async values => {
+                        console.log(values)
                         this.cards = await values[0].data;
                         this.decks = await values[1].data;
                         this.loading = false;
@@ -148,7 +152,6 @@
             },
 
             renderCard(event){
-                console.log(event.question)
                 let card = {
                     question: event.question,
                     answer: event.answer,

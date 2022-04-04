@@ -66,6 +66,7 @@
             },
 
             async upload() {
+                if(!this.file) this.createCard();
                 let results;
                 let reader = new FileReader();
 
