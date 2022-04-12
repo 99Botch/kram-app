@@ -5,7 +5,7 @@
 }
 
 @media (max-width: 1024px) {
-    aside, b{
+    .aside-menu, b{
         display: none;
     }
 }
@@ -17,7 +17,8 @@
     .main-holder{
         display: grid;
         grid-template-columns: 150px 1fr 75px;
-        aside{
+        justify-items: center;
+        .aside-menu{
             // background-color: #DDD;
         }
     }

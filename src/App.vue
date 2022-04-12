@@ -3,6 +3,8 @@
 </template>
 
 <script>
+    import 'element-plus/es/components/button/style/css'
+    // import 'element-plus/es/components/container/style/css'
 
     export default {
         components: {},
@@ -61,7 +63,9 @@
         }
     }
     
-    body{}
+    body{
+        overflow-x: hidden;
+    }
 
     #app, a, p, h1, h2, h3, h4, h5, h6 {
         font-family: Arial;

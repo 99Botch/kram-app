@@ -11,6 +11,7 @@
     "@chenfengyuan/vue-countdown": "^2.0.0",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "element-plus": "^2.1.9",
     "email-validator": "^2.0.4",
     "luxon": "^2.3.1",
     "vue": "^3.2.31",

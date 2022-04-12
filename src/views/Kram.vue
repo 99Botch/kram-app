@@ -10,7 +10,7 @@
     </div>
 
     <div class="main-holder">
-        <aside>
+        <aside class="aside-menu">
             <Sidebar @clicked="switchPage"/>
         </aside>
 
