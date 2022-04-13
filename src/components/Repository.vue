@@ -23,134 +23,293 @@
             </div>
         </div>
 
-        <div class="decks-repo" v-if="windowWidth <= 600">
-            <el-card v-for="deck of decks" :key="deck._id" class="common-layout box-card" shadow="always">
-                <div class="repo-card-header">
-                    <button  class="add-to-profile" title="Add to deck" 
-                        @click="addDeck(deck._id)" 
-                        :disabled="owned.find(elem => elem ==deck._id)" 
-                    >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" /></svg>
-                    </button>
+        <!-- MOBILES -->
+        <div class="decks-repo" v-if="windowWidth < 600">
+            <div>
 
-                    <h6>{{deck.name}}</h6>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  class="common-layout box-card" shadow="always">
 
-                    <p>{{deck.category}}</p>
-                </div>
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
 
-                <div class="repo-card-main">
-                    <!--<p v-if="deck.description.length > 70">{{ deck.description.substring(0,67)+"..." }}</p>
-                    <p v-else>{{ deck.description }}</p>-->
-                    <p>{{ deck.description }}</p>
-                </div>
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
 
-                <div class="repo-card-footer">
-                    <p class="votes" title="Votes">{{deck.votes}}</p>
-                    
-                    <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
-                        :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
-                        <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                        </svg>
-                    </button>
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
 
-                    <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
-                        :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
-                        <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                        </svg>
-                    </button>
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
+                        
+                    </el-card>
+                </span>
 
-                </div>
-            </el-card>
+            </div>
         </div>
 
-        <div class="decks-repo" v-else>
-            <div class="bite">
-                <el-card v-for="deck of decks" :key="deck._id" class="common-layout box-card" shadow="always">
-                    <div class="repo-card-header">
-                        <button  class="add-to-profile" title="Add to deck" 
-                            @click="addDeck(deck._id)" 
-                            :disabled="owned.find(elem => elem ==deck._id)" 
-                        >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" /></svg>
-                        </button>
+        <!-- TABLETS -->
+        <div class="decks-repo" v-if="windowWidth >= 600 && windowWidth < 1024">
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 2 == 0" class="common-layout box-card" shadow="always">
 
-                        <h6>{{deck.name}}</h6>
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
 
-                        <p>{{deck.category}}</p>
-                    </div>
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
 
-                    <div class="repo-card-main">
-                        <!--<p v-if="deck.description.length > 70">{{ deck.description.substring(0,67)+"..." }}</p>
-                        <p v-else>{{ deck.description }}</p>-->
-                        <p>{{ deck.description }}</p>
-                    </div>
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
 
-                    <div class="repo-card-footer">
-                        <p class="votes" title="Votes">{{deck.votes}}</p>
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
                         
-                        <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
-                            :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                            </svg>
-                        </button>
-
-                        <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
-                            :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                            </svg>
-                        </button>
-
-                    </div>
-                </el-card>
+                    </el-card>
+                </span>
             </div>
 
             <div>
-                <el-card v-for="deck of decks_2" :key="deck._id"  class="common-layout box-card" shadow="always">a
-                    <div class="repo-card-header">
-                        <button  class="add-to-profile" title="Add to deck" 
-                            @click="addDeck(deck._id)" 
-                            :disabled="owned.find(elem => elem ==deck._id)" 
-                        >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" /></svg>
-                        </button>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 2 == 1" class="common-layout box-card" shadow="always">
 
-                        <h6>{{deck.name}}</h6>
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
 
-                        <p>{{deck.category}}</p>
-                    </div>
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
 
-                    <div class="repo-card-main">
-                        <p>{{ deck.description }}</p>
-                    </div>
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
 
-                    <div class="repo-card-footer">
-                        <p class="votes" title="Votes">{{deck.votes}}</p>
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
                         
-                        <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
-                            :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                            </svg>
-                        </button>
-
-                        <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
-                            :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.5 17H5.5V7.5H2L7 1.5L12 7.5H8.5V17Z" fill="#8A8D90" stroke="#8A8D90"/>
-                            </svg>
-                        </button>
-
-                    </div>
-                </el-card>
+                    </el-card>
+                </span>
             </div>
         </div>
+        
+        <!-- COMPUTERS -->
+        <div class="decks-repo" v-if="windowWidth >= 1024">
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 0" class="common-layout box-card" shadow="always">
 
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
 
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
 
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
+
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 1" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
+
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 2" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+
+                                <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
+                                    :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
+                                    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
+                                    </svg>
+                                </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p>{{ deck.description }}</p>
+                        </div>
+
+                        <div class="repo-card-footer">
+                            <button  class="add-to-profile" title="Add to deck" 
+                                @click="addDeck(deck._id)" 
+                                :disabled="owned.find(elem => elem ==deck._id)" 
+                            >
+                            Add to my profile
+                            </button>
+                        </div>
+                        
+                    </el-card>
+                </span>
+            </div>
+        </div>
+ 
     
     </span>
 </template>
@@ -169,8 +328,6 @@
                 loading: true,
                 id: localStorage.getItem('_id'),
                 decks: [],
-                decks_2: [],
-                decks_3: [],
                 owned: [],
                 saved: false,
                 windowWidth: 0,
@@ -192,9 +349,18 @@
             this.windowWidth = window.innerWidth;
         },
 
+        created() {
+            window.addEventListener("resize", this.myEventHandler);
+        },
+        unmounted() {
+            window.removeEventListener("resize", this.myEventHandler);
+        },
+
         methods: {
-            async getDecks(){    
+            myEventHandler() {
                 this.windowWidth = window.innerWidth;
+            },
+            async getDecks(){    
 
                 if (!localStorage.getItem('token')) {
                     this.$router.push({ path : `/` });
@@ -209,20 +375,8 @@
                         let i = 0;
                         this.decks.forEach(deck => deck.index = i++);
                         this.owned = JSON.parse(localStorage.own_ids);
-                        this.arrays();
                     })
                     .catch(err => { console.log(err) })
-                }
-            },
-
-            arrays(){
-                if(this.windowWidth > 600){
-                    this.decks.filter(elem => {
-                        if(elem.index % 2 != 0) {
-                            this.decks_2.push(elem)
-                            this.decks.splice(elem.index, 1)
-                        }
-                    })
                 }
             },
 
@@ -350,54 +504,78 @@
     }
 
     .decks-repo{
-        // max-width: 1200px;
-        // margin: 0 15px;
-        // display: grid;
-        // grid-gap: 1rem;
-        // grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
+        margin: 0 15px;
+        display: grid;
 
-
-    .add-to-profile{
-        border-radius: 50%;
-        border-width: 0px;
-        background-color: #0079C2CC;
-        color: white;
-        padding: 2px;
-        cursor: pointer;
-        margin-bottom: auto;
-        height: 24px;
-        width: 24px;
-
-        &:disabled{
-            opacity: .6;
-            cursor: auto;
-        }
-        svg{
-            display: flex;
-            width: 16px;
-            height: 16px;
-            margin: 0px auto;
+        .box-card{
+            margin-bottom: 10px;
         }
     }
+
+    @media (min-width: 600px) {
+        .decks-repo{
+            grid-template-columns: repeat(2,1fr);
+            gap: 1rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .decks-repo{
+            max-width: 1200px;
+            grid-template-columns: repeat(3,1fr);
+            gap: 5px;
+        }
+    }
+
+
+    .decks-repo :only-child{
+        padding: 0px;
+    }
+
 
     .box-card{
         height: fit-content;
     }
 
     .repo-card-header{
+        display: grid;
+        grid-template-columns: 90% auto;
+        padding: 10px 20px 20px 20px !important;
 
+        .voting{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card-category{
+            font-size: 12px;
+            color: #8a8d90;
+            padding-bottom: 10px;
+        }
+        h4{
+            font-weight: 600;
+        }
     }
 
     .repo-card-main{
-
+        padding: 0px 20px 25px 20px !important;
     }
 
-    .repo-card--footer{
-        // margin: auto -20px;
-        // padding-left: 20px;
-        // display: flex;
-        // border-top: 1px solid #DDD;
+    .repo-card-footer{
+        button{
+            width: 100%;
+            padding: 10px 0px !important;
+            border-radius: 0px 0px 3px 3px;
+            border-width: 0px;
+            background-color: #0079C2CC;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        button:disabled{
+            opacity: .6;
+        }
     }
 
     .btn-voter{

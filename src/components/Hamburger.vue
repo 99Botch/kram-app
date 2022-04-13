@@ -55,6 +55,7 @@
 
 <style scoped lang="scss">
     .menu{
+        z-index: 99;
         position: fixed;
         bottom: 0;
         right: 0;

@@ -143,6 +143,7 @@
     }
 
     .ham-btn{
+        z-index: 99;
         position: fixed;
         bottom: 0;
         right: 0;
