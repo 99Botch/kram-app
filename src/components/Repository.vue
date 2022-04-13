@@ -14,9 +14,10 @@
                     </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item><span class="sort-li">Last update</span> </el-dropdown-item>
-                        <el-dropdown-item><span class="sort-li">Votes</span></el-dropdown-item>
-                        <el-dropdown-item><span class="sort-li">Category</span></el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-own" ><span class="repo-own sort-li">Not owned</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-vts" ><span class="repo-vts sort-li">Votes</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-ctg" ><span class="repo-ctg sort-li">Category</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-upd" ><span class="repo-upd sort-li">Last update</span> </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
                 </el-dropdown>
@@ -62,7 +63,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -112,7 +113,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -158,7 +159,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -207,7 +208,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -253,7 +254,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -299,7 +300,7 @@
                         <div class="repo-card-footer">
                             <button  class="add-to-profile" title="Add to deck" 
                                 @click="addDeck(deck._id)" 
-                                :disabled="owned.find(elem => elem ==deck._id)" 
+                                :disabled="deck.owned == 1" 
                             >
                             Add to my profile
                             </button>
@@ -310,7 +311,6 @@
             </div>
         </div>
  
-    
     </span>
 </template>
 
@@ -318,10 +318,10 @@
     import { URI, axios } from '@/plugins/index.js';
     import Feedback from '@/components/Feedback.vue';
 
-
     export default {
         name: 'Repository',
         props: ['query'],
+        components: { Feedback },
 
         data() {
             return {
@@ -334,23 +334,15 @@
             }
         },
 
-        components: {
-            Feedback,
-        },
-
         mounted () {
-            this.getDecks()
+            this.getDecks();
         },
-
-        computed: {},
-
+        created() {
+            window.addEventListener("resize", this.myEventHandler);
+        },
         beforeUpdate(){
             if (this.$props.query.length != 0) this.decks = this.$props.query;
             this.windowWidth = window.innerWidth;
-        },
-
-        created() {
-            window.addEventListener("resize", this.myEventHandler);
         },
         unmounted() {
             window.removeEventListener("resize", this.myEventHandler);
@@ -360,6 +352,21 @@
             myEventHandler() {
                 this.windowWidth = window.innerWidth;
             },
+
+            decksSort(){
+                this.loading = !this.loading;
+                let res;
+
+                if(event.target.className.substr(0, 8) == 'repo-vts') res = this.decks.sort((a, b) => b.votes - a.votes);
+                else if(event.target.className.substr(0, 8) == 'repo-ctg') res = this.decks.sort((a, b) => a.category > b.category);
+                else if(event.target.className.substr(0, 8) == 'repo-own') res = this.decks.sort((a, b) => b.owned < a.owned);
+                else if(event.target.className.substr(0, 8) == 'repo-upd') res = this.decks.sort((a, b) => b.last_update < a.last_update);
+
+                res.forEach((elem, i) => elem.index = i);
+                this.decks = res;
+                this.loading = !this.loading;
+            },
+
             async getDecks(){    
 
                 if (!localStorage.getItem('token')) {
@@ -369,12 +376,19 @@
                         headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
                     })
                     .then(async response => {
-                        this.decks = await response.data;
+                        let decks_og = await response.data;
                         this.loading = false;
 
                         let i = 0;
-                        this.decks.forEach(deck => deck.index = i++);
+                        decks_og.forEach(deck => deck.index = i++);
                         this.owned = JSON.parse(localStorage.own_ids);
+
+                        this.decks = decks_og.map(elem => {
+                            this.owned.find(item => (item == elem._id) ? elem.owned = 1 : elem.owned = 0 )
+                            return elem
+                        })
+
+
                     })
                     .catch(err => { console.log(err) })
                 }
@@ -490,17 +504,30 @@
             width: 15px;
             padding-top: 5px;
         }
+
         h4{
             color: #8A8D90;
         }
 
-        .dropby-sort li{
-            color: red;
-        }
         .dropby-sort button{
             border-color: #0079C2;
             color: #0079C2;
         }
+
+        .sort-drop {
+            color: red;
+        }
+        // .sort-drop li {
+        //     font-size: 16px;
+        //     font-family: Arial;
+        //     padding: 7px 10px;
+        //     cursor: pointer !important;
+        //     color: #8a8d90 !important;
+
+        //     &:hover{
+        //         color: red;
+        //     }
+        // }
     }
 
     .decks-repo{
