@@ -14,10 +14,10 @@
                     </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
-                            <el-dropdown-item @click="decksSort" class="repo-own" ><span class="repo-own sort-li">Not owned</span> </el-dropdown-item>
-                            <el-dropdown-item @click="decksSort" class="repo-vts" ><span class="repo-vts sort-li">Votes</span> </el-dropdown-item>
-                            <el-dropdown-item @click="decksSort" class="repo-ctg" ><span class="repo-ctg sort-li">Category</span> </el-dropdown-item>
-                            <el-dropdown-item @click="decksSort" class="repo-upd" ><span class="repo-upd sort-li">Last update</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-own sort-list" ><span class="repo-own sort-li">Not owned</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-vts sort-list" ><span class="repo-vts sort-li">Votes</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-ctg sort-list" ><span class="repo-ctg sort-li">Category</span> </el-dropdown-item>
+                            <el-dropdown-item @click="decksSort" class="repo-upd sort-list" ><span class="repo-upd sort-li">Last update</span> </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
                 </el-dropdown>
@@ -25,7 +25,7 @@
         </div>
 
         <!-- MOBILES -->
-        <div class="decks-repo" v-if="windowWidth < 600">
+        <div class="decks-repo" v-if="windowWidth < 500">
             <div>
 
                 <span v-for="deck of decks" :key="deck._id">
@@ -76,7 +76,7 @@
         </div>
 
         <!-- TABLETS -->
-        <div class="decks-repo" v-if="windowWidth >= 600 && windowWidth < 1024">
+        <div class="decks-repo" v-if="windowWidth >= 500 && windowWidth < 900">
             <div>
                 <span v-for="deck of decks" :key="deck._id">
                     <el-card  v-if="deck.index % 2 == 0" class="common-layout box-card" shadow="always">
@@ -171,7 +171,7 @@
         </div>
         
         <!-- COMPUTERS -->
-        <div class="decks-repo" v-if="windowWidth >= 1024">
+        <div class="decks-repo" v-if="windowWidth >= 900">
             <div>
                 <span v-for="deck of decks" :key="deck._id">
                     <el-card  v-if="deck.index % 3 == 0" class="common-layout box-card" shadow="always">
@@ -513,21 +513,23 @@
             border-color: #0079C2;
             color: #0079C2;
         }
+    }
 
-        .sort-drop {
-            color: red;
+    .sort-list {
+        & .sort-li  {
+            font-size: 16px;
+            color: #8a8d90;
+            font-family: arial;
+            padding: 7px 10px;
+
+            &:hover{
+                color: #0079C2;
+            }
         }
-        // .sort-drop li {
-        //     font-size: 16px;
-        //     font-family: Arial;
-        //     padding: 7px 10px;
-        //     cursor: pointer !important;
-        //     color: #8a8d90 !important;
 
-        //     &:hover{
-        //         color: red;
-        //     }
-        // }
+        &:hover > *{
+            color: #0079C2;
+        }
     }
 
     .decks-repo{
@@ -539,21 +541,20 @@
         }
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 500px) {
         .decks-repo{
             grid-template-columns: repeat(2,1fr);
             gap: 1rem;
         }
     }
 
-    @media (min-width: 1024px) {
+    @media (min-width: 900px) {
         .decks-repo{
             max-width: 1200px;
             grid-template-columns: repeat(3,1fr);
             gap: 5px;
         }
     }
-
 
     .decks-repo :only-child{
         padding: 0px;
@@ -577,7 +578,7 @@
         .card-category{
             font-size: 12px;
             color: #8a8d90;
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
         h4{
             font-weight: 600;
@@ -601,6 +602,11 @@
         }
 
         button:disabled{
+            opacity: .6;
+            cursor: auto;
+        }
+        
+        button:hover{
             opacity: .6;
         }
     }
