@@ -1,31 +1,29 @@
 <template>
-    <div class="form-items">
+    <el-form class="adding-form">
 
-        <div class="form-items-header">
+        <div class="">
             <h4>New deck</h4>
         </div>
 
-        <div class="form-items-form">
+        <div class="">
             <form>
-                <input type="text" name="" v-model="form.name" required placeholder="Name" />
-                <p class="form-items-error">{{ this.nameError }}</p>
+                <el-input type="text" name="" v-model="form.name" required placeholder="Name" />
+                <p class="">{{ this.nameError }}</p>
 
-                <select v-model="form.category">
-                    <option disabled>Pick a category</option>
-                    <option v-for="category of categories" :key="category"> {{ category }}</option>
-                </select>
-                <p class="form-items-error">{{ this.categoryError }}</p>
+                <el-select v-model="form.category">
+                    <el-option disabled>Pick a category</el-option>
+                    <el-option v-for="category of categories" :key="category"> {{ category }}</el-option>
+                </el-select>
+                <p class="">{{ this.categoryError }}</p>
             </form>
 
-            <div class="form-items-submit">
+            <div class="btns-modal-form">
                 <button @click="$emit('close')">Cancel</button>
-                <button type="submit" @click="submitForm">Add deck</button>
+                <button type="submit" @click="submitDeck">Add deck</button>
             </div>
         </div>
 
-
-
-    </div>
+    </el-form>
 </template>
 
 <script>
@@ -50,7 +48,7 @@
 
         methods: {
             // SUBMIT DECK FORM
-            async submitForm(){
+            async submitDeck(){
                 const json = JSON.stringify(this.form);
 
                 if (this.form.name.length < 6 || this.form.name.length > 31) this.nameError = 'Name must be between 6 and 30 characters';
@@ -81,100 +79,52 @@
 </script>
 
 
-<style scoped lang="scss">
-
-    .form-items{
-        background-color: white;
+<style lang="scss">
+    .adding-form{
         position: absolute;
+        z-index: 88;
+        right: 0;
+        background-color: #FFF;
+        border: 1px solid #DDD;
+    }
+
+    .btns-modal-form{
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-radius: 3px;
-        border: 1px solid #2223;
-        margin-top: 53px;
         width: 300px;
 
-        .form-items-header{
-            border-bottom: 1px solid #2222;
+        & > *{
             width: 100%;
-            text-align: center;
+            border-width: 0px;
+            height: 40px;
+            text-align: left;
+            padding: 0.5rem 0 1.7rem 0.5rem;
+            cursor: pointer;
+        }
 
-            h4{
-                color: #222E;
-                padding: 25px 0px;
+        & :nth-child(1){
+            background-color: #333;
+            color: #fff;
+
+            &:hover{
+                opacity: .85
+            }
+            &:focus{
+                border-color: red;
             }
         }
 
-        form{
-            display: flex;
-            flex-direction: column;
-            width: 200px;
-            padding-top: 30px;
+        & :nth-child(2){
+            background-color: #0079c2;
+            color: #fff;
 
-            & input, & select {
-                outline: 0;
-                padding: 10px;
-                background-color: white;
-                border-radius: 3px;
-                border-color: #2222;
+            &:hover{
+                opacity: .85
             }
-
-            & input:focus, & select:focus {
-                border-color: #222C;
-            }
-
-            .form-items-error {
-                color: #DB3C3A;
-                font-size: 12px;
-                padding: 5px 0px 15px 0px;
-                height: 34px;
+            &:focus{
+                border-color: red;
             }
         }
 
-        .form-items-submit{
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0px 30px 0px;
-
-            button{
-                padding: 10px 15px;
-                font-size: 12px;
-                border: 1px solid #0079C2CC;
-                border-radius: 7px;
-                cursor: pointer;
-            }
-
-            & :nth-child(1){
-                background-color: white;
-                color: #0079C2CC;
-
-                &:hover{
-                    color: #0079C2CC;
-                }
-            }
-
-            & :nth-child(2){
-                background-color: #0079C2CC;
-                color: white;
-            }
-        }
     }
 
-    @media (max-width: 480px) {
-        .form-items{
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            margin: 0px;
-
-            form{
-                display: flex;
-                flex-direction: column;
-                width: 335px;
-                padding-top: 30px;
-            }
-        }
-    }
 </style>

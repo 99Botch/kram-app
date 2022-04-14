@@ -7,10 +7,11 @@
 
             <div class="flex flex-wrap items-center dropby-sort">
                 <el-dropdown>
-                    <el-button>Sort by
+                    <el-button round>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-chevron">
                         <path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" />
                     </svg>    
+                    Sort by
                     </el-button>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -355,15 +356,13 @@
 
             decksSort(){
                 this.loading = !this.loading;
-                let res;
 
-                if(event.target.className.substr(0, 8) == 'repo-vts') res = this.decks.sort((a, b) => b.votes - a.votes);
-                else if(event.target.className.substr(0, 8) == 'repo-ctg') res = this.decks.sort((a, b) => a.category > b.category);
-                else if(event.target.className.substr(0, 8) == 'repo-own') res = this.decks.sort((a, b) => b.owned < a.owned);
-                else if(event.target.className.substr(0, 8) == 'repo-upd') res = this.decks.sort((a, b) => b.last_update < a.last_update);
+                if(event.target.className.substr(0, 8) == 'repo-vts') this.decks = this.decks.sort((a, b) => b.votes - a.votes);
+                else if(event.target.className.substr(0, 8) == 'repo-ctg') this.decks = this.decks.sort((a, b) => a.category > b.category);
+                else if(event.target.className.substr(0, 8) == 'repo-own') this.decks = this.decks.sort((a, b) => b.owned < a.owned);
+                else if(event.target.className.substr(0, 8) == 'repo-upd') this.decks = this.decks.sort((a, b) => b.last_update < a.last_update);
 
-                res.forEach((elem, i) => elem.index = i);
-                this.decks = res;
+                this.decks.forEach((elem, i) => elem.index = i);
                 this.loading = !this.loading;
             },
 
@@ -387,8 +386,6 @@
                             this.owned.find(item => (item == elem._id) ? elem.owned = 1 : elem.owned = 0 )
                             return elem
                         })
-
-
                     })
                     .catch(err => { console.log(err) })
                 }
@@ -494,24 +491,26 @@
 </script>
 
 
-<style scoped lang="scss">
-    .repo-header{
+<style lang="scss">
+    .repo-header,
+    .my-deck-header{
         padding: 25px 15px 20px 15px;
         display: flex;
         justify-content: space-between;
 
         .sort-chevron{
             width: 15px;
-            padding-top: 5px;
+            margin-right: 3px;
+            padding-top: 2px;
         }
 
         h4{
             color: #8A8D90;
         }
 
-        .dropby-sort button{
-            border-color: #0079C2;
-            color: #0079C2;
+        .dropby-sort button:hover{
+            border-color: #0079C288;
+            color: #0079C2DD;
         }
     }
 
@@ -591,8 +590,9 @@
 
     .repo-card-footer{
         button{
+            text-align: left;
             width: 100%;
-            padding: 10px 0px !important;
+            padding: 0.75rem 0 1.25rem 0.75rem !important;
             border-radius: 0px 0px 3px 3px;
             border-width: 0px;
             background-color: #0079C2CC;

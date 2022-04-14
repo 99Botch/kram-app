@@ -1,48 +1,262 @@
 <template>
-
     <Feedback v-if="saved"/>
+    <span v-if="!loading">
     
-    <div class="holder" >
-        <div class="holder-btn ">
-            <span class="animated-hover">
-                <button @click="popForm('AddDeck')">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                        <path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"
-                            fill="currentColor" />
-                    </svg>
-                    New deck
-                </button>
-            </span>
-            <button class="sort-decks">
-                Sort by
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" />
-                </svg>
-            </button>
-            <AddDeck @clicked="renderDeck" @close="closePop" v-if="formAddDeck" />
-        </div>
+        <div class="my-deck-header">
+            <h4>My decks</h4>
 
-        <p v-if="!decks.length && !loading" class="empty-msg" >
-                /W You don't have any deck as of yet ! Click the 'new deck' button or get one from our Kram community
-        </p>
-        
-        <div class="holder-decks" v-if="!loading">
-            <div v-for="deck of decks" :key="deck._id" class="holder-deck">
-                <span>
-                    <p class="holder-decks-name" :class="(deck.name.length > 25) ? 'overflow-name': null ">{{ deck.name }} </p>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
-                        <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
-                     </svg>  
+            <div class="deck-btns">
+                <div class="flex flex-wrap items-center dropby-sort">
+                    <el-dropdown>
+                        <el-button round type="default">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-chevron">
+                                <path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" />
+                            </svg>    
+                            Sort by
+                        </el-button>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                                <el-dropdown-item @click="sortingDecks" class="deck-rw sort-list" ><span class="deck-rw sort-li">To review</span> </el-dropdown-item>
+                                <el-dropdown-item @click="sortingDecks" class="deck-cg sort-list" ><span class="deck-cg sort-li">Category</span> </el-dropdown-item>
+                                <el-dropdown-item @click="sortingDecks" class="deck-nm sort-list" ><span class="deck-nm sort-li">Name</span> </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                    </el-dropdown>
+                </div>
+
+                <span class="form-pop-up">
+                    <el-button round type="primary" @click="popForm('AddDeck')" class="add-deck-btn">
+                        New deck
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                            <path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" />
+                        </svg>
+                    </el-button>
+
+                    <AddDeck @clicked="renderDeck" @close="closePop" v-if="formAddDeck" />
                 </span>
-
-                <p class="holder-decks-category">{{ deck.category }} </p>
-                
-                <p class="holder-decks-count" title="Number of cards in this deck">100 cards</p>
-
-                <router-link :to="{ name:'Review', params:{ deckId: deck._id }}"><button :disabled="deck.card_count == 0">Review</button></router-link>
             </div>
         </div>
-    </div>
+
+        <div v-if="!decks.length && !loading" class="empty-msg" >
+            <h4> You don't have any decks !!! </h4>
+            <p>Click the 'new deck' button or get one from our Kram community</p>
+        </div>
+
+        <!-- MOBILE -->
+        <div class="decks-repo" v-if="windowWidth < 500">
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+        </div>
+
+        <!-- TABLETS -->
+        <div class="decks-repo" v-if="windowWidth >= 500 && windowWidth < 900">
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 2 == 0" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 2 == 1" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+        </div>
+
+        <!-- COMPUTER -->
+        <div class="decks-repo" v-if="windowWidth >= 900">
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 0" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 1" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="deck of decks" :key="deck._id">
+                    <el-card  v-if="deck.index % 3 == 2" class="common-layout box-card" shadow="always">
+
+                        <div class="repo-card-header">
+                            <div>
+                                <p class="card-category">{{deck.category}}</p>
+                                <h4>{{deck.name}}</h4>
+                            </div>
+                            
+                            <div class="voting">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" @click="popMenu(deck)">
+                                    <path d="M22 18.0048C22 18.5544 21.5544 19 21.0048 19H12.9952C12.4456 19 12 18.5544 12 18.0048C12 17.4552 12.4456 17.0096 12.9952 17.0096H21.0048C21.5544 17.0096 22 17.4552 22 18.0048Z" fill="currentColor" /><path d="M22 12.0002C22 12.5499 21.5544 12.9954 21.0048 12.9954H2.99519C2.44556 12.9954 2 12.5499 2 12.0002C2 11.4506 2.44556 11.0051 2.99519 11.0051H21.0048C21.5544 11.0051 22 11.4506 22 12.0002Z" fill="currentColor" /><path d="M21.0048 6.99039C21.5544 6.99039 22 6.54482 22 5.99519C22 5.44556 21.5544 5 21.0048 5H8.99519C8.44556 5 8 5.44556 8 5.99519C8 6.54482 8.44556 6.99039 8.99519 6.99039H21.0048Z" fill="currentColor" />
+                                </svg> 
+                            </div>
+                        </div>
+
+                        <div class="repo-card-main">
+                            <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
+                            <p v-else>{{ deck.description }}</p>
+                        </div>
+                    
+                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
+                            <button class="review-btn" :disabled="deck.card_count == 0">
+                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else>Review {{ deck.card_count }} cards</span>
+                            </button>
+                        </router-link>
+                        
+                    </el-card>
+                </span>
+            </div>
+        </div>
+
 
     <PopDeck v-if="popMenuDeck" 
         :deck="this.popMenuDeck" 
@@ -52,6 +266,7 @@
         @update-deck="updateDeck"
     />
 
+    </span>
 </template>
 
 <script>
@@ -64,6 +279,11 @@
         name: 'Decks',
         props: ['query'],
         emits: ['clicked'],
+        components: {
+            AddDeck,
+            Feedback,
+            PopDeck,
+        },
 
         data() {
             return {
@@ -72,27 +292,39 @@
                 saved: false,
                 formAddDeck: false,
                 loading: true,
-                popMenuDeck: false
+                popMenuDeck: false,
+                windowWidth: 0,
             }
-        },
-
-        components: {
-            AddDeck,
-            Feedback,
-            PopDeck,
         },
 
         mounted () {
             this.getDecks();
         },
-
-        computed: {},
-
+        created() {
+            window.addEventListener("resize", this.myEventHandler);
+        },
         beforeUpdate(){
             if (this.$props.query.length != 0) this.decks = this.$props.query;
+            this.windowWidth = window.innerWidth;
+        },
+        unmounted() {
+            window.removeEventListener("resize", this.myEventHandler);
         },
 
         methods: {
+            myEventHandler() {
+                this.windowWidth = window.innerWidth;
+            },
+            sortingDecks(){
+                this.loading = !this.loading;
+
+                if(event.target.className.substr(0, 7) == 'deck-rw') this.decks = this.decks.sort((a, b) => b.card_count - a.card_count);
+                else if(event.target.className.substr(0, 7) == 'deck-cg') this.decks = this.decks.sort((a, b) => a.category > b.category);
+                else if(event.target.className.substr(0, 7) == 'deck-nm') this.decks = this.decks.sort((a, b) => b.name < a.name);
+
+                this.decks.forEach((elem, i) => elem.index = i);
+                this.loading = !this.loading;
+            },
             popMenu(_deck){
                 (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
             },
@@ -134,7 +366,7 @@
                         this.decks = await response.data;
                         let i = 0;
                         this.loading = false;
-                        this.decks.forEach(deck => deck.index = i++)
+                        this.decks.forEach(deck => deck.index = i++);
                     })
                     .catch(err => { console.log(err) })
                 }
@@ -178,149 +410,69 @@
 
 
 <style scoped lang="scss">
+    .deck-btns{
+        display: flex;
+        gap: 10px;
+    }
 
-    .sort-decks{
-        text-transform: uppercase;
-        position: relative;
-        padding-bottom: 8px;
+    .add-deck-btn{
+        background-color: #0079C2;
+        boder-color: #0079C2;
 
-        &:hover, &:focus{
-            color: #29ab87;
+        svg{
+            margin-left: 5px;
+            width: 16px;
+        }
+
+        &:hover{
+            opacity: .6;
         }
     }
 
-    .holder{
+    .form-pop-up{
+        position: relative;
+    }
+
+    div.empty-msg{
+        padding-top: 20vh;
         display: flex;
+        align-items: center;
         flex-direction: column;
 
-        &-btn{
-            display: flex;
-            button{
-                cursor: pointer;
-            }
+        h4{
+            padding-bottom: 10px;
+            color: #e05654;
         }
 
-        &-decks{
-            display: grid;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-            div{
-                -webkit-box-shadow: 0px 10px 13px -7px #000000, 0px 0px 34px -7px rgba(0,0,0,0);
-                box-shadow: 0px 10px 13px -7px #000000, 0px 0px 34px -7px rgba(0,0,0,0);
-                border: 1px solid #2222;
-                border-radius: 3px;
-            }
+        p{
+            width: 35ch;
+            text-align: center;
+            color: #C8C8C8;
         }
     }
 
-    .empty-msg{
-        color: #2227;
-        text-align: center;
-        padding: 0px 20px;
+    .no-description{
+        color: #C8C8C8
     }
 
-    .holder-deck{
-        span{
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 7px 0px 7px;
-            align-items: center;
-
-            p{
-                font-size: 16px;
-                text-transform: uppercase;
-            }
-            svg{
-                width: 16px;
-            }
-        }
-
-        .holder-decks-category{
-            font-size: 14px;
-            color: #222A;
-            padding: 3px 7px 15px 7px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .holder{
-            &-decks{
-                grid-template-columns: 1fr;
-            }
-        }
-    }
-
-    @media (min-width: 600px) {
-        .empty-msg{
-            padding-top: 50px;
-        }
-
-        .holder{
-            &-decks{
-                grid-template-columns: repeat(3, minmax(150px, 200px));
-            }
-        }
-    }
-
-    @media (min-width: 768px) {
-        .holder{
-            &-decks{
-                grid-template-columns: repeat(3, minmax(200px, 250px));
-            }
-        }
-    }
-
-    .overflow-name{
-        width: 24ch;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    @media (max-width: 1024px) {
-        .holder{
-            &-btn{
-                margin: 15px 15px 5px 15px;
-            }
-            &-decks{
-                margin: 0px 15px;
-            }
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .holder{
-            margin: 25px;
-            &-btn{
-                svg{
-                    width: 16px;
-                    margin-right: 3px;
-                    gap: 0px
-                }
-            }
-            &-decks{
-                grid-template-columns: repeat(3, minmax(250px, 300px));
-            }
-        }
-    }
-
-    @media (max-height: 600px) {
-        .holder{
-            &-decks{
-                grid-template-columns: 1fr;
-            }
-        }
-    }
-
-    button{
+    .review-btn{
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 0 1.25rem 0.75rem !important;
+        border-radius: 0px 0px 3px 3px;
+        border-width: 0px;
+        background-color: #29ab87;
+        color: white;
         cursor: pointer;
-        display: flex;
-        border: 0px;
-        background-color: transparent;
-        font-size: 16px;
-        align-items: center;
-        margin-right: 15px;
-    }
+        font-size: 12px;
 
+        &:disabled{
+            opacity: .75;
+            cursor: auto;
+        }
+        
+        &:hover{
+            opacity: .75;
+        }
+    }
 </style>
