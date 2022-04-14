@@ -592,7 +592,7 @@
         button{
             text-align: left;
             width: 100%;
-            padding: 0.75rem 0 1.25rem 0.75rem !important;
+            padding: 0.75rem 0 1.1rem 0.75rem !important;
             border-radius: 0px 0px 3px 3px;
             border-width: 0px;
             background-color: #0079C2CC;
