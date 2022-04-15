@@ -21,7 +21,7 @@
 
         <div class="left-side">
             <img v-if="this.$props.picUrl" :src="this.$props.picUrl" @click="profile($event)" />
-            <img v-else src="@/assets/User.svg"  class="content-image" @click="profile($event)"/>
+            <img v-else src="@/assets/User.svg"  class="no-pic" @click="profile($event)"/>
         </div>
         
     </nav>
@@ -142,13 +142,18 @@
         display: flex;
         justify-content: flex-end;
         img{
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50px;
-            border: 1px solid #333;
+            background-size:     cover;        
+            background-repeat:   no-repeat;
+            background-position: center center;  
             cursor: pointer;
-            padding: 1px;
         }
+    }
+
+    .no-pic{
+        border: 1px solid #C8C8C8;
     }
 
     input::-webkit-input-placeholder {

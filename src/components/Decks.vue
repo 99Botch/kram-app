@@ -69,7 +69,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -107,7 +107,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -141,7 +141,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -179,7 +179,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -213,7 +213,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -247,7 +247,7 @@
                         <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
                             <button class="review-btn" :disabled="deck.card_count == 0">
                                 <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
                                 <span v-else>Review {{ deck.card_count }} cards</span>
                             </button>
                         </router-link>
@@ -316,20 +316,21 @@
                 this.windowWidth = window.innerWidth;
             },
             sortingDecks(){
-                this.loading = !this.loading;
+                this.loading = true;
 
                 if(event.target.className.substr(0, 7) == 'deck-rw') this.decks = this.decks.sort((a, b) => b.card_count - a.card_count);
                 else if(event.target.className.substr(0, 7) == 'deck-cg') this.decks = this.decks.sort((a, b) => a.category > b.category);
                 else if(event.target.className.substr(0, 7) == 'deck-nm') this.decks = this.decks.sort((a, b) => b.name < a.name);
 
                 this.decks.forEach((elem, i) => elem.index = i);
-                this.loading = !this.loading;
+                this.loading = false;
             },
             popMenu(_deck){
                 (!this.popMenuDeck) ? this.popMenuDeck = {deck: JSON.parse(JSON.stringify(_deck)) } : this.popMenuDeck = false;
             },
 
             renderDeck(event){
+                [event.index, event.card_count] =[this.decks.length, 0];
                 this.decks.push(event);
                 this.formAddDeck= false;
                 this.feedback();
@@ -366,7 +367,13 @@
                         this.decks = await response.data;
                         let i = 0;
                         this.loading = false;
-                        this.decks.forEach(deck => deck.index = i++);
+                        this.decks.forEach(deck => {
+                            deck.index = i++;
+                            delete deck.votes;
+                            delete deck.voters;
+                            delete deck.added_date;
+                            delete deck.last_update;
+                        });
                     })
                     .catch(err => { console.log(err) })
                 }

@@ -1,5 +1,5 @@
 <template>
-    <el-form class="adding-form">
+    <div class="adding-form">
 
         <div class="pop-up-form-top">
             <h4>New deck</h4>
@@ -8,22 +8,22 @@
 
 
         <form class="pop-up-form">
-            <el-input type="text" name="" v-model="form.name" required placeholder="Name" />
-            <p class="error-msg">{{ this.nameError }}</p>
+            <el-input type="text" name="" v-model="form.name" placeholder="Name" />
+            <p :class="(this.nameError) ? 'error-msg' :  'error-msg-empty' ">{{ this.nameError }}</p>
 
             <el-select v-model="form.category">
                 <el-option disabled>Pick a category</el-option>
-                <el-option v-for="category of categories" :key="category"> {{ category }}</el-option>
+                <el-option v-for="category of categories" :key="category" :value="category"> {{ category }}</el-option>
             </el-select>
-            <p class="error-msg">{{ this.categoryError }}</p>
+            <p :class="(this.categoryError) ? 'error-msg' :  'error-msg-empty' ">{{ this.categoryError }}</p>
         </form>
 
         <div class="btns-modal-form">
             <button @click="$emit('close')">Cancel</button>
-            <button type="submit" @click="submitDeck">Add deck</button>
+            <button type="submit" @click="createDeck">Add deck</button>
         </div>
 
-    </el-form>
+    </div>
 </template>
 
 <script>
@@ -39,16 +39,14 @@
                     category: "",
                 },
                 categories: ['Language', 'Mathematics', 'Science', 'History', 'Geography', 'Literature', 'Culture', 'Other'],
-                nameError: "Name must be between 6 and 30 characters",
-                categoryError: "Error",
+                nameError: "",
+                categoryError: "",
             }
         },
 
-        mounted () {},
-
         methods: {
             // SUBMIT DECK FORM
-            async submitDeck(){
+            async createDeck(){
                 const json = JSON.stringify(this.form);
 
                 if (this.form.name.length < 6 || this.form.name.length > 31) this.nameError = 'Name must be between 6 and 30 characters';
@@ -92,7 +90,7 @@
     }
 
     .pop-up-form-top{
-        padding: 20px;
+        padding: 20px 20px 30px 20px;
 
         h4{
             color: #222 !important;
@@ -106,20 +104,20 @@
     }
 
     form.pop-up-form{
-        padding: 0px 20px 10px 20px;
+        padding: 0px 20px 20px 20px;
 
-        input, select{
-            box-shadow: none;
+        .el-select{
+            width: 100%;
+        }
+
+        input{
+            box-shadow: none !important;
             border-radius: 0px;
             border: 1.5px solid #DDD;
         }
-        input:hover, select:hover, input:focus, select:focus{
-            box-shadow: none;
+        input:hover, input:focus, select:focus, .el-input .el-input__inner:focus{
+            box-shadow: none !important;
             border-color: #0079c2CC;
-        }
-        .el-select{
-            width: 100%;
-
         }
     }
 
@@ -127,6 +125,10 @@
         color: #df5654;
         font-size: 12px;
         padding: 4px 0px 10px 0px;
+    }
+
+    .error-msg-empty{
+        height: 28px;
     }
 
     .btns-modal-form{
@@ -166,7 +168,12 @@
                 border-color: red;
             }
         }
+    }
 
+    @media (max-width: 600px) {
+        .btns-modal-form{
+            width: 330px;
+        }
     }
 
 </style>
