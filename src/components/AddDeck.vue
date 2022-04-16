@@ -150,7 +150,7 @@
             border-width: 0px;
 
             &:hover{
-                opacity: .85
+                opacity: .75
             }
             &:focus{
                 border-color: red;
@@ -162,7 +162,7 @@
             color: #fff;
 
             &:hover{
-                opacity: .85
+                opacity: .75
             }
             &:focus{
                 border-color: red;

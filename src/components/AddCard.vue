@@ -115,6 +115,7 @@
                 .then((res) => {
                     if(res.status === 200) {
                         [this.form.question, this.form.answer] = '';
+                        console.log(res)
                         document.getElementById('file-input-card').value = '';
                         this.$emit('clicked', res.data);
                     }

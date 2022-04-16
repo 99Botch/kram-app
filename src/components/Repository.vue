@@ -497,6 +497,7 @@
         padding: 25px 15px 20px 15px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         .sort-chevron{
             width: 15px;

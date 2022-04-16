@@ -3,12 +3,16 @@
     <span v-if="!loading">
     
         <div class="my-deck-header">
-            <h4>My decks</h4>
+            <h4 :class="(windowWidth < 400 ? 'size-header' : null)">My decks</h4>
 
             <div class="deck-btns">
+                <button @click="deletion = !deletion" class="delete-deck" title="Delete deck(s)" :class="(!deletion) ? 'delete-off' : false">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z" fill="currentColor" /><path d="M9 9H11V17H9V9Z" fill="currentColor" /><path d="M13 9H15V17H13V9Z" fill="currentColor" /></svg>
+                </button>
+
                 <div class="flex flex-wrap items-center dropby-sort">
                     <el-dropdown>
-                        <el-button round type="default">
+                        <el-button round type="default" class="shrink-one">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-chevron">
                                 <path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" />
                             </svg>    
@@ -25,7 +29,7 @@
                 </div>
 
                 <span class="form-pop-up">
-                    <el-button round type="primary" @click="popForm('AddDeck')" class="add-deck-btn">
+                    <el-button type="primary" @click="popForm('AddDeck')" class="add-deck-btn">
                         New deck
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                             <path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" />
@@ -62,17 +66,24 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
                     
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
@@ -100,17 +111,24 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
                     
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
@@ -134,17 +152,24 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
                     
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
@@ -172,17 +197,24 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
                     
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
@@ -206,17 +238,24 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
                     
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
@@ -240,28 +279,33 @@
                         </div>
 
                         <div class="repo-card-main">
+                            <a href="#">Link to my cards</a>
                             <p v-if="!deck.description" class="no-description">Hey, add a description ;)</p>
                             <p v-else>{{ deck.description }}</p>
                         </div>
-                    
-                        <router-link :to="{ name:'Review', params:{ deckId: deck._id }}">
-                            <button class="review-btn" :disabled="deck.card_count == 0">
-                                <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
-                                <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
-                                <span v-else>Review {{ deck.card_count }} cards</span>
-                            </button>
-                        </router-link>
+
+                        <span v-if="deletion">
+                            <button class="delete-deck-btn" @click="deleteDeck(deck._id, deck.index)">Delete {{deck.name}}</button>
+                        </span>
+
+                        <span v-else-if="!deletion">
+                            <router-link :to="{ name:'Review', params:{ deckId: deck._id }}" >
+                                <button class="review-btn" :disabled="deck.card_count == 0">
+                                    <span v-if="deck.card_count == 0">/w That deck has no card yet..</span>
+                                    <span v-else-if="deck.card_count == 1">Review {{ deck.card_count }} card</span>
+                                    <span v-else>Review {{ deck.card_count }} cards</span>
+                                </button>
+                            </router-link>
+                        </span>
                         
                     </el-card>
                 </span>
             </div>
         </div>
 
-
     <PopDeck v-if="popMenuDeck" 
         :deck="this.popMenuDeck" 
-        @clicked="popMenu" 
-        @deletion="deleteDeck"
+        @clicked="popMenu"
         @cards="switchPage"
         @update-deck="updateDeck"
     />
@@ -294,6 +338,7 @@
                 loading: true,
                 popMenuDeck: false,
                 windowWidth: 0,
+                deletion: false,
             }
         },
 
@@ -352,7 +397,7 @@
                 this.feedback();
                 this.decks[_index].name = _form.name;
                 this.decks[_index].category = _form.category;
-                this.decks[_index].desctiption = _form.desctiption;
+                this.decks[_index].description = _form.description;
                 this.decks[_index].private = _form.private;
             },
 
@@ -393,6 +438,10 @@
                         localStorage.setItem('own_ids', JSON.stringify(filtered));
 
                         this.decks.splice(_index, 1);
+                        let i = 0;
+                        this.decks.forEach(deck => {
+                            deck.index = i++;
+                        });
                         this.feedback();
                     })
                     .catch(err => { console.log(err.request) })
@@ -462,24 +511,60 @@
         color: #C8C8C8
     }
 
-    .review-btn{
+    .review-btn, .delete-deck-btn{
         width: 100%;
         text-align: left;
         padding: 0.75rem 0 1.1rem 0.75rem !important;
         border-radius: 0px 0px 3px 3px;
         border-width: 0px;
-        background-color: #29ab87;
         color: white;
         cursor: pointer;
         font-size: 12px;
+        &:hover{
+            opacity: .75;
+        }
 
+    }
+
+    .review-btn{
+        background-color: #29ab87;
         &:disabled{
             opacity: .75;
             cursor: auto;
         }
-        
-        &:hover{
-            opacity: .75;
+    }
+
+    .delete-deck{
+        background-color: transparent;
+        border-width: 0px;
+        cursor: pointer;
+
+        svg{
+            color: #DB3C3A;
         }
     }
+
+    @media (max-width: 400px) {
+        .delete-deck svg{
+            width: 18px;
+        }
+        .shrink-one{
+            width: 85px;
+        }
+        .add-deck-btn{
+            width: 100px;
+        }
+    }
+
+    .size-header{
+        font-size: 18px;
+    }
+    .delete-off{
+        opacity: .7;
+    }
+    .delete-deck-btn{
+        background-color: #DB3C3AEE;
+    }
+
+
 </style>
