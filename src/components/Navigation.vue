@@ -16,7 +16,7 @@
                     />
                 </svg>
             </div>
-            <input type="text" placeholder="Search " id="searchBar" @keyup="searchItem"  v-model="searchInput"/>
+            <input type="text" placeholder="Search " id="searchBar" @keyup="searchItem"  v-model="searchInput" />
         </div>
 
         <div class="left-side">
@@ -32,13 +32,20 @@
 
     export default {
         name: 'Navigation',
-        props: ['picUrl'],
+        props: ['picUrl', 'search'],
         components: {},
 
         data () {
             return {
                 page: "",
-                searchInput: ""
+                searchInput: "",
+                searching: this.$props.search
+            }
+        },
+
+        watch : {
+            searching: function() {
+                (this.$props.search) ? console.log(true) : null
             }
         },
 
@@ -55,8 +62,10 @@
         },
 
         beforeUpdate(){
+            (this.$props.search) ? this.searchInput = '' :  null;
             (this.searchInput != "") ? document.getElementById('lensePath').setAttribute("fill", "#222") : 
-                document.getElementById('lensePath').setAttribute("fill", "#DDD");
+               (document.getElementById('lensePath').setAttribute("fill", "#DDD"), this.searchItem());
+
         },
 
         methods: {
@@ -99,6 +108,7 @@
                     headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
                 })
                 .then(async res => {
+                    console.log('bite')
                     let found_decks = await res.data;
                     let i = 0;
                     found_decks.forEach(deck => deck.index = i++);
@@ -145,9 +155,7 @@
             width: 35px;
             height: 35px;
             border-radius: 50px;
-            background-size:     cover;        
-            background-repeat:   no-repeat;
-            background-position: center center;  
+            object-fit: cover;
             cursor: pointer;
         }
     }

@@ -402,6 +402,7 @@
             },
 
             async getDecks(){
+                console.log('bite')
                 if (!localStorage.getItem('token')) {
                     this.$router.push({ path : `/` });
                 } else {

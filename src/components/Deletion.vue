@@ -1,5 +1,5 @@
 <template>
-    <div class="delete-holder">
+    <div class="delete-holder" @click="outsider" id="delBox">
         <div class="delete-box">
 
             <svg class="close-box"  @click="$emit('clicked', false)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -19,7 +19,8 @@
 
                 <h5>Hold on buddy !</h5>
                 <span></span>
-                <p>Hey! We are truly sorry to see you go. <b>Type in you're username to confirm your profile deletion.</b></p>
+                <p>Hey! We are truly sorry to see you go. </p>
+                <p>Type in you're username to confirm your profile deletion.</p>
             </div>
 
             <div>
@@ -49,6 +50,9 @@
             confirmation(){
                 let button = document.getElementById('prDelete');
                 (this.$props.username === event.currentTarget.value) ? button.disabled = false : button.disabled = true ;
+            },
+            outsider(){
+                if (event.target.id == 'delBox') this.$emit('clicked', false)
             },
         }
     }
@@ -82,16 +86,23 @@
         background-color: white;
 
         & div:nth-child(1){
-            width: 250px;
+            width: 50px;
         }
         & div:nth-child(2){
             width: 70%;
+        }
+        & div:nth-child(3){
+            width: 250px;;
         }
     }
     .close-box{
         display: block;
         margin: 0px 0px 10px auto;
         cursor: pointer;
+        transition: transform .4s ease-in-out;
+        &:hover {
+            transform: rotate(180deg);
+        }
     }
     .attention{
         height: 100px;
@@ -122,6 +133,15 @@
         width: 100%;
         padding: 5px 5px;
         margin-bottom: 15px;
+        outline: 0;
+        border: 1.5px solid #C8C8C8;
+
+        &:hover{
+            border-color: #DB3C3ADD;
+        }
+        &:focus{
+            border-color: #DB3C3ADD;
+        }
     }
 
     button{

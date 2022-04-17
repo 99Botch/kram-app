@@ -1,7 +1,7 @@
 <template>
 
     <Feedback v-if="saved"/>
-    <Navigation @clicked="switchPage" :picUrl="this.pic_url" @keyup="query" />
+    <Navigation @clicked="switchPage" :picUrl="this.pic_url" :search='this.search' @keyup="query" />
     <Hamburger v-if="menu" @clicked="switchPageMobile"/>
     
     <div class="ham-btn" @click="menu = !menu" >
@@ -59,6 +59,7 @@
                 decks: [],
                 repository: [],
                 cards: [],
+                search: false
             }
         },
 
@@ -109,6 +110,16 @@
                 localStorage.setItem('page', _event);
                 this.$store.dispatch('page', _event);
                 this.mountPage = _event;
+                
+                let counter = 1;
+                this.search = true;
+                const timer = setInterval(() => {
+                    counter--;
+                    if (counter === 0) {
+                        clearInterval(timer);
+                        this.search = false;
+                    }
+                }, 1000);
             },
 
             // SWITCH PAGE MOBILE

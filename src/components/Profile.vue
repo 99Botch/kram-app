@@ -1,6 +1,6 @@
 <template>
 
-    <Deletion v-if="deleteBox" :username="this.user.username" @clicked="deletion"/>
+    <Deletion v-if="deleteBox" :username="this.user.username" @clicked="deletion" />
 
     <Feedback v-if="saved"/>
 
@@ -10,7 +10,8 @@
             <h5>My profile</h5>
         </div>
 
-        <div class="profile-pic">
+
+        <div class="profile-pic ">
             <div class="content-overlay" @click="inputPic">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z"  fill="currentColor" />
@@ -25,52 +26,68 @@
 
         </div>
 
-    </div>
+        <div class="profile-forms">
+            <div class="forms">
+                <p class="sub-header">Account information</p>
 
-    <div>
+                <form class="profile-upd">
+                    <div class="ipt-item">
+                        <label>Username</label>
+                        <el-input type="text" id="username" name="username" v-model="user.username" required @focus="btnSub" class="profileSubmission"/>
+                    </div>
+                    
+                    <div class="ipt-item">
+                        <label>Mail adress</label>
+                        <el-input type="text" id="email" name="email" v-model="user.email" required @focus="btnSub" class="profileSubmission"/>
+                    </div>
+                    
+                    <p class="error">{{ this.profileError }}</p>
+                </form>
+                
+            </div>
 
-        <div class="forms">
-            <p class="sub-header">Profile</p>
+            <div class="forms">
+                <p class="sub-header">Change password</p>
 
-            <form class="profile-upd">
-                <input type="text" id="username" name="username" v-model="user.username" required @focus="btnSub" class="profileSubmission"/>
-                <input type="text" id="email" name="email" v-model="user.email" required @focus="btnSub" class="profileSubmission"/>
-            </form>
-            
-            <div>
-                <p class="error">{{ this.profileError }}</p>
-                <button disabled class="submit submit-profile" type="submit" @click="submitProfile" id="submitProfile" >Update</button>
+                <form class="password-upd">
+                    <div class="ipt-item">
+                        <label>New password</label>
+                        <el-input type="password" id="username" name="pass" v-model="user.new_password" required @focus="btnSub" @blur="checkPass" class="passSubmission"/>
+                    </div>
+                    
+                    <div class="ipt-item">
+                        <label>Confirm password</label>
+                        <el-input type="password" id="email" name="re" v-model="user.repeat_password" required @focus="btnSub" @blur="checkRePass" class="passSubmission"/>
+                    </div>
+
+                    <div class="ipt-item">
+                        <label>Old password</label>
+                        <el-input type="password" id="email" name="re" v-model="user.old_password" required @focus="btnSub" class="passSubmission"/>
+                    </div>
+                    
+                    <p class="error">{{ this.passError }}</p>
+                </form>
+                
+
+            </div>
+
+            <div class="forms warning-del">
+                <p class="sub-header" style="color: #DB3C3ADD">Delete Profile</p>
+
+                <button @click="deleteBox = true"> 
+                    <svg  width="24" height="24" viewBox="0 0 24 24" fill="none"  xmlns="http://www.w3.org/2000/svg" >
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
+                                fill="currentColor" />
+                            <path d="M9 9H11V17H9V9Z" fill="currentColor" />
+                            <path d="M13 9H15V17H13V9Z" fill="currentColor" />
+                    </svg>
+                    Delete 
+                </button>
             </div>
         </div>
 
-        <div class="forms">
-            <p class="sub-header">Password</p>
 
-            <form class="password-upd">
-                <input type="password" id="username" name="pass" v-model="user.new_password" required @focus="btnSub" @blur="checkPass" placeholder="New password" class="passSubmission"/>
-                <input type="password" id="email" name="re" v-model="user.repeat_password" required @focus="btnSub" @blur="checkRePass" placeholder="Repeat password" class="passSubmission"/>
-                <input type="password" id="email" name="re" v-model="user.old_password" required @focus="btnSub" placeholder="Old password" class="passSubmission"/>
-            </form>
-            
-            <div>
-                <p class="error">{{ this.passError }}</p>
-                <button disabled class="submit submit-profile" type="submit" @click="submitPass" id="submitPass" >Update</button>
-            </div>
-        </div>
-
-        <div class="forms warning-del">
-            <p class="sub-header" style="color: #DB3C3ADD">Delete Profile</p>
-            <p>Be careful. By deleting your profile, you risk of loosing all of your infromation !</p>
-            <button @click="deleteBox = true"> 
-                <svg  width="24" height="24" viewBox="0 0 24 24" fill="none"  xmlns="http://www.w3.org/2000/svg" >
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
-                            fill="currentColor" />
-                        <path d="M9 9H11V17H9V9Z" fill="currentColor" />
-                        <path d="M13 9H15V17H13V9Z" fill="currentColor" />
-                </svg>
-                Delete 
-            </button>
-        </div>
+                <!--<button disabled class="" type="submit" @click="submitPass" id="submitPass" >Update</button>-->
 
     </div>
 </template>
@@ -94,8 +111,8 @@
                 loading: true,
                 id: localStorage.getItem("_id"),
                 user: [],
-                profileError: "",
-                passError: "",
+                profileError: "Error",
+                passError: "Error",
                 deleteBox: false,
                 saved: false,
                 errors: [],
@@ -228,6 +245,7 @@
 
             deletion(event){
                 if (!event) {
+                    console.log(true)
                     this.deleteBox = false
                 } else {
                     axios.delete(`${ URI }/users/${ this.id }`, {
@@ -297,7 +315,7 @@
             },
 
             checkRePass(){
-                (this.user.new_password !== this.user.repeat_password) ? this.passError = "Make sure both passwords match!" : this.passError = '' ;
+                (this.user.new_password !== this.user.repeat_password) ? this.passError = "Both passwords must match!" : this.passError = '' ;
             },
 
             submitPass(){
@@ -391,52 +409,56 @@
             border-radius: 50%;
             border: 1px solid #2223;
             cursor: pointer;
+            object-fit: cover;
         }
-    }
-
-    .sub-header{
-        padding: 30px 0px 20px 0px;
     }
 
     .forms{
-        padding: 10px 15px;
+        padding-top: 25px;
     }
 
-    form{
-        
-        input{
-            width: 100%;
-            border-width: 0px 0px 1px 0px;
-            border-bottom-color: #2222;
-            outline: 0;
-            font-size: 16px;
-            padding: 5px 0px;
-            margin-bottom: 20px;
+    .profile-forms{
+        padding: 0 15px;
+    }
 
-        }
-
-        & :last-child{
-            margin-bottom: 25px;
-        }
-
-        input:focus{
-            border-bottom: 1px solid #222F;
-        }
+    .sub-header{
+        padding-bottom: 15px;
     }
     
+    .ipt-item{
+        display: flex;
+        align-items: center;
+        padding-bottom: 15px;
+
+        label{
+            width: 16ch;
+            padding-right: 2ch;
+            font-size: 14px;
+            color: #8a8d90;
+        }
+
+        @media (max-width: 600px) {
+            label{
+                font-size: 14px;
+                width: 15ch;
+                padding-right: 2ch;
+            }
+        }
+    }
+
+    .profileSubmission, .passSubmission{
+        max-width: 350px;
+    }
+
     .error{
         color: #DB3C3A;
-        height: 24px;
         font-size: 14px;
         text-transform: capitalize;
+        height: 16px;
     }
 
     .warning-del{
         & :nth-child(2){
-            font-size: 14px;
-            padding-bottom: 35px;
-        }
-        & :nth-child(3){
             color: white;
             background-color: #DB3C3ADD;
             border: 0px;
@@ -455,48 +477,6 @@
 
             &:hover{
                 background-color: #DB3C3A;
-            }
-        }
-    }
-
-    .submit-profile{
-        border-width: 0px;
-        background-color: #0079C2DD;
-        color: #FFF;
-        font-size: 16px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-
-        &:disabled{
-            background-color: transparent;
-            cursor: auto;
-        }
-    }
-
-    @media (max-width: 480px) {
-
-    }
-
-    @media (max-width: 1024px) {
-        .hld-profile{
-            margin: 0px 10px;
-        }
-        .forms form{
-            display: flex;
-            flex-direction: column;
-            input{
-                width: 300px;
-            }
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .forms form{
-            display: flex;
-            flex-direction: column;
-            input{
-                width: 300px;
             }
         }
     }
