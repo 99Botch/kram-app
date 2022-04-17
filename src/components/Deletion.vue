@@ -17,13 +17,16 @@
                         fill="#DB3C3ADD"/>
                 </svg>
 
-                <h5>Hold on buddy !</h5>
-                <span></span>
-                <p>Hey! We are truly sorry to see you go. </p>
-                <p>Type in you're username to confirm your profile deletion.</p>
+                <span class="hr-line"></span>
+
+                <h5 style="text-align: center;">Hold on buddy !</h5>
+                <div class="warn-msg">
+                    <p>Hey! We are truly sorry to see you go. Keep in mind that you will loose all of your data.
+                    <span>Type your username to confirm deletion:</span></p>
+                </div>
             </div>
 
-            <div>
+            <div class="form-delete-profile">
                 <input type="text" id="confirmUsername" @keyup="confirmation"/>
                 <button id="prDelete" disabled @click="$emit('clicked', true)">Delete</button>
             </div>
@@ -75,24 +78,23 @@
         align-items: center;
     }
     .delete-box{
-        width: 400px;
+        max-width: 400px;
         border-radius: 5px;
         border: 1px solid #DDD7;
         z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 25px 25px 50px 25px;
+        padding: 25px 50px 50px 50px;
         background-color: white;
 
         & div:nth-child(1){
             width: 50px;
         }
         & div:nth-child(2){
-            width: 70%;
+            width: 100%;
         }
         & div:nth-child(3){
-            width: 250px;;
         }
     }
     .close-box{
@@ -108,27 +110,33 @@
         height: 100px;
         width: 100px;
         display: block;
-        margin: 0px auto 25px auto;
+        margin: 0px auto 10px auto;
     }
     h5{
         color: #DB3C3A;
-        text-align: center;
         padding-bottom: 10px;
     }
-    span{
+    .hr-line{
         height: 2px;
         display: block;
         background-color: #DB3C3ADD;
         width: 50px;
         margin: 0px auto 15px auto;
     }
-    p{
-        font-size: 14px;
-        text-align: center;
-        line-height: 20px;
-        color: #222B; 
-        padding-bottom: 25px;
+
+    .warn-msg{
+        padding: 15px 0 25px 0;
+        p{
+            font-size: 14px;
+            line-height: 20px;
+            color: #222B; 
+        }
+
+        span{
+            font-weight: 600;
+        }
     }
+
     input{
         width: 100%;
         padding: 5px 5px;
@@ -142,6 +150,11 @@
         &:focus{
             border-color: #DB3C3ADD;
         }
+    }
+    
+
+    .form-delete-profile{
+        width: 100%;
     }
 
     button{
@@ -161,7 +174,7 @@
         }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 430px) {
         .delete-box{
             width: 100%;
             height: 100%;

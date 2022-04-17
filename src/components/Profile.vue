@@ -10,8 +10,7 @@
             <h5>My profile</h5>
         </div>
 
-
-        <div class="profile-pic ">
+        <div class="profile-pic " title="Edit profile picture">
             <div class="content-overlay" @click="inputPic">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z"  fill="currentColor" />
@@ -32,13 +31,13 @@
 
                 <form class="profile-upd">
                     <div class="ipt-item">
-                        <label>Username</label>
-                        <el-input type="text" id="username" name="username" v-model="user.username" required @focus="btnSub" class="profileSubmission"/>
+                        <label for="username">Username</label>
+                        <el-input type="text" id="username" name="username" v-model="user.username" required class="profileSubmission"/>
                     </div>
                     
                     <div class="ipt-item">
-                        <label>Mail adress</label>
-                        <el-input type="text" id="email" name="email" v-model="user.email" required @focus="btnSub" class="profileSubmission"/>
+                        <label for="email">Mail adress</label>
+                        <el-input type="text" id="email" name="email" v-model="user.email" required class="profileSubmission"/>
                     </div>
                     
                     <p class="error">{{ this.profileError }}</p>
@@ -51,18 +50,18 @@
 
                 <form class="password-upd">
                     <div class="ipt-item">
-                        <label>New password</label>
-                        <el-input type="password" id="username" name="pass" v-model="user.new_password" required @focus="btnSub" @blur="checkPass" class="passSubmission"/>
+                        <label for="new_password">New password</label>
+                        <el-input type="password" id="new_password" name="pass" v-model="user.new_password" required @blur="checkPass" class="passSubmission"/>
                     </div>
                     
-                    <div class="ipt-item">
-                        <label>Confirm password</label>
-                        <el-input type="password" id="email" name="re" v-model="user.repeat_password" required @focus="btnSub" @blur="checkRePass" class="passSubmission"/>
+                    <div class="ipt-item" >
+                        <label for="confirm_password">Confirm password</label>
+                        <el-input type="password" id="confirm_password" name="re" v-model="user.repeat_password" required @blur="checkRePass" class="passSubmission"/>
                     </div>
 
-                    <div class="ipt-item">
-                        <label>Old password</label>
-                        <el-input type="password" id="email" name="re" v-model="user.old_password" required @focus="btnSub" class="passSubmission"/>
+                    <div class="ipt-item" for="username">
+                        <label for="old_password">Old password</label>
+                        <el-input type="password" id="old_password" name="re" v-model="user.old_password" required class="passSubmission"/>
                     </div>
                     
                     <p class="error">{{ this.passError }}</p>
@@ -71,23 +70,11 @@
 
             </div>
 
-            <div class="forms warning-del">
-                <p class="sub-header" style="color: #DB3C3ADD">Delete Profile</p>
-
-                <button @click="deleteBox = true"> 
-                    <svg  width="24" height="24" viewBox="0 0 24 24" fill="none"  xmlns="http://www.w3.org/2000/svg" >
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z"
-                                fill="currentColor" />
-                            <path d="M9 9H11V17H9V9Z" fill="currentColor" />
-                            <path d="M13 9H15V17H13V9Z" fill="currentColor" />
-                    </svg>
-                    Delete 
-                </button>
+            <div class="forms forms-sub-change">
+                <el-button type="primary" class="submit-change" @click="submitProfile">Save Changes</el-button>
+                <el-button class="warning-del" @click="deleteBox = true">Delete my profile</el-button>
             </div>
         </div>
-
-
-                <!--<button disabled class="" type="submit" @click="submitPass" id="submitPass" >Update</button>-->
 
     </div>
 </template>
@@ -111,8 +98,8 @@
                 loading: true,
                 id: localStorage.getItem("_id"),
                 user: [],
-                profileError: "Error",
-                passError: "Error",
+                profileError: "",
+                passError: "",
                 deleteBox: false,
                 saved: false,
                 errors: [],
@@ -229,20 +216,6 @@
                 })
             },
 
-            // SUBMIT FORM PROFILE UPDATE VALIDATION RULES
-            btnSub(){
-                if(event.target.classList.value == 'profileSubmission') {
-                    document.getElementById("submitProfile").disabled = false;
-                    document.getElementById("submitPass").disabled = true;
-                    this.passError= '';
-                }
-                if(event.target.classList.value == 'passSubmission'){
-                    document.getElementById("submitPass").disabled = false;
-                    document.getElementById("submitProfile").disabled = true;
-                    this.profileError= '';
-                }
-            },
-
             deletion(event){
                 if (!event) {
                     console.log(true)
@@ -289,7 +262,6 @@
                         })
                         .then((res) => {
                             if(res.status === 200) {
-                                document.getElementById("submitProfile").disabled = true;
                                 this.profileError = '';
                                 let counter = 5;
 
@@ -323,7 +295,6 @@
                     new_password: this.user.new_password,
                     repeat_password: this.user.repeat_password,
                     old_password: this.user.old_password,
-                    current_password: this.user.current_password
                 });
 
                 if(this.user.username.length == 0 || this.user.email.length == 0) this.profileError = "Username and email can't be empty";                
@@ -336,7 +307,6 @@
                         })
                         .then((res) => {
                             if(res.status === 200) {
-                                document.getElementById("submitProfile").disabled = true;
                                 [this.profileError, this.user.new_password, this.user.old_password, this.user.repeat_password] = '';
                                 let counter = 5;
 
@@ -362,7 +332,7 @@
     
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 
     .hld-profile{
         h5{
@@ -424,7 +394,24 @@
     .sub-header{
         padding-bottom: 15px;
     }
-    
+
+    .el-input__inner{
+            // border-radius: 0px;
+            box-shadow: none !important;
+            border: 1.5px solid #DDD;
+                
+             &:hover{
+                box-shadow: none !important;
+            }
+
+            &:focus{
+                box-shadow: none !important;
+                border-color: #0079c2CC;
+            }
+    }
+
+
+
     .ipt-item{
         display: flex;
         align-items: center;
@@ -449,35 +436,38 @@
     .profileSubmission, .passSubmission{
         max-width: 350px;
     }
-
+    .forms-sub-change{
+        margin-bottom: 30px;
+    }
     .error{
         color: #DB3C3A;
         font-size: 14px;
-        text-transform: capitalize;
         height: 16px;
     }
 
+    .warning-del, .submit-change{
+        text-transform: uppercase;
+        font-size: 14px;
+        font-family: Arial;
+        font-weight: 600;
+    }
+
+    .submit-change{
+        background-color: #0079C2CC;
+
+        &:hover{
+            opacity: .7;
+        }
+    }
+
     .warning-del{
-        & :nth-child(2){
-            color: white;
-            background-color: #DB3C3ADD;
-            border: 0px;
-            display: flex;
-            align-items: center;
-            padding: 8px 15px;
-            border-radius: 7px;
-            cursor: pointer;
+        color: #DB3C3ACC;
+        border-color: #DB3C3ACC;
+        background-color: #DB3C3A11;
 
-            svg{
-                color: white;
-                height: 18px;
-                width: 18px;
-                margin-right: 7px;
-            }
-
-            &:hover{
-                background-color: #DB3C3A;
-            }
+        &:hover{
+            color: #DB3C3A;
+            border-color: #DB3C3A;
         }
     }
 

@@ -135,7 +135,6 @@
         }
 
         #logo{
-            border-right: 1px solid #DDD;
             justify-content: center;
         }
     }
