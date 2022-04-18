@@ -7,6 +7,10 @@
             <p :class="this.timer == '00:00' ? ' timer-end' : '' "> {{ this.timer }} </p>
         </div>
 
+        <button class="undo-btn" title="undo review" v-if="viewed_indexes.length > 0" @click="reverseReview">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.33929 4.46777H7.33929V7.02487C8.52931 6.08978 10.0299 5.53207 11.6607 5.53207C15.5267 5.53207 18.6607 8.66608 18.6607 12.5321C18.6607 16.3981 15.5267 19.5321 11.6607 19.5321C9.51025 19.5321 7.58625 18.5623 6.30219 17.0363L7.92151 15.8515C8.83741 16.8825 10.1732 17.5321 11.6607 17.5321C14.4222 17.5321 16.6607 15.2935 16.6607 12.5321C16.6607 9.77065 14.4222 7.53207 11.6607 7.53207C10.5739 7.53207 9.56805 7.87884 8.74779 8.46777L11.3393 8.46777V10.4678H5.33929V4.46777Z" /></svg>
+        </button>
+
         <div class="card">
 
             <div class="card-image" >
@@ -37,6 +41,13 @@
                                 </svg>
                             </div>
                             <button id="fail" @click="cardReview">Fail (60 sec)</button>
+                        </div>
+
+                        <div class="result" :class="!reveal ? ' result-undo' : ' result-undo-h' ">
+                            <div class="arrow" >
+                                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.0001 3.67157L13.0001 3.67157L13.0001 16.4999L16.2426 13.2574L17.6568 14.6716L12 20.3284L6.34314 14.6716L7.75735 13.2574L11.0001 16.5001L11.0001 3.67157Z" /></svg>
+                            </div>
+                            <button @keyup.arrow-down="cardReview">Undo</button>
                         </div>
 
                         <div class="result result-pass" :class="!reveal ? 'hide-btn' : 'highlight-state-btn' ">
@@ -79,6 +90,8 @@
                 timeCount: 60,
                 learning_cue:  [60, 15, 1, 2, 7, 14, 30],
                 nextInterval: 0,
+                viewed_indexes: [],
+                window_width: window.innerWidth
             }
         },
 
@@ -96,6 +109,10 @@
         },
 
         methods: {
+            reverseReview(){
+                console.log(true)
+            },
+
             clock(){
                 const timer = setInterval(() => {
                     this.timeCount--;
@@ -107,7 +124,6 @@
             }, 
 
             predictInterval(){
-                    // console.log(this.cards[this.card_index].interval)
                     let current_interval = this.learning_cue.find(elem => elem == this.cards[this.card_index].interval)
                     if(!current_interval || this.cards[this.card_index].interval == 60){
                         this.nextInterval = '15 min';
@@ -168,15 +184,14 @@
 
             // ------------------------------ REVIEW SESSION
             cardReview(){
-                const WIDTH = window.innerWidth;
 
-                if(!this.reveal && event.key == " " && WIDTH >= 1200 || !this.reveal && event.target.id == "spacebar" && WIDTH <= 1200 ) {
+                if(!this.reveal && event.key == " " && this.window_width >= 1200 || !this.reveal && event.target.id == "spacebar" && this.window_width <= 1200 ) {
                     this.reveal = !this.reveal;
                 } 
-                else if (this.reveal && event.key == "ArrowRight" && WIDTH >= 1200 || 
-                    this.reveal && event.key == "ArrowLeft" && WIDTH >= 1200 ||
-                    this.reveal && event.target.id == "pass" && WIDTH <= 1200 ||
-                    this.reveal && event.target.id == "fail" && WIDTH <= 1200) {
+                else if (this.reveal && event.key == "ArrowRight" && this.window_width >= 1200 || 
+                    this.reveal && event.key == "ArrowLeft" && this.window_width >= 1200 ||
+                    this.reveal && event.target.id == "pass" && this.window_width <= 1200 ||
+                    this.reveal && event.target.id == "fail" && this.window_width <= 1200) {
                         this.updateCard();
                         if (this.timer == '00:00') this.clock()
                         this.timeCount = 60;
@@ -186,7 +201,8 @@
             },
 
             updateCard(){
-                this.cards[this.card_index] = spacedRepetition(this.cards[this.card_index], event.key, event.target.id)
+                this.cards[this.card_index] = spacedRepetition(this.cards[this.card_index], event.key, event.target.id);
+                this.viewed_indexes.push(this.card_index)
                 
                 if(this.cardIds.length == 0 && this.cards[this.card_index].interval == 15  || this.cardIds.length == 0 && this.cards[this.card_index].interval == 60 ){
                     this.reveal = !this.reveal;
@@ -288,12 +304,41 @@
             color: #DB3C3A;
         }
     }
+
+    .undo-btn{
+        position: fixed;
+        border-radius: 100%;
+        border: 1px solid #C8C8C8;
+        background-color: transparent;
+        fill: #C8C8C8;
+        right: 0;
+        bottom: 0;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+
+        &:hover, &:active{
+            fill: #8a8d90;
+            border-color: #8a8d90;
+            background-color: #8a8d9011;
+        }
+
+        svg{
+            width: 32px;
+            height: 32px;  
+            padding-bottom: 2px;
+        }
+    }
         
     .card-image{
         margin-top: 20vh;
     }
 
     @media (max-width: 480px) {
+        .undo-btn{
+            margin-bottom: 10vh;
+            margin-right: 20px;
+        }
         .save-and-exit{
             margin: 21px
         }
@@ -306,6 +351,10 @@
     }
 
     @media (min-width: 480px) {
+        .undo-btn{
+            margin-bottom: 10vh;
+            margin-right: 25px;
+        }
         .save-and-exit{
             margin: 25px;
         }
@@ -345,6 +394,10 @@
     }
 
     @media (max-width: 1200px) {
+
+        .result-undo, .result-undo-h{
+            display: none;   
+        }
         .card{
             &-image{
                 
@@ -398,6 +451,9 @@
 
 
     @media (min-width: 1200px) {
+        .undo-btn{
+            display: none;
+        }
 
         .cards{
             display: flex;
@@ -498,6 +554,24 @@
         .highlight-state-border-pass{
             border-color: #37b08f99;
         }
+
+        .result-undo{
+            .arrow{
+                fill: #8885;
+            }
+        }
+
+        .result-undo-h{
+            button{
+                color: #228aca99;
+            }
+            .arrow{
+                border-color: #228aca99 ;
+            }
+            svg{
+                fill: #228aca99;
+            }
+        }
     }
 
     @media (max-height: 560px) {
@@ -507,7 +581,5 @@
             }
         }
     }
-
-
 
 </style>
