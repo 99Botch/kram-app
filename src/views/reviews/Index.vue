@@ -1,13 +1,13 @@
 <template>
-    <div class="cards" @keydown="cardReview()" tabindex="0">
+    <div class="cards" @keydown="cardReview()" tabindex="0" id="reviewHolder" v-if="!loading">
 
-        <Progress  @save-and-exit="cardUpdate"/>
+        <el-link type="info" class="save-and-exit" @click="cardUpdate">save & exit review session</el-link>
 
-        <div class="timer">
+        <div class="timer" v-if="!reveal">
             <p :class="this.timer == '00:00' ? ' timer-end' : '' "> {{ this.timer }} </p>
         </div>
 
-        <div class="card" v-if="!loading">
+        <div class="card">
 
             <div class="card-image" >
                 <img v-if="cards[card_index].img_url" :src="cards[card_index].img_url" class="image-fit"/>
@@ -25,33 +25,27 @@
             <div class="card-btn">
                 <div class="card-btn-holder">
 
-                        <div class="spacebar" :class="reveal ? 'hide-btn' : '' ">
+                        <div class="spacebar" :class="reveal ? 'hide-btn' : 'highlight-state' ">
                             <p>spacebar</p>
                             <button id="spacebar" @click="cardReview">Show answer</button>
                         </div>
 
-                        <div class="result result-fail" :class="!reveal ? 'hide-btn' : '' ">
-                            <div class="arrow">
-                                <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M20.3284 11.0001V13.0001L7.50011 13.0001L10.7426 16.2426L9.32842 17.6568L3.67157 12L9.32842 6.34314L10.7426 7.75735L7.49988 11.0001L20.3284 11.0001Z"
-                                        fill="#8885"
-                                    />
+                        <div class="result result-fail" :class="!reveal ? 'hide-btn' : 'highlight-state-btn' ">
+                            <div class="arrow" :class="reveal ? 'highlight-state-border-fail' : '' ">
+                                <svg width="30px" height="30px"  xmlns="http://www.w3.org/2000/svg" :class="!reveal ? 'svg-fail' : 'svg-fail-h' ">
+                                    <path d="M20.3284 11.0001V13.0001L7.50011 13.0001L10.7426 16.2426L9.32842 17.6568L3.67157 12L9.32842 6.34314L10.7426 7.75735L7.49988 11.0001L20.3284 11.0001Z" />
                                 </svg>
                             </div>
-                            <button id="fail" @click="cardReview">Fail</button>
+                            <button id="fail" @click="cardReview">Fail (60 sec)</button>
                         </div>
 
-                        <div class="result result-pass" :class="!reveal ? 'hide-btn' : '' ">
-                            <div class="arrow">
-                                <svg width="30px" height="30px"  fill="#8885" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M15.0378 6.34317L13.6269 7.76069L16.8972 11.0157L3.29211 11.0293L3.29413 13.0293L16.8619 13.0157L13.6467 16.2459L15.0643 17.6568L20.7079 11.9868L15.0378 6.34317Z"
-                                        fill="#8885"
-                                    />
+                        <div class="result result-pass" :class="!reveal ? 'hide-btn' : 'highlight-state-btn' ">
+                            <div class="arrow" :class="reveal ? 'highlight-state-border-pass' : '' ">
+                                <svg width="30px" height="30px"  xmlns="http://www.w3.org/2000/svg" :class="!reveal ? 'svg-pass' : 'svg-pass-h' ">
+                                    <path d="M15.0378 6.34317L13.6269 7.76069L16.8972 11.0157L3.29211 11.0293L3.29413 13.0293L16.8619 13.0157L13.6467 16.2459L15.0643 17.6568L20.7079 11.9868L15.0378 6.34317Z" />
                                 </svg>
                             </div>
-                            <button id="pass" @click="cardReview">Pass</button>
+                            <button id="pass" @click="cardReview">Pass ({{ this.nextInterval }})</button>
                         </div>
 
                 </div>
@@ -65,7 +59,6 @@
 <script>
     import { URI, axios } from '@/plugins/index.js';
     import { spacedRepetition } from '@/plugins/spaced_repetition.js';
-    import Progress from '@/components/Progress.vue';
 
     export default {
         name: 'Review',
@@ -84,22 +77,16 @@
                 session_length: null,
                 timer: '01:00',
                 timeCount: 60,
+                learning_cue:  [60, 15, 1, 2, 7, 14, 30],
+                nextInterval: 0,
             }
         },
 
-        components: {
-            Progress,
-        },
+        components: {},
 
         mounted () {
             this.getDeckCards();
-            const timer = setInterval(() => {
-                this.timeCount--;
-                (this.timeCount > 9) ? this.timer = `00:${this.timeCount}` : this.timer = `00:0${this.timeCount}` ;
-                if (this.timeCount === 0) {
-                    clearInterval(timer);
-                }
-            }, 1000);
+            this.clock();
         },
 
         computed: {
@@ -109,6 +96,31 @@
         },
 
         methods: {
+            clock(){
+                const timer = setInterval(() => {
+                    this.timeCount--;
+                    (this.timeCount > 9) ? this.timer = `00:${this.timeCount}` : this.timer = `00:0${this.timeCount}` ;
+                    if (this.timeCount === 0) {
+                        clearInterval(timer);
+                    }
+                }, 1000);
+            }, 
+
+            predictInterval(){
+                    // console.log(this.cards[this.card_index].interval)
+                    let current_interval = this.learning_cue.find(elem => elem == this.cards[this.card_index].interval)
+                    if(!current_interval || this.cards[this.card_index].interval == 60){
+                        this.nextInterval = '15 min';
+                    } 
+                    else if(this.cards[this.card_index].interval == 30){
+                        this.nextInterval = '30d';
+                    } 
+                    else {
+                        let index = this.learning_cue[this.learning_cue.indexOf(current_interval) + 1];
+                        this.nextInterval = index + 'd';
+                    }                    
+            },
+
             // ------------------------------ GET DECK DATA
             async getDeckCards(){
                 if (!localStorage.getItem('token')) {
@@ -123,7 +135,6 @@
                     })
                     .then(async (res) => { 
                         this.cards = res.data.userDeck.cards; 
-                        this.loading = false;
                         this.session_length = res.data.userDeck.cards.length -1;
                         for(let i = 0; i <= this.session_length ; i++){
                             this.cardIds.push(i)
@@ -135,16 +146,17 @@
                             headers: { 'Authorization': `Bearer ${ localStorage.getItem('token') }`}
                             })
                             .then(async (res) => { 
-                                console.log(res.data)
-                                this.user_cards = res.data; 
+                                this.user_cards = res.data;
+                                this.predictInterval ();
+                                this.loading = false;
                             })
                             .catch(err => { console.log(err) })
                     })
                     .catch(err => { 
                         if (err) this.$router.push({ path : `/kram` })
-                        // console.log(err) 
                     })
                 }
+                document.getElementById('reviewHolder').focus();
             },
             
             shuffleArray(_array) {
@@ -166,7 +178,11 @@
                     this.reveal && event.target.id == "pass" && WIDTH <= 1200 ||
                     this.reveal && event.target.id == "fail" && WIDTH <= 1200) {
                         this.updateCard();
-                }
+                        if (this.timer == '00:00') this.clock()
+                        this.timeCount = 60;
+                        this.timer = '01:00';
+                    }
+                this.predictInterval();
             },
 
             updateCard(){
@@ -174,8 +190,6 @@
                 
                 if(this.cardIds.length == 0 && this.cards[this.card_index].interval == 15  || this.cardIds.length == 0 && this.cards[this.card_index].interval == 60 ){
                     this.reveal = !this.reveal;
-                    this.timeCount = 60;
-                    this.timer = '01:00';
                 }
 
                 else if(this.cardIds.length > 0){
@@ -183,17 +197,15 @@
                         this.cardIds.push(this.card_index);
                         this.card_index =  this.cardIds.shift(); 
                     }
-                    else this.card_index =  this.cardIds.shift();
 
-                    this.reveal = !this.reveal;
-                    this.timeCount = 60;
-                    this.timer = '01:00';
-                }   
+                    else this.card_index =  this.cardIds.shift();
+                        this.reveal = !this.reveal;
+                }
 
                 else if(this.cardIds.length == 0 && this.reveal == true){
-                    console.log()
                     this.cardUpdate();
                 }
+                
             },
 
             // ------------------------------ SEND JSON
@@ -253,12 +265,20 @@
     .image-fit{
         width: 350px;
         height: 300px;
-        object-fit: cover;
+        object-fit: contain;
+        padding: 0 15px;
     }
     .svg-fit{
         width: 350px;
         height: 300px;
         object-fit: contain;
+        opacity: .45;
+        padding: 0 15px;
+    }
+
+    .save-and-exit{
+        position: absolute;
+        left: 0;
     }
 
     .timer{
@@ -268,8 +288,15 @@
             color: #DB3C3A;
         }
     }
+        
+    .card-image{
+        margin-top: 20vh;
+    }
 
     @media (max-width: 480px) {
+        .save-and-exit{
+            margin: 21px
+        }
         .timer{
             padding: 20px;
             p{
@@ -279,6 +306,9 @@
     }
 
     @media (min-width: 480px) {
+        .save-and-exit{
+            margin: 25px;
+        }
         .timer{
             padding: 25px;
             p{
@@ -317,14 +347,10 @@
     @media (max-width: 1200px) {
         .card{
             &-image{
-                margin-top: 65px;
                 
                 & img{
-                    // width: 250px; 
-                    border-radius: 4px;        
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
+                    border-radius: 4px;
+                    object-fit: contain;
                 }
             }
             &-btn{
@@ -364,6 +390,9 @@
             .spacebar p, .arrow, .hide-btn{
                 display: none;
             }
+            .result-pass:active, .result-fail:active, .spacebar:active{
+                opacity: .7;
+            }
         }
     }
 
@@ -375,41 +404,14 @@
             justify-content: center;
         }
 
-        .save-btn{
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            margin: 0px 25px 40px 0px;
-            background-color: #DDD;
-            padding: 10px;
-            border-radius: 100%;
-            width: 53px;
-            height: 53px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.4s;
-            animation: quintic;
-
-            &:hover{  
-                transition: 0.4s;
-                background-color: #222;
-            }
-        }
-
         .card{
             justify-content: center;
 
             &-image{
-                margin-top: 100px;
                 
                 & img{
-                    // width: 250px; 
-                    border-radius: 4px;        
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
+                    border-radius: 4px;
+                    object-fit: contain
                 }
             }
 
@@ -434,8 +436,9 @@
 
                 .spacebar, .result{
                     display: flex;
-                }
+                }                
             }
+
         }
 
         .spacebar p{
@@ -459,16 +462,48 @@
             padding: 1px;
             border-radius: 4px;
         }
+
+        .highlight-state{
+            p{
+                color: #228aca99;
+                border-color: #228aca99;
+            }
+            button{
+                color: #228aca99;
+            }
+        }
+
+        .highlight-state-btn{
+            & #fail{
+                color: #dd494799;
+            }
+            & #pass{
+                color: #37b08f99;
+            }
+        }
+
+// :class="reveal ? 'svg-pass' : 'svg-pass-h' "
+        .svg-pass, .svg-fail{
+            fill: #d7d7d7;
+        }
+        .svg-fail-h{
+            fill: #dd494799;
+        }
+        .highlight-state-border-fail{
+            border-color: #dd494799;
+        }
+        .svg-pass-h{
+            fill: #37b08f99;
+        }
+        .highlight-state-border-pass{
+            border-color: #37b08f99;
+        }
     }
 
     @media (max-height: 560px) {
         .card{
             &-image{
                 margin-top: 65px;
-                
-                & img{
-                    // width: 150px; 
-                }
             }
         }
     }

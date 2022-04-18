@@ -127,6 +127,10 @@
         align-items: center;
         border-bottom: 1px solid #DDDDDD;
         box-shadow: 0px 1.1px 1.4px -16px rgba(0, 0, 0, 0.028),  0px 3.8px 4.7px -16px rgba(0, 0, 0, 0.042), 0px 17px 21px -16px rgba(0, 0, 0, 0.07);
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 199;
 
         div{
             height: 100%;
