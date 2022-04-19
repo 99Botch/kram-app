@@ -117,7 +117,7 @@
                     <el-card class="common-layout box-card" shadow="always">
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 
@@ -209,7 +209,7 @@
                     >
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 
@@ -298,7 +298,7 @@
                     >
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 
@@ -390,7 +390,7 @@
                     >
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 
@@ -479,7 +479,7 @@
                     >
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 
@@ -568,7 +568,7 @@
                     >
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{ deck.category }}</p>
+                                <p class="deck-category">{{ deck.category }}</p>
                                 <h4>{{ deck.name }}</h4>
                             </div>
 

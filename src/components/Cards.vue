@@ -6,6 +6,7 @@
                 Cards repository
             </h4>
 
+            <!-- HEADER -->
             <div class="deck-btns">
                 <span class="form-pop-up">
                     <el-button
@@ -37,60 +38,200 @@
             </div>
         </div>
 
-        <div>
-            <table>
-                <tr>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>Image</th>
-                    <th>Fail Counter</th>
-                    <th>Burry</th>
-                    <th>Add/remove</th>
-                </tr>
-
-                <tr v-for="card of cards" :key="card.id" >
-                    <td>{{ card.question }}</td>
-                    <td>{{ card.answer }}</td>
-                    <td>
-                        <img
-                            v-if="card.img_url"
-                            :src="card.img_url"
-                            class="tab-img"
-                        />
-                        <p v-else>No image</p>
-                    </td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>
-                        <button @click="boxReveal(card._id)" :id="card._id">
-                            Collapse
-                        </button>
-
-                        <div
-                            class="collapse-belong"
-                            v-if="revealed == card._id"
-                        >
-                            <span
-                                v-for="(deck, index) of decks"
-                                :key="deck.deck_id"
-                            >
-                                <input
-                                    type="checkbox"
-                                    :id="deck.deck_id"
-                                    @click="cardToDeck(card._id, index)"
-                                    :checked="
-                                        deck.card_ids.find(
-                                            (elem) => elem == card._id
-                                        )
-                                    "
-                                />
-                                {{ deck.name }}
-                            </span>
+        <!-- CONTENT -->
+        <!-- MOBILE -->
+        <div class="decks-repo" v-if="windowWidth < 500">
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card class="common-layout box-card" shadow="always">
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
                         </div>
-                    </td>
-                </tr>
-            </table>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
         </div>
+
+        <!-- TABLETS -->
+        <div class="decks-repo" v-if="windowWidth >= 500 && windowWidth < 900">
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        v-if="card.index % 2 == 0"
+                    >
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
+                        </div>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        v-if="card.index % 2 == 1"
+                    >
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
+                        </div>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
+        </div>
+
+        <!-- COMPUTER -->
+        <div class="decks-repo" v-if="windowWidth >= 900">
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        v-if="card.index % 3 == 0"
+                    >
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
+                        </div>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        v-if="card.index % 3 == 1"
+                    >
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
+                        </div>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
+
+            <div>
+                <span v-for="card of cards" :key="card._id">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        v-if="card.index % 3 == 2"
+                    >
+                        <div class="img-card">
+                            <img v-if="card.img_url" :src="card.img_url" />
+                            <img
+                                v-else
+                                src="@/assets/undraw_images_re_0kll.svg"
+                                class="default-img"
+                            />
+                        </div>
+
+                        <p>{{ card.question }}</p>
+                        <p>{{ card.answer }}</p>
+                        <p>fail counter</p>
+                        <p>burry</p>
+                        <div class="repo-card-footer">
+                            <button>Add to a deck</button>
+                        </div>
+                    </el-card>
+                </span>
+            </div>
+        </div>
+
+        <!--
+            <button @click="boxReveal(card._id)" :id="card._id">
+                Collapse
+            </button>
+
+            <div
+                class="collapse-belong"
+                v-if="revealed == card._id"
+            >
+                <span
+                    v-for="(deck, index) of decks"
+                    :key="deck.deck_id"
+                >
+                    <input
+                        type="checkbox"
+                        :id="deck.deck_id"
+                        @click="cardToDeck(card._id, index)"
+                        :checked="
+                            deck.card_ids.find(
+                                (elem) => elem == card._id
+                            )
+                        "
+                    />
+                    {{ deck.name }}
+                </span>
+            </div>
+        -->
     </span>
 </template>
 
@@ -109,6 +250,7 @@ export default {
 
     data() {
         return {
+            cards_initial: [],
             cards: [],
             decks: [],
             id: localStorage.getItem("_id"),
@@ -117,23 +259,47 @@ export default {
             loading: true,
             add_card_form: false,
             revealed: false,
+            windowWidth: 0
         };
     },
 
     mounted() {
         this.getCards();
+        this.infiniteScroll()
     },
-
-    computed: {},
-
+    created() {
+        window.addEventListener("resize", this.myEventHandler);
+        window.addEventListener("scroll", this.infiniteScroll);
+    },
     beforeUpdate() {
         if (this.$props.query.length != 0) this.cards = this.$props.query;
+        this.windowWidth = window.innerWidth;
+    },
+    unmounted() {
+        window.removeEventListener("resize", this.myEventHandler);
+        window.removeEventListener("scroll", this.infiniteScroll);
     },
 
     methods: {
+        myEventHandler() {
+            this.windowWidth = window.innerWidth;
+        },
+
+        infiniteScroll () {
+            window.onscroll = () => {
+                let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight >= document.documentElement.offsetHeight - 300;
+
+                if (bottomOfWindow) {
+                    let cut = JSON.parse(JSON.stringify(this.cards_initial.splice(0, 15)));
+                    cut.forEach(elem => this.cards.push(elem));                    
+                }
+            }
+        },
+
         popForm(event) {
             if (event == "AddCard") this.add_card_form = true;
-            else if (this.add_card_form) this.add_card_form = !this.add_card_form;
+            else if (this.add_card_form)
+                this.add_card_form = !this.add_card_form;
         },
 
         boxReveal(_id) {
@@ -213,7 +379,12 @@ export default {
                 Promise.all([promise1, promise2])
                     .then(async (values) => {
                         // console.log(values);
-                        this.cards = await values[0].data;
+                        this.cards_initial = await values[0].data;
+                        this.cards_initial.forEach(
+                            (elem, i) => (elem.index = i)
+                        );
+                        let cut = this.cards_initial.splice(0, 15);
+                        this.cards = cut;
                         this.decks = await values[1].data;
                         this.loading = false;
                     })
@@ -274,5 +445,14 @@ export default {
     width: 125px;
     height: 125px;
     object-fit: cover;
+}
+
+.img-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.default-img {
+    opacity: 0.5;
 }
 </style>

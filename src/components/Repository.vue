@@ -34,7 +34,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -84,7 +84,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -130,7 +130,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -179,7 +179,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -225,7 +225,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -271,7 +271,7 @@
 
                         <div class="repo-card-header">
                             <div>
-                                <p class="card-category">{{deck.category}}</p>
+                                <p class="deck-category">{{deck.category}}</p>
                                 <h4>{{deck.name}}</h4>
                             </div>
                             
@@ -575,7 +575,7 @@
             flex-direction: column;
             align-items: flex-end;
         }
-        .card-category{
+        .deck-category{
             font-size: 12px;
             color: #8a8d90;
             padding-bottom: 5px;
