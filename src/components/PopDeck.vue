@@ -150,6 +150,7 @@
         display: grid;
         justify-items: center;
         padding: 0px 15px;
+        z-index: 999;
 
         &-holder{
             width: 100%;

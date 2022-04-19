@@ -197,9 +197,9 @@
             transform: rotate(-45deg);
         }
     }
-        main{
-            width: 100%;
-        }
+        // main{
+        //     width: 100%;
+        // }
 
     @media (max-width: 1024px) {
         .ham-btn{

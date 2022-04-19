@@ -1,15 +1,43 @@
 <template>
+    <Feedback v-if="saved" />
     <span v-if="!loading">
+        <div class="my-deck-header">
+            <h4 :class="windowWidth < 400 ? 'size-header' : null">
+                Cards repository
+            </h4>
 
-        <Feedback v-if="saved"/>
+            <div class="deck-btns">
+                <span class="form-pop-up">
+                    <el-button
+                        type="primary"
+                        @click="popForm('AddCard')"
+                        class="add-deck-btn"
+                    >
+                        New card
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                    </el-button>
 
-        <AddCard @clicked="renderCard"/>
+                    <AddCard
+                        @clicked="renderCard"
+                        @close="popForm"
+                        v-if="add_card_form"
+                    />
+                </span>
+            </div>
+        </div>
 
         <div>
-            <div>
-
-            </div>
-            
             <table>
                 <tr>
                     <th>Question</th>
@@ -19,172 +47,232 @@
                     <th>Burry</th>
                     <th>Add/remove</th>
                 </tr>
+
                 <tr v-for="card of cards" :key="card.id" >
                     <td>{{ card.question }}</td>
                     <td>{{ card.answer }}</td>
                     <td>
-                        <img v-if="card.img_url" :src="card.img_url" class="tab-img"/>
-                        <p v-else> No image </p>
+                        <img
+                            v-if="card.img_url"
+                            :src="card.img_url"
+                            class="tab-img"
+                        />
+                        <p v-else>No image</p>
                     </td>
                     <td>X</td>
                     <td>X</td>
                     <td>
-                        <button @click="boxReveal(card._id)" :id="card._id">Collapse</button>
+                        <button @click="boxReveal(card._id)" :id="card._id">
+                            Collapse
+                        </button>
 
-                        <div class="collapse-belong" v-if="revealed == card._id">
-                            <span v-for="(deck, index) of decks" :key="deck.deck_id" >
-                                <input type="checkbox" :id="deck.deck_id" @click="cardToDeck(card._id, index)" 
-                                     :checked="deck.card_ids.find(elem => elem == card._id)"/>
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                        >
+                            <span
+                                v-for="(deck, index) of decks"
+                                :key="deck.deck_id"
+                            >
+                                <input
+                                    type="checkbox"
+                                    :id="deck.deck_id"
+                                    @click="cardToDeck(card._id, index)"
+                                    :checked="
+                                        deck.card_ids.find(
+                                            (elem) => elem == card._id
+                                        )
+                                    "
+                                />
                                 {{ deck.name }}
                             </span>
                         </div>
-
                     </td>
                 </tr>
             </table>
         </div>
-
     </span>
 </template>
 
 <script>
-    import { URI, axios } from '@/plugins/index.js';
-    import AddCard from '@/components/AddCard.vue';
-    import Feedback from '@/components/Feedback.vue';
+import { URI, axios } from "@/plugins/index.js";
+import AddCard from "@/components/AddCard.vue";
+import Feedback from "@/components/Feedback.vue";
 
-    export default {
-        name: 'Cards',
-        props: ['deckId', 'query'],
-        components: {
-            AddCard,
-            Feedback
+export default {
+    name: "Cards",
+    props: ["deckId", "query"],
+    components: {
+        AddCard,
+        Feedback,
+    },
+
+    data() {
+        return {
+            cards: [],
+            decks: [],
+            id: localStorage.getItem("_id"),
+            deck_id: this.$store.getters.deckCardsId,
+            saved: false,
+            loading: true,
+            add_card_form: false,
+            revealed: false,
+        };
+    },
+
+    mounted() {
+        this.getCards();
+    },
+
+    computed: {},
+
+    beforeUpdate() {
+        if (this.$props.query.length != 0) this.cards = this.$props.query;
+    },
+
+    methods: {
+        popForm(event) {
+            if (event == "AddCard") this.add_card_form = true;
+            else if (this.add_card_form) this.add_card_form = !this.add_card_form;
         },
 
-
-        data() {
-            return {
-                cards: [],
-                decks: [],
-                id: localStorage.getItem('_id'),
-                deck_id: this.$store.getters.deckCardsId,
-                saved: false,
-                loading: true,
-                revealed: false
+        boxReveal(_id) {
+            // console.log(true)
+            if (!this.revealed) {
+                this.revealed = _id;
+            } else if (this.revealed != _id) {
+                this.revealed = _id;
+            } else {
+                this.revealed = false;
             }
         },
 
-        mounted () {
-            this.getCards();
-        },
+        async cardToDeck(_id, _index) {
+            const json = JSON.stringify({
+                deck_id: event.target.id,
+                card_id: _id,
+            });
 
-        computed: {},
-
-        beforeUpdate(){
-            if (this.$props.query.length != 0) this.cards = this.$props.query;
-        },
-
-        methods: {
-            boxReveal(_id){
-                console.log(true)
-                if(!this.revealed){
-                    this.revealed = _id;
-                }
-                else if(this.revealed != _id){
-                    this.revealed = _id;
-                }
-                else{
-                    this.revealed = false;
-                }
-            },
-            
-            async cardToDeck(_id, _index){
-                const json = JSON.stringify({
-                    deck_id: event.target.id,
-                    card_id: _id
+            if (event.target.checked) {
+                this.decks[_index].card_ids.push(_id);
+            } else {
+                this.decks[_index].card_ids.find((elem) => {
+                    if (elem == _id)
+                        this.decks[_index].card_ids.splice(
+                            this.decks[_index].card_ids.indexOf(elem),
+                            1
+                        );
                 });
+            }
 
-                if(event.target.checked){
-                    this.decks[_index].card_ids.push(_id);
-                } else {
-                    this.decks[_index].card_ids.find( elem => {
-                        if (elem == _id) this.decks[_index].card_ids.splice(this.decks[_index].card_ids.indexOf(elem), 1);
-                    })
-                }
+            let url_one = `${URI}/cards/add-to-deck/${this.id}`;
+            let url_two = `${URI}/cards/deck/${this.id}`;
 
-                let url_one = `${ URI }/cards/add-to-deck/${ this.id }`;
-                let url_two = `${ URI }/cards/deck/${ this.id }`;
-
-                await axios.put( (event.target.checked) ? url_one : url_two, json, {
+            await axios
+                .put(event.target.checked ? url_one : url_two, json, {
                     headers: {
-                        Authorization: `Bearer ${ localStorage.getItem('token') }`,
-                        'Content-Type': 'application/json'
-                    }
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                        "Content-Type": "application/json",
+                    },
                 })
                 .then((res) => {
-                    if(res.status === 200) {
+                    if (res.status === 200) {
                         this.feedback();
                     }
                 })
-                .catch((error) => {console.log(error)});
-            },
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
 
-            async getCards(){
-                if (!localStorage.getItem('token')) {
-                    this.$router.push({ path : `/` });
-                } else {
-                    const promise1 = await axios.get( `${ URI }/cards/${ this.id }`, {
-                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                    });
+        async getCards() {
+            if (!localStorage.getItem("token")) {
+                this.$router.push({ path: `/` });
+            } else {
+                const promise1 = await axios.get(`${URI}/cards/${this.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                });
 
-                    const promise2 = await axios.get( `${ URI }/decks/table/${ this.id }`, {
-                        headers: { Authorization: `Bearer ${ localStorage.getItem('token') }` }
-                    });
+                const promise2 = await axios.get(
+                    `${URI}/decks/table/${this.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
 
-                    Promise.all([promise1, promise2])
-                    .then(async values => {
-                        console.log(values)
+                Promise.all([promise1, promise2])
+                    .then(async (values) => {
+                        // console.log(values);
                         this.cards = await values[0].data;
                         this.decks = await values[1].data;
                         this.loading = false;
                     })
-                    .catch(err => { console.log(err) })
-                }
-            },
-
-            renderCard(event){
-                let card = {
-                    question: event.question,
-                    answer: event.answer,
-                    img_url: event.img_url
-                }
-                this.cards.push(card);
-                this.feedback();
-            },
-
-            //  REQUEST FEEDBACK 
-            feedback(){
-                this.saved = true;
-                let counter = 1;
-                const timer = setInterval(() => {
-                    counter--;
-                    if (counter === 0) {
-                        clearInterval(timer);
-                        this.saved = false
-                    }
-                }, 1000);
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         },
-    }
+
+        renderCard(event) {
+            let card = {
+                question: event.question,
+                answer: event.answer,
+                img_url: event.img_url,
+            };
+            this.cards.unshift(card);
+            this.add_card_form = !this.add_card_form;
+            this.feedback();
+        },
+
+        //  REQUEST FEEDBACK
+        feedback() {
+            this.saved = true;
+            let counter = 1;
+            const timer = setInterval(() => {
+                counter--;
+                if (counter === 0) {
+                    clearInterval(timer);
+                    this.saved = false;
+                }
+            }, 1000);
+        },
+    },
+};
 </script>
 
 <style scoped lang="scss">
-    .collapse-belong{
-        position: absolute;
-        flex-direction: column;
-        background-color: aquamarine;
+.add-deck-btn {
+    background-color: #0079c2;
+    border-color: #0079c2;
+
+    svg {
+        margin-left: 5px;
+        width: 16px;
     }
-    .tab-img{
-        width: 125px;
-        height: auto;
+
+    &:hover {
+        opacity: 0.6;
     }
+}
+
+.collapse-belong {
+    position: absolute;
+    flex-direction: column;
+    background-color: aquamarine;
+}
+.tab-img {
+    width: 125px;
+    height: 125px;
+    object-fit: cover;
+}
 </style>

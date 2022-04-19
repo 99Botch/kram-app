@@ -573,7 +573,7 @@
         .voting{
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-end;
         }
         .card-category{
             font-size: 12px;
