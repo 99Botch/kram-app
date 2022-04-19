@@ -110,7 +110,11 @@
 
         methods: {
             reverseReview(){
-                console.log(true)
+                this.cardIds.unshift(this.card_index);
+                // this.cardIds.pop();
+                this.card_index = this.viewed_indexes[this.viewed_indexes.length -1];
+                this.viewed_indexes.pop();
+                if(this.reveal) this.reveal = !this.reveal
             },
 
             clock(){
