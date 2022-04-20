@@ -14,7 +14,7 @@
                         @click="popForm('AddCard')"
                         class="add-deck-btn"
                     >
-                        New card
+                        new card
                         <svg
                             width="24"
                             height="24"
@@ -43,7 +43,11 @@
         <div class="decks-repo" v-if="windowWidth < 500">
             <div>
                 <span v-for="card of cards" :key="card._id">
-                    <el-card class="common-layout box-card" shadow="always">
+                    <el-card
+                        class="common-layout box-card"
+                        shadow="always"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                    >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
                             <img
@@ -53,12 +57,102 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
@@ -73,6 +167,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 2 == 0"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -83,12 +178,102 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
@@ -99,6 +284,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 2 == 1"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -109,12 +295,102 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
@@ -129,6 +405,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 0"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -139,12 +416,102 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
@@ -156,6 +523,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 1"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -166,12 +534,102 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
@@ -183,6 +641,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 2"
+                        :class="card.fail_counter >= 8 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -193,45 +652,108 @@
                             />
                         </div>
 
-                        <p>{{ card.question }}</p>
-                        <p>{{ card.answer }}</p>
-                        <p>fail counter</p>
-                        <p>burry</p>
+                        <div class="card-data">
+                            <p>
+                                <span class="card-data-inf">Question</span>
+                                <span class="card-data-cnt">{{
+                                    card.question
+                                }}</span>
+                            </p>
+                            <p>
+                                <span class="card-data-inf">Answer</span>
+                                <span class="card-data-cnt">{{
+                                    card.answer
+                                }}</span>
+                            </p>
+                            <span v-if="card.fail_counter != null">
+                                <p class="next-session">
+                                    <span class="card-data-inf"
+                                        >Next session</span
+                                    >
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.next_session"
+                                        >{{ card.next_session }}</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >You haven't reviewed that card
+                                        yet</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Fail counter
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.fail_counter
+                                    }}</span>
+                                </p>
+                                <p>
+                                    <span class="card-data-inf">Burry </span>
+                                    <span
+                                        class="card-data-cnt"
+                                        v-if="card.fail_counter < 8"
+                                        >no</span
+                                    >
+                                    <span class="card-data-cnt" v-else
+                                        >yes</span
+                                    >
+                                </p>
+                                <p>
+                                    <span class="card-data-inf"
+                                        >Success streak
+                                    </span>
+                                    <span class="card-data-cnt">{{
+                                        card.success_streak
+                                    }}</span>
+                                </p>
+                            </span>
+                            <p v-else class="no-ownership">
+                                Pssst.. you don't have that card yet
+                            </p>
+                        </div>
+
                         <div class="repo-card-footer">
-                            <button>Add to a deck</button>
+                            <button
+                                class="add-to-deck-btn"
+                                @click="boxReveal(card._id)"
+                                :id="card._id"
+                                title="Add the card to a deck (or remove it)"
+                            >
+                                add to a deck
+                            </button>
+                        </div>
+
+                        <div
+                            class="collapse-belong"
+                            v-if="revealed == card._id"
+                            @click="outsider" id="addingCardToDeck"
+                        >
+                            <div class="collapse-belong-holder">
+                                <p class="question-to-add">{{ card.question }}</p>
+                                <span
+                                    v-for="(deck, index) of decks"
+                                    :key="deck.deck_id"
+                                >
+                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <input
+                                        type="checkbox"
+                                        :id="deck.deck_id"
+                                        @click="cardToDeck(card._id, index)"
+                                        :checked="
+                                            deck.card_ids.find(
+                                                (elem) => elem == card._id
+                                            )
+                                        "
+                                    />
+                                </span>
+                                <button @click="boxReveal(card._id)">close</button>
+                            </div>
                         </div>
                     </el-card>
                 </span>
             </div>
         </div>
-
-        <!--
-            <button @click="boxReveal(card._id)" :id="card._id">
-                Collapse
-            </button>
-
-            <div
-                class="collapse-belong"
-                v-if="revealed == card._id"
-            >
-                <span
-                    v-for="(deck, index) of decks"
-                    :key="deck.deck_id"
-                >
-                    <input
-                        type="checkbox"
-                        :id="deck.deck_id"
-                        @click="cardToDeck(card._id, index)"
-                        :checked="
-                            deck.card_ids.find(
-                                (elem) => elem == card._id
-                            )
-                        "
-                    />
-                    {{ deck.name }}
-                </span>
-            </div>
-        -->
     </span>
 </template>
 
@@ -259,13 +781,13 @@ export default {
             loading: true,
             add_card_form: false,
             revealed: false,
-            windowWidth: 0
+            windowWidth: 0,
         };
     },
 
     mounted() {
         this.getCards();
-        this.infiniteScroll()
+        this.infiniteScroll();
     },
     created() {
         window.addEventListener("resize", this.myEventHandler);
@@ -285,21 +807,34 @@ export default {
             this.windowWidth = window.innerWidth;
         },
 
-        infiniteScroll () {
+        infiniteScroll() {
             window.onscroll = () => {
-                let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight >= document.documentElement.offsetHeight - 300;
+                let bottomOfWindow =
+                    Math.max(
+                        window.pageYOffset,
+                        document.documentElement.scrollTop,
+                        document.body.scrollTop
+                    ) +
+                        window.innerHeight >=
+                    document.documentElement.offsetHeight - 300;
 
                 if (bottomOfWindow) {
-                    let cut = JSON.parse(JSON.stringify(this.cards_initial.splice(0, 15)));
-                    cut.forEach(elem => this.cards.push(elem));                    
+                    let cut = JSON.parse(
+                        JSON.stringify(this.cards_initial.splice(0, 15))
+                    );
+                    cut.forEach((elem) => this.cards.push(elem));
                 }
-            }
+            };
         },
 
         popForm(event) {
             if (event == "AddCard") this.add_card_form = true;
             else if (this.add_card_form)
                 this.add_card_form = !this.add_card_form;
+        },
+
+        outsider() {
+            if (event.target.id == 'addingCardToDeck') this.revealed = false;
         },
 
         boxReveal(_id) {
@@ -346,11 +881,17 @@ export default {
                 .then((res) => {
                     if (res.status === 200) {
                         this.feedback();
+                        // console.log(this.cards.Proxy)
+                        this.cards[_id].question = 'bite';
+                        // this.cards.target[_id].fail_counter = 0;
+                        // this.cards.target[_id].success_streak = 0;
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+                        this.cards[_id].question = 'bite';
+
         },
 
         async getCards() {
@@ -377,15 +918,15 @@ export default {
                 );
 
                 Promise.all([promise1, promise2])
-                    .then(async (values) => {
-                        // console.log(values);
-                        this.cards_initial = await values[0].data;
+                    .then(async (res) => {
+                        this.decks = await res[1].data;
+
+                        this.cards_initial = await res[0].data.cards;
                         this.cards_initial.forEach(
                             (elem, i) => (elem.index = i)
                         );
-                        let cut = this.cards_initial.splice(0, 15);
-                        this.cards = cut;
-                        this.decks = await values[1].data;
+                        this.cards = this.cards_initial.splice(0, 15);
+
                         this.loading = false;
                     })
                     .catch((err) => {
@@ -437,22 +978,96 @@ export default {
 }
 
 .collapse-belong {
-    position: absolute;
-    flex-direction: column;
-    background-color: aquamarine;
-}
-.tab-img {
-    width: 125px;
-    height: 125px;
-    object-fit: cover;
-}
+    position: fixed;
+    background-color: #2223;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+    &-holder{
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        padding-top: 18px !important;
+
+        span{
+            padding:0 20px 10px 20px;
+        }
+        button{
+            width: 100%;
+            border-width: 0px;
+            height: 40px;
+            text-align: left;
+            padding: 0.5rem 0 1.7rem 0.5rem;
+            cursor: pointer;
+            background-color: #333;
+            color: #fff;
+            border-width: 0px;
+            margin-top: 15px;
+
+            &:hover{
+                opacity: .7;
+            }
+        }
+    }
+
+    label{
+        width: 22ch;
+        display: inline-block
+    }
+}
+.burried {
+    background-color: #e59c2433;
+}
 .img-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-bottom: 1px solid #ddd;
 }
 .default-img {
     opacity: 0.5;
+    padding: 10px !important;
+}
+.question-to-add{
+    padding: 0 0 20px 20px;
+    font-size: 18px;
+    color: #8a8d90;
+}
+.card-data {
+    padding: 10px;
+
+    &-inf {
+        font-size: 14px;
+        width: 14ch;
+        display: inline-block;
+        color: #8a8d90;
+        padding-bottom: 3px;
+    }
+    &-cnt {
+        font-size: 14px;
+    }
+    .next-session {
+        display: flex;
+
+        & :nth-child(1) {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
+}
+.add-to-deck-btn {
+    background-color: #e59c24dd;
+}
+.no-ownership {
+    font-size: 14px;
+    color: #8a8d9066;
+    padding: 3px 0 3px 0;
 }
 </style>
