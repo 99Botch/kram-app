@@ -896,6 +896,7 @@ export default {
             decks: [],
             id: localStorage.getItem("_id"),
             deck_id: this.$store.getters.deckCardsId,
+            deck_cards: this.$store.getters.getCards,
             saved: false,
             loading: true,
             add_card_form: false,
@@ -916,6 +917,15 @@ export default {
     beforeUpdate() {
         if (this.$props.query.length != 0) this.cards = this.$props.query;
         this.windowWidth = window.innerWidth;
+        
+        if(this.deck_cards) {
+            this.decks.find(elem => {
+                if(elem.deck_id == this.deck_cards){
+                    this.deckSort(elem.card_ids);
+                }
+            }) 
+            this.$store.dispatch('cards', null);
+        }
     },
     unmounted() {
         window.removeEventListener("resize", this.myEventHandler);
@@ -957,6 +967,7 @@ export default {
         },
 
         deckSort(e) {
+            console.log('bite')
             this.loading = !this.loading;
 
             this.sorting_deck_cards = true;

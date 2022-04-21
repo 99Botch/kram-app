@@ -15,7 +15,7 @@
         </aside>
 
         <main>
-            <Decks v-if="mountPage == 'deck' " @clicked="switchPageMobile" :query="this.decks"/>
+            <Decks v-if="mountPage == 'deck' " @clicked=" switchPageMobile" @page-switch="switchPage" :query="this.decks" />
             <Cards v-if="mountPage == 'card' " :query="this.cards"/>
             <Profile v-if="mountPage == 'profile' " @pic-url="updPic" />
             <Repository v-if="mountPage == 'repository' " :query="this.repository"/>

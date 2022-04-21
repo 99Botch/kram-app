@@ -153,7 +153,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -245,7 +245,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -334,7 +334,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -426,7 +426,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -515,7 +515,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -604,7 +604,7 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <a href="#">Link to my cards</a>
+                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
@@ -653,7 +653,6 @@
             v-if="popMenuDeck"
             :deck="this.popMenuDeck"
             @clicked="popMenu"
-            @cards="switchPage"
             @update-deck="updateDeck"
         />
     </span>
@@ -703,9 +702,16 @@ export default {
     },
 
     methods: {
+        pageSwitch(e){
+            console.log(e)
+            this.$store.dispatch('cards', e);
+            this.$emit('page-switch', 'card')
+        },
+
         myEventHandler() {
             this.windowWidth = window.innerWidth;
         },
+
         sortingDecks() {
             this.loading = true;
 
@@ -721,6 +727,7 @@ export default {
             this.decks.forEach((elem, i) => (elem.index = i));
             this.loading = false;
         },
+
         popMenu(_deck) {
             !this.popMenuDeck
                 ? (this.popMenuDeck = {
@@ -742,10 +749,6 @@ export default {
 
         closePop() {
             this.formAddDeck = false;
-        },
-
-        switchPage(event) {
-            this.$emit("clicked", event);
         },
 
         updateDeck(_form, _index) {

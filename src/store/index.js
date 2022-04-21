@@ -4,6 +4,7 @@ export default createStore({
     state: {
         sessionState: false,
         feedback: false,
+        cards: null,
         page: null,
         deckCardsId: null,
     },
@@ -15,11 +16,14 @@ export default createStore({
         FEEDBACK(state, payload) {
             state.feedback = payload;
         },
+        CARDS_IN_DECK(state, payload) {
+            state.cards_in_deck = payload;
+        },
         PAGE(state, payload) {
             state.page = payload;
         },
-        CARDS_DECK_ID(state, payload) {
-            state.deckCardsId = payload;
+        CARDS(state, payload) {
+            state.cards = payload;
         }
     },
     
@@ -32,6 +36,10 @@ export default createStore({
             const saved = payload;
             context.commit('FEEDBACK', saved);
         },
+        cards(context, payload){
+            const setCards = payload;
+            context.commit('CARDS', setCards);
+        },
         page(context, payload){
             const setPage = payload;
             context.commit('PAGE', setPage);
@@ -39,7 +47,8 @@ export default createStore({
         deckCardsId(context, payload){
             const setCardsDeckId = payload;
             context.commit('CARDS_DECK_ID', setCardsDeckId);
-        }
+        },
+        
     },
     
     getters: {
@@ -49,11 +58,14 @@ export default createStore({
         getFeedback(state){
             return state.feedback;
         },
+        getCardsInDeck(state){
+            return state.cards_in_deck;
+        },
         getPage(state){
             return state.page;
         },
-        getCardsDeckId(state){
-            return state.deckCardsId;
-        },
+        getCards(state){
+            return state.cards;
+        }
     }
 })
