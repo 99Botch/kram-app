@@ -6,6 +6,91 @@
                 Cards repository
             </h4>
 
+            <div class="mid-btns">
+                <div class="flex flex-wrap items-center">
+                    <el-dropdown>
+                        <el-button round>
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="sort-chevron"
+                            >
+                                <path
+                                    d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                            Sort decks
+                        </el-button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item
+                                    @click="resetDecks"
+                                    class="sort-list"
+                                    ><span class="sort-li">All cards</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    v-for="deck of decks"
+                                    :key="deck._id"
+                                    @click="deckSort(deck.card_ids)"
+                                    class="sort-list"
+                                    ><span class="sort-li">{{ deck.name }}</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </div>
+
+                <div class="flex flex-wrap items-center dropby-sort">
+                    <el-dropdown>
+                        <el-button round>
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="sort-chevron"
+                            >
+                                <path
+                                    d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                            Sort cards
+                        </el-button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item
+                                    @click="cardSort"
+                                    class="crd-qst sort-list"
+                                    ><span class="crd-qst sort-li">Question</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    @click="cardSort"
+                                    class="crd-awn sort-list"
+                                    ><span class="crd-awn sort-li">Answer</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    @click="cardSort"
+                                    class="crd-dat sort-list"
+                                    ><span class="crd-dat sort-li">Date</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    @click="cardSort"
+                                    class="crd-bry sort-list"
+                                    ><span class="crd-bry sort-li">Burried</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </div>
+            </div>
+
+
             <!-- HEADER -->
             <div class="deck-btns">
                 <span class="form-pop-up">
@@ -36,6 +121,10 @@
                     />
                 </span>
             </div>
+        </div>
+
+        <div v-if="!cards.length && !loading" class="empty-deck">
+            <h4>You don't have any cards on that deck !!!</h4>
         </div>
 
         <!-- CONTENT -->
@@ -85,14 +174,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -104,14 +186,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -131,19 +212,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -151,7 +243,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -206,14 +300,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -225,14 +312,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -252,19 +338,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -272,7 +369,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -323,14 +422,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -342,14 +434,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -369,19 +460,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -389,7 +491,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -444,14 +548,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -463,14 +560,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -490,19 +586,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -510,7 +617,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -562,14 +671,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -581,14 +683,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -608,19 +709,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -628,7 +740,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -680,14 +794,7 @@
                                         yet</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Fail counter
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.fail_counter
-                                    }}</span>
-                                </p>
+
                                 <p>
                                     <span class="card-data-inf">Burry </span>
                                     <span
@@ -699,14 +806,13 @@
                                         >yes</span
                                     >
                                 </p>
-                                <p>
-                                    <span class="card-data-inf"
-                                        >Success streak
-                                    </span>
-                                    <span class="card-data-cnt">{{
-                                        card.success_streak
-                                    }}</span>
-                                </p>
+                                <button
+                                    v-if="card.interval"
+                                    @click="resetInterval(card._id, card.index)"
+                                    class="reset-interval"
+                                >
+                                    reset interval
+                                </button>
                             </span>
                             <p v-else class="no-ownership">
                                 Pssst.. you don't have that card yet
@@ -727,19 +833,30 @@
                         <div
                             class="collapse-belong"
                             v-if="revealed == card._id"
-                            @click="outsider" id="addingCardToDeck"
+                            @click="outsider"
+                            id="addingCardToDeck"
                         >
                             <div class="collapse-belong-holder">
-                                <p class="question-to-add">{{ card.question }}</p>
+                                <p class="question-to-add">
+                                    {{ card.question }}
+                                </p>
                                 <span
                                     v-for="(deck, index) of decks"
                                     :key="deck.deck_id"
                                 >
-                                    <label :for="deck.deck_id">{{ deck.name }}</label>
+                                    <label :for="deck.deck_id">{{
+                                        deck.name
+                                    }}</label>
                                     <input
                                         type="checkbox"
                                         :id="deck.deck_id"
-                                        @click="cardToDeck(card._id, index)"
+                                        @click="
+                                            cardToDeck(
+                                                card._id,
+                                                index,
+                                                card.index
+                                            )
+                                        "
                                         :checked="
                                             deck.card_ids.find(
                                                 (elem) => elem == card._id
@@ -747,7 +864,9 @@
                                         "
                                     />
                                 </span>
-                                <button @click="boxReveal(card._id)">close</button>
+                                <button @click="boxReveal(card._id)">
+                                    close
+                                </button>
                             </div>
                         </div>
                     </el-card>
@@ -782,6 +901,7 @@ export default {
             add_card_form: false,
             revealed: false,
             windowWidth: 0,
+            sorting_deck_cards: false,
         };
     },
 
@@ -803,26 +923,144 @@ export default {
     },
 
     methods: {
+        async resetInterval(_id, _index) {
+            const json = JSON.stringify({ card_id: _id });
+
+            await axios
+                .put(
+                    `${URI}/cards/reset/${localStorage.getItem("_id")}`,
+                    json,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                )
+                .then((res) => {
+                    if (res.status === 200) {
+                        this.cards[_index].next_session = "Today";
+                        this.cards[_index].fail_counter = 0;
+                        this.feedback();
+                    }
+                })
+                .catch((error) => {
+                    error;
+                });
+        },
+
+        resetDecks() {
+            this.sorting_deck_cards = false;
+            this.getCards();
+        },
+
+        deckSort(e) {
+            this.loading = !this.loading;
+
+            this.sorting_deck_cards = true;
+
+            this.cards_initial = [...this.cards, ...this.cards_initial];
+
+            // let deck_cards = [];
+            let deck_cards = [];
+            this.cards_initial.forEach((elem) => {
+                e.find((item) => {
+                    if (item == elem._id) {
+                        deck_cards.push(elem);
+                    }
+                });
+            });
+
+            deck_cards.forEach((item) => {
+                this.cards_initial.find((c) => {
+                    if (c === item) {
+                        this.cards_initial.splice(
+                            this.cards_initial.indexOf(c),
+                            1
+                        );
+                    }
+                });
+            });
+
+            this.cards = deck_cards;
+
+            this.cards.forEach((elem, i) => (elem.index = i));
+            this.loading = !this.loading;
+        },
+
+        cardSort(e) {
+            this.loading = !this.loading;
+
+            if (e.target.className.substr(0, 7) == "crd-qst")
+                this.cards = this.cards.sort((a, b) => a.question > b.question);
+            if (e.target.className.substr(0, 7) == "crd-awn")
+                this.cards = this.cards.sort((a, b) => a.answer > b.answer);
+
+            if (e.target.className.substr(0, 7) == "crd-bry") {
+                let burried = this.cards.filter(
+                    (elem) =>
+                        elem.fail_counter != undefined && elem.fail_counter >= 8
+                );
+
+                burried.forEach((item) => {
+                    this.cards.find((c) => {
+                        if (c == item)
+                            this.cards.splice(this.cards.indexOf(c), 1);
+                    });
+                });
+
+                burried.forEach((elem) => this.cards.unshift(elem));
+            }
+
+            if (e.target.className.substr(0, 7) == "crd-dat") {
+                let cards_session = this.cards.filter(
+                    (elem) => elem.next_session
+                );
+
+                cards_session.forEach((item) => {
+                    this.cards.find((c) => {
+                        if (c == item)
+                            this.cards.splice(this.cards.indexOf(c), 1);
+                    });
+                });
+
+                cards_session.sort(function (a, b) {
+                    let aa = a.next_session.split("/").reverse().join(),
+                        bb = b.next_session.split("/").reverse().join();
+                    return aa > bb ? -1 : aa < bb ? 1 : 0;
+                });
+
+                cards_session.forEach((elem) => this.cards.unshift(elem));
+            }
+
+            this.cards.forEach((elem, i) => (elem.index = i));
+            this.loading = !this.loading;
+        },
+
         myEventHandler() {
             this.windowWidth = window.innerWidth;
         },
 
         infiniteScroll() {
             window.onscroll = () => {
-                let bottomOfWindow =
-                    Math.max(
-                        window.pageYOffset,
-                        document.documentElement.scrollTop,
-                        document.body.scrollTop
-                    ) +
-                        window.innerHeight >=
-                    document.documentElement.offsetHeight - 300;
+                if (this.sorting_deck_cards != true) {
+                    let bottomOfWindow =
+                        Math.max(
+                            window.pageYOffset,
+                            document.documentElement.scrollTop,
+                            document.body.scrollTop
+                        ) +
+                            window.innerHeight >=
+                        document.documentElement.offsetHeight - 300;
 
-                if (bottomOfWindow) {
-                    let cut = JSON.parse(
-                        JSON.stringify(this.cards_initial.splice(0, 15))
-                    );
-                    cut.forEach((elem) => this.cards.push(elem));
+                    if (bottomOfWindow) {
+                        let cut = JSON.parse(
+                            JSON.stringify(this.cards_initial.splice(0, 15))
+                        );
+                        cut.forEach((elem) => this.cards.push(elem));
+                    }
                 }
             };
         },
@@ -834,11 +1072,10 @@ export default {
         },
 
         outsider() {
-            if (event.target.id == 'addingCardToDeck') this.revealed = false;
+            if (event.target.id == "addingCardToDeck") this.revealed = false;
         },
 
         boxReveal(_id) {
-            // console.log(true)
             if (!this.revealed) {
                 this.revealed = _id;
             } else if (this.revealed != _id) {
@@ -848,7 +1085,7 @@ export default {
             }
         },
 
-        async cardToDeck(_id, _index) {
+        async cardToDeck(_id, _index, _card_index) {
             const json = JSON.stringify({
                 deck_id: event.target.id,
                 card_id: _id,
@@ -880,18 +1117,17 @@ export default {
                 })
                 .then((res) => {
                     if (res.status === 200) {
-                        this.feedback();
-                        // console.log(this.cards.Proxy)
-                        this.cards[_id].question = 'bite';
-                        // this.cards.target[_id].fail_counter = 0;
-                        // this.cards.target[_id].success_streak = 0;
+                        // this.feedback();
+                        console.log(this.cards[_card_index].fail_counter);
+                        if (this.cards[_card_index].fail_counter == undefined) {
+                            this.cards[_card_index].fail_counter = 0;
+                            this.cards[_card_index].next_session = null;
+                        }
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-                        this.cards[_id].question = 'bite';
-
         },
 
         async getCards() {
@@ -922,9 +1158,19 @@ export default {
                         this.decks = await res[1].data;
 
                         this.cards_initial = await res[0].data.cards;
-                        this.cards_initial.forEach(
-                            (elem, i) => (elem.index = i)
-                        );
+                        this.cards_initial.forEach((elem, i) => {
+                            elem.index = i;
+                            if (elem.next_session) {
+                                if (elem.next_session.length > 10) {
+                                    elem.next_session = "Today";
+                                } else {
+                                    elem.next_session = elem.next_session
+                                        .split("-")
+                                        .reverse()
+                                        .join("/");
+                                }
+                            }
+                        });
                         this.cards = this.cards_initial.splice(0, 15);
 
                         this.loading = false;
@@ -937,11 +1183,13 @@ export default {
 
         renderCard(event) {
             let card = {
+                _id: event._id,
                 question: event.question,
                 answer: event.answer,
                 img_url: event.img_url,
             };
             this.cards.unshift(card);
+            this.cards.forEach((elem, i) => (elem.index = i));
             this.add_card_form = !this.add_card_form;
             this.feedback();
         },
@@ -977,6 +1225,12 @@ export default {
     }
 }
 
+.mid-btns{
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: 7px;
+}
 .collapse-belong {
     position: fixed;
     background-color: #2223;
@@ -989,17 +1243,17 @@ export default {
     align-items: center;
     justify-content: center;
 
-    &-holder{
+    &-holder {
         background-color: white;
         display: flex;
         flex-direction: column;
         width: fit-content;
         padding-top: 18px !important;
 
-        span{
-            padding:0 20px 10px 20px;
+        span {
+            padding: 0 20px 10px 20px;
         }
-        button{
+        button {
             width: 100%;
             border-width: 0px;
             height: 40px;
@@ -1011,15 +1265,15 @@ export default {
             border-width: 0px;
             margin-top: 15px;
 
-            &:hover{
-                opacity: .7;
+            &:hover {
+                opacity: 0.7;
             }
         }
     }
 
-    label{
+    label {
         width: 22ch;
-        display: inline-block
+        display: inline-block;
     }
 }
 .burried {
@@ -1035,7 +1289,7 @@ export default {
     opacity: 0.5;
     padding: 10px !important;
 }
-.question-to-add{
+.question-to-add {
     padding: 0 0 20px 20px;
     font-size: 18px;
     color: #8a8d90;
@@ -1069,5 +1323,25 @@ export default {
     font-size: 14px;
     color: #8a8d9066;
     padding: 3px 0 3px 0;
+}
+.reset-interval {
+    background-color: transparent;
+    border-width: 0;
+    padding: 10px 0;
+    color: #0079c2;
+    cursor: pointer;
+
+    &:hover {
+        color: #0079c2cc;
+        text-decoration: underline;
+    }
+}
+.empty-deck {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #222;
 }
 </style>
