@@ -2,6 +2,7 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
+    margin-top: 10px;
     img{
         cursor: pointer;
         opacity: .4;
@@ -51,10 +52,11 @@ form .log{
         font-weight: 600;
         font-style:italic;
         margin-bottom: 20px;
+        text-align: center;
     }
 
     &-btn{
-        margin-top: 20px
+        margin-top: 5px
     }
 
     &-btn button{
@@ -66,7 +68,7 @@ form .log{
         border-radius: 25px;
         cursor: pointer;
         border: 0;
-        margin-bottom: 60px;
+        margin-bottom: 50px;
         background: rgb(0,121,194);
         background: linear-gradient(6deg, rgba(0,121,194,1) 0%, rgba(41,171,135,1) 100%);
     }
@@ -79,7 +81,7 @@ form .log{
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 600px) {
     .form-pop{
         position: absolute;
         width: 100%;
@@ -88,7 +90,7 @@ form .log{
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 600px) {
     .form-pop{
         position: absolute;
         display: flex;
@@ -102,10 +104,5 @@ form .log{
         background-color: white;
         width: 392px;
         border-radius: 10px;
-    }
-
-    .log-credits{
-        display: flex;
-        justify-content: space-around;
     }
 }

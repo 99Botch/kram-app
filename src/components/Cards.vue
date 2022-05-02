@@ -1,7 +1,7 @@
 <template>
     <Feedback v-if="saved" />
     <span v-if="!loading">
-        <div class="my-deck-header">
+        <div class="my-deck-header card-header-title">
             <h4 :class="windowWidth < 400 ? 'size-header' : null">
                 Cards repository
             </h4>
@@ -135,7 +135,7 @@
                     <el-card
                         class="common-layout box-card"
                         shadow="always"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -261,7 +261,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 2 == 0"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -383,7 +383,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 2 == 1"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -509,7 +509,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 0"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -632,7 +632,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 1"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -755,7 +755,7 @@
                         class="common-layout box-card"
                         shadow="always"
                         v-if="card.index % 3 == 2"
-                        :class="card.fail_counter >= 8 ? 'burried' : null"
+                        :class="card.fail_counter >= 5 ? 'burried' : null"
                     >
                         <div class="img-card">
                             <img v-if="card.img_url" :src="card.img_url" />
@@ -1012,7 +1012,7 @@ export default {
             if (e.target.className.substr(0, 7) == "crd-bry") {
                 let burried = this.cards.filter(
                     (elem) =>
-                        elem.fail_counter != undefined && elem.fail_counter >= 8
+                        elem.fail_counter != undefined && elem.fail_counter >= 5
                 );
 
                 burried.forEach((item) => {
@@ -1355,4 +1355,13 @@ export default {
     transform: translate(-50%, -50%);
     color: #222;
 }
+@media (max-width: 500px) {
+    .card-header-title{
+        display: block;
+        h4, .mid-btns{
+            padding-bottom: 10px;
+        }
+    }
+}
+
 </style>

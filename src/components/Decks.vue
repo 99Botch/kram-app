@@ -129,6 +129,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -153,11 +154,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -221,6 +222,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -245,11 +247,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -310,6 +312,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -334,11 +337,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -402,6 +405,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -426,11 +430,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -491,6 +495,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -515,11 +520,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -580,6 +585,7 @@
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     @click="popMenu(deck)"
+                                    class="three-dots-menu"
                                 >
                                     <circle
                                         cx="2"
@@ -604,11 +610,11 @@
                         </div>
 
                         <div class="repo-card-main">
-                            <button @click="pageSwitch(deck._id)">Link to my cards</button>
                             <p v-if="!deck.description" class="no-description">
                                 Hey, add a description ;)
                             </p>
                             <p v-else>{{ deck.description }}</p>
+                            <button @click="pageSwitch(deck._id)" v-if="deck.card_count > 0" class="fetch-deck-card" title="Show the deck's cards">Browse deck's cards</button>
                         </div>
 
                         <span v-if="deletion">
@@ -752,7 +758,6 @@ export default {
         },
 
         updateDeck(_form, _index) {
-            this.feedback();
             this.decks[_index].name = _form.name;
             this.decks[_index].category = _form.category;
             this.decks[_index].description = _form.description;
@@ -863,6 +868,10 @@ export default {
     }
 }
 
+.three-dots-menu{
+    cursor: pointer;
+}
+
 .form-pop-up {
     position: relative;
 }
@@ -882,6 +891,21 @@ div.empty-msg {
         width: 35ch;
         text-align: center;
         color: #c8c8c8;
+    }
+}
+
+.fetch-deck-card{
+    background-color: transparent;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 11px;
+    padding-top: 10px;
+    cursor: pointer;
+    color: #0079c2BB;
+
+    &:hover, &:focus{
+        color: #0079c2;
+        
     }
 }
 

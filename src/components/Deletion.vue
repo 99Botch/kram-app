@@ -78,6 +78,7 @@
         align-items: center;
     }
     .delete-box{
+        margin-top: 7%;
         max-width: 400px;
         border-radius: 5px;
         border: 1px solid #DDD7;

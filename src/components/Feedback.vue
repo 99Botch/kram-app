@@ -39,7 +39,7 @@
         margin-bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 99;
+        z-index: 1999;
         p{
             display: flex;
             align-items: center;

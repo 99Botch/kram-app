@@ -39,12 +39,14 @@
                             </div>
                             
                             <div class="voting">
-                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -52,8 +54,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -89,12 +89,14 @@
                             </div>
                             
                             <div class="voting">
-                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -102,8 +104,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -135,12 +135,14 @@
                             </div>
                             
                             <div class="voting">
-                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -148,8 +150,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -184,12 +184,14 @@
                             </div>
                             
                             <div class="voting">
-                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -197,8 +199,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -236,6 +236,8 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -243,8 +245,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -276,12 +276,14 @@
                             </div>
                             
                             <div class="voting">
-                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
+                                
+                                <p class="votes" title="Votes">{{deck.votes}}</p>
 
                                 <button @click="vote(deck.index, 'down')" id='down' title="Downvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'down')">
@@ -289,8 +291,6 @@
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
                                     </svg>
                                 </button>
-                                
-                                <p class="votes" title="Votes">{{deck.votes}}</p>
                             </div>
                         </div>
 
@@ -568,7 +568,7 @@
     .repo-card-header{
         display: grid;
         grid-template-columns: 90% auto;
-        padding: 10px 20px 20px 20px !important;
+        padding: 10px 20px 15px 20px !important;
 
         .voting{
             display: flex;
@@ -628,7 +628,6 @@
     }
 
     .votes{
-        padding-top: 5px;
         font-weight: 600;
     }
 </style>
