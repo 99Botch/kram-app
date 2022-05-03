@@ -568,7 +568,7 @@
     .repo-card-header{
         display: grid;
         grid-template-columns: 90% auto;
-        padding: 10px 20px 15px 20px !important;
+        padding: 15px 20px 15px 20px !important;
 
         .voting{
             display: flex;

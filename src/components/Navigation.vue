@@ -33,28 +33,33 @@
         </div>
 
         <div class="left-side">
-            <img
-                v-if="this.$props.picUrl"
-                :src="this.$props.picUrl"
-                @click="profile($event)"
-            />
-            <img
-                v-else
-                src="@/assets/User.svg"
-                class="no-pic"
-                @click="profile($event)"
-            />
+            <el-dropdown>
+                <span class="el-dropdown-link">
+                    <img v-if="this.$props.picUrl" :src="this.$props.picUrl" />
+                    <img v-else src="@/assets/User.svg" class="no-pic" />
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="profile($event)"><span class="profile-lnk">Profile</span></el-dropdown-item>
+                        <span class="hidder"><el-dropdown-item class="desktop-logout"><Logout /></el-dropdown-item></span>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
         </div>
     </nav>
 </template>
 
 <script>
 import { URI, axios } from "@/plugins/index.js";
+import Logout from '@/components/Logout.vue';
+
 
 export default {
     name: "Navigation",
     props: ["picUrl", "search"],
-    components: {},
+    components: {
+        Logout
+    },
 
     data() {
         return {
@@ -191,6 +196,14 @@ nav {
     color: #333;
 }
 
+.profile-lnk{
+    font-size: 16px !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    &:hover{
+        color: #3393ce;
+    }
+}
+
 .left-side {
     display: flex;
     justify-content: flex-end;
@@ -257,8 +270,8 @@ input::placeholder {
 
 @media (max-width: 480px) {
     .left-side img {
-            width: 30px;
-            height: 30px;
+        width: 30px;
+        height: 30px;
     }
 }
 
@@ -285,6 +298,11 @@ input::placeholder {
         #lense {
             width: 22px;
         }
+    }
+}
+@media (max-width: 1024px) {
+    .hidder{
+        display: none;
     }
 }
 </style>

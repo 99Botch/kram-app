@@ -74,7 +74,6 @@
 
         methods: {
             query(items, query){
-                // console.log(items)
                 if(query == 'my_decks') this.decks =  items;
                 if(query == 'repository') this.repository =  items;
                 if(query == 'cards') this.cards =  items;
@@ -124,6 +123,8 @@
 
             // SWITCH PAGE MOBILE
             switchPageMobile (_event) {
+                console.log(_event)
+                console.log(true)
                 localStorage.setItem('page', _event);
                 [this.mountPage, this.menu] = [_event, false]
             },
@@ -161,7 +162,6 @@
         width: 36px;
         height: 36px;
         margin-right: 25px;
-        margin-bottom: 30px;
         border-radius: 50%;
         border-width: 0px;
         cursor: pointer;
@@ -197,13 +197,10 @@
             transform: rotate(-45deg);
         }
     }
-        // main{
-        //     width: 100%;
-        // }
 
     @media (max-width: 1024px) {
         .ham-btn{
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
     }
 
