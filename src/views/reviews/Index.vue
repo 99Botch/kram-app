@@ -90,7 +90,7 @@
                             </svg>
                         </div>
                         <button id="fail" @click="cardReview">
-                            Fail (60 sec)
+                            Fail ({{ this.fail_predict }})
                         </button>
                     </div>
 
@@ -145,6 +145,7 @@
 <script>
 import { URI, axios } from "@/plugins/index.js";
 import { spacedRepetition } from "@/plugins/spaced_repetition.js";
+// import { predictInterval } from "@/plugins/button_predict.js";
 
 export default {
     name: "Review",
@@ -163,8 +164,9 @@ export default {
             session_length: null,
             timer: "01:00",
             timeCount: 60,
-            learning_cue: [60, 15, 1, 2, 7, 14, 30],
-            nextInterval: 0,
+            learning_cue: [0.60, 0.150, 1, 2, 7, 14, 30],
+            nextInterval: 'pass',
+            fail_predict: 'fail',
             viewed_indexes: [],
             window_width: window.innerWidth,
         };
@@ -206,23 +208,46 @@ export default {
         },
 
         predictInterval() {
-            let current_interval = this.learning_cue.find(
-                (elem) => elem == this.cards[this.card_index].interval
-            );
-            if (
-                !current_interval ||
-                this.cards[this.card_index].interval == 60
-            ) {
-                this.nextInterval = "15 min";
-            } else if (this.cards[this.card_index].interval == 30) {
-                this.nextInterval = "30d";
-            } else {
-                let index =
-                    this.learning_cue[
-                        this.learning_cue.indexOf(current_interval) + 1
-                    ];
-                this.nextInterval = index + "d";
-            }
+            console.log(true)
+            // let current_interval = this.learning_cue.find(
+            //     (elem) => elem == this.cards[this.card_index].interval
+            // );
+
+            // let ttt = this.cards[this.card_index].next_session.slice(11,16)
+
+            // if ( ttt && this.cards[this.card_index].interval == 60) {
+            //     this.fail_predict = '60 sec     '
+            // }
+
+            // else if (this.cards[this.card_index].interval >= 30) {
+            //     let interval = this.cards[this.card_index].interval;
+            //     let ease_factor = this.cards[this.card_index].ease_factor;
+            //     let streak = this.cards[this.card_index].success_streak;
+                
+            //     let new_interval;
+            //     (streak != 0 && streak % 2 == 0) ? new_interval = interval * (ease_factor + 0.2) : new_interval = interval * ease_factor;
+            //     let feedback = predictInterval(new_interval);
+
+            //     let reset_interval;
+            //     (streak != 0 && this.cards[this.card_index].interval >= 1.30) ? reset_interval = interval * ease_factor : reset_interval = interval * 1.30;
+            //     let feedback_fail = predictInterval(reset_interval);
+
+            //     this.nextInterval = feedback;
+            //     this.fail_predict = feedback_fail;
+            //     // if (this.cards[this.card_index].next_session.slice(11,16) && this.cards[this.card_index].interval == 60)  this.fail_predict = '15 min';
+
+            //     (this.cards[this.card_index].interval <= 30) ? this.fail_predict = '60 sec' : this.fail_predict = feedback_fail;
+                
+            // }
+
+            // else if(this.learning_cue.indexOf(current_interval) && this.cards[this.card_index].interval < 30){
+            //     let index = this.learning_cue[this.learning_cue.indexOf(current_interval) + 1];
+            //     this.nextInterval = index + "d";
+            // }
+
+            // else if (!current_interval || this.cards[this.card_index].interval == 60) {
+            //     this.nextInterval = "15 min";
+            // } 
         },
 
         // ------------------------------ GET DECK DATA
@@ -324,15 +349,15 @@ export default {
 
             if (
                 (this.cardIds.length == 0 &&
-                    this.cards[this.card_index].interval == 15) ||
+                    this.cards[this.card_index].interval == 0.150) ||
                 (this.cardIds.length == 0 &&
-                    this.cards[this.card_index].interval == 60)
+                    this.cards[this.card_index].interval == 0.60)
             ) {
                 this.reveal = !this.reveal;
             } else if (this.cardIds.length > 0) {
                 if (
-                    this.cards[this.card_index].interval == 15 ||
-                    this.cards[this.card_index].interval == 60
+                    this.cards[this.card_index].interval == 0.150 ||
+                    this.cards[this.card_index].interval == 0.60
                 ) {
                     this.cardIds.push(this.card_index);
                     this.card_index = this.cardIds.shift();
@@ -543,7 +568,7 @@ export default {
         }
         button {
             border-width: 0px;
-            font-size: 16px;
+            font-size: 14px;
             text-transform: uppercase;
             cursor: pointer;
             padding: 20px 0px;

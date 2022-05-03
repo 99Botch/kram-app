@@ -2,18 +2,17 @@ const { DateTime } = require("luxon");
 
 // export API URI
 function spacedRepetition(_card, _event, _id){
-    let learning_cue = [null, 60, 15, 1, 2, 7, 14, 30];
+    let learning_cue = [null, 0.60, 0.150, 1, 2, 7, 14, 30];
     let is_learning = learning_cue.indexOf(_card.interval, 0);
-    console.log(is_learning)
-    
+
     let feedback;
     (_event == 'ArrowLeft' || _id == 'fail') ? feedback = false : feedback =true;
     
     if(feedback){
 
-        if(_card.next_session == null || _card.interval == 60){
-            _card.interval = 15;
-            let date = DateTime.local().plus({ minutes: _card.interval }).toString();  
+        if(_card.next_session == null || _card.interval == 0.60){
+            _card.interval = 0.150;
+            let date = DateTime.local().plus({ minutes: 15 }).toString();  
             let new_interval = date.slice(0,10) + " " + date.slice(11,16);  
             _card.next_session = new_interval;
         }
@@ -42,8 +41,8 @@ function spacedRepetition(_card, _event, _id){
 
     else if (!feedback){
         if(_card.interval <= 30){
-            _card.interval = 60;
-            let date = DateTime.local().plus({ seconds: _card.interval }).toString();  
+            _card.interval = 0.60;
+            let date = DateTime.local().plus({ seconds: 60 }).toString();  
             let new_interval = date.slice(0,10) + " " + date.slice(11,16);  
             _card.next_session = new_interval;
         }
