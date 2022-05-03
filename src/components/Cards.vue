@@ -176,10 +176,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -191,7 +191,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -302,10 +302,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -317,7 +317,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -424,10 +424,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -439,7 +439,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -550,10 +550,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -565,7 +565,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -673,10 +673,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -688,7 +688,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -796,10 +796,10 @@
                                 </p>
 
                                 <p>
-                                    <span class="card-data-inf">Burry </span>
+                                    <span class="card-data-inf">Leech </span>
                                     <span
                                         class="card-data-cnt"
-                                        v-if="card.fail_counter < 8"
+                                        v-if="card.fail_counter < 5"
                                         >no</span
                                     >
                                     <span class="card-data-cnt" v-else
@@ -811,7 +811,7 @@
                                     @click="resetInterval(card._id, card.index)"
                                     class="reset-interval"
                                 >
-                                    reset interval
+                                    Reset interval
                                 </button>
                             </span>
                             <p v-else class="no-ownership">
@@ -1338,7 +1338,7 @@ export default {
 .reset-interval {
     background-color: transparent;
     border-width: 0;
-    padding: 10px 0;
+    padding-bottom: 10px;
     color: #0079c2;
     cursor: pointer;
 
