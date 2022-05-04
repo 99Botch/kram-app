@@ -1,4 +1,6 @@
 <template>
+    <Leeched v-if="burried" />
+
     <div
         class="cards"
         @keydown="cardReview()"
@@ -7,7 +9,7 @@
         v-if="!loading"
     >
         <el-link type="info" class="save-and-exit" @click="cardUpdate"
-            >save & exit review session</el-link
+            >save & exit session</el-link
         >
 
         <div class="timer" v-if="!reveal">
@@ -53,12 +55,19 @@
             </div>
 
             <div class="card-answer">
-                <p v-if="reveal">{{ cards[card_index].answer }}</p>
+                <p v-if="reveal" class="qst-answ">
+                    {{ cards[card_index].answer }}
+                </p>
             </div>
 
             <div class="card-btn">
                 <div class="card-btn-holder">
-                    <p class="keyboard-commands" v-if="this.window_width > 1200">Keyboard commands</p>
+                    <p
+                        class="keyboard-commands"
+                        v-if="this.window_width > 1200"
+                    >
+                        Keyboard commands
+                    </p>
 
                     <div
                         class="spacebar"
@@ -110,7 +119,8 @@
                                 />
                             </svg>
                         </div>
-                        <button @keyup.arrow-down="cardReview">Undo</button>
+                        <button @id="revert" @click="cardReview">Undo</button>
+                        <!-- <button @keyup.arrow-down="reverseReview">Undo</button> -->
                     </div>
 
                     <div
@@ -145,7 +155,8 @@
 <script>
 import { URI, axios } from "@/plugins/index.js";
 import { spacedRepetition } from "@/plugins/spaced_repetition.js";
-// import { predictInterval } from "@/plugins/button_predict.js";
+import { predictInterval } from "@/plugins/button_predict.js";
+import Leeched from "@/components/Leeched.vue";
 
 export default {
     name: "Review",
@@ -164,15 +175,18 @@ export default {
             session_length: null,
             timer: "01:00",
             timeCount: 60,
-            learning_cue: [0.60, 0.150, 1, 2, 7, 14, 30],
-            nextInterval: 'pass',
-            fail_predict: 'fail',
+            learning_cue: [0.6, 0.15, 1, 2, 7, 14, 30],
+            nextInterval: "",
+            fail_predict: "",
             viewed_indexes: [],
             window_width: window.innerWidth,
+            burried: false,
         };
     },
 
-    components: {},
+    components: {
+        Leeched,
+    },
 
     mounted() {
         this.getDeckCards();
@@ -188,10 +202,20 @@ export default {
     methods: {
         reverseReview() {
             this.cardIds.unshift(this.card_index);
-            // this.cardIds.pop();
-            this.card_index =
-                this.viewed_indexes[this.viewed_indexes.length - 1];
+            let old_card = this.viewed_indexes[this.viewed_indexes.length - 1]
+            this.card_index = old_card.id;
+
+            let card = this.cards[this.card_index];
+
+            card.success_streak = old_card.success;
+            card.fail_counter = old_card.fail;
+            card.ease_factor = old_card.ease;
+            card.interval = old_card.int;
+            card.next_session = old_card.next;
+
             this.viewed_indexes.pop();
+
+            // console.log(this.cards[this.card_index])
             if (this.reveal) this.reveal = !this.reveal;
         },
 
@@ -208,46 +232,53 @@ export default {
         },
 
         predictInterval() {
-            console.log(true)
-            // let current_interval = this.learning_cue.find(
-            //     (elem) => elem == this.cards[this.card_index].interval
-            // );
+            let current_interval = this.learning_cue.find(
+                (elem) => elem == this.cards[this.card_index].interval
+            );
 
-            // let ttt = this.cards[this.card_index].next_session.slice(11,16)
+            if (
+                !current_interval ||
+                this.cards[this.card_index].interval == 0.6
+            ) {
+                this.nextInterval = "15 min";
+            }
 
-            // if ( ttt && this.cards[this.card_index].interval == 60) {
-            //     this.fail_predict = '60 sec     '
-            // }
+            if (this.cards[this.card_index].interval >= 30) {
+                let interval = this.cards[this.card_index].interval;
+                let ease_factor = this.cards[this.card_index].ease_factor;
+                let streak = this.cards[this.card_index].success_streak;
 
-            // else if (this.cards[this.card_index].interval >= 30) {
-            //     let interval = this.cards[this.card_index].interval;
-            //     let ease_factor = this.cards[this.card_index].ease_factor;
-            //     let streak = this.cards[this.card_index].success_streak;
-                
-            //     let new_interval;
-            //     (streak != 0 && streak % 2 == 0) ? new_interval = interval * (ease_factor + 0.2) : new_interval = interval * ease_factor;
-            //     let feedback = predictInterval(new_interval);
+                let new_interval;
+                streak != 0 && streak % 2 == 0
+                    ? (new_interval = interval * (ease_factor + 0.2))
+                    : (new_interval = interval * ease_factor);
+                let feedback = predictInterval(new_interval);
 
-            //     let reset_interval;
-            //     (streak != 0 && this.cards[this.card_index].interval >= 1.30) ? reset_interval = interval * ease_factor : reset_interval = interval * 1.30;
-            //     let feedback_fail = predictInterval(reset_interval);
+                let reset_interval;
+                streak != 0 && this.cards[this.card_index].interval >= 1.3
+                    ? (reset_interval = interval * ease_factor)
+                    : (reset_interval = interval * 1.3);
+                let feedback_fail = predictInterval(reset_interval);
 
-            //     this.nextInterval = feedback;
-            //     this.fail_predict = feedback_fail;
-            //     // if (this.cards[this.card_index].next_session.slice(11,16) && this.cards[this.card_index].interval == 60)  this.fail_predict = '15 min';
+                this.nextInterval = feedback;
+                this.fail_predict = feedback_fail;
+                if (
+                    this.cards[this.card_index].next_session.slice(11, 16) &&
+                    this.cards[this.card_index].interval == 60
+                )
+                    this.fail_predict = "15 min";
 
-            //     (this.cards[this.card_index].interval <= 30) ? this.fail_predict = '60 sec' : this.fail_predict = feedback_fail;
-                
-            // }
-
-            // else if(this.learning_cue.indexOf(current_interval) && this.cards[this.card_index].interval < 30){
-            //     let index = this.learning_cue[this.learning_cue.indexOf(current_interval) + 1];
-            //     this.nextInterval = index + "d";
-            // }
-
-            // else if (!current_interval || this.cards[this.card_index].interval == 60) {
-            //     this.nextInterval = "15 min";
-            // } 
+                this.cards[this.card_index].interval <= 30
+                    ? (this.fail_predict = "60 sec")
+                    : (this.fail_predict = feedback_fail);
+            } else {
+                let index =
+                    this.learning_cue[
+                        this.learning_cue.indexOf(current_interval) + 1
+                    ];
+                index == 0.15 ? null : (this.nextInterval = index + "d");
+                this.fail_predict = "60 sec";
+            }
         },
 
         // ------------------------------ GET DECK DATA
@@ -308,7 +339,11 @@ export default {
 
         // ------------------------------ REVIEW SESSION
         cardReview() {
-            if (
+            if (event.key == "ArrowDown"){
+                this.reverseReview();
+            }
+
+            else if (
                 (!this.reveal &&
                     event.key == " " &&
                     this.window_width >= 1200) ||
@@ -317,7 +352,9 @@ export default {
                     this.window_width <= 1200)
             ) {
                 this.reveal = !this.reveal;
-            } else if (
+            } 
+            
+            else if (
                 (this.reveal &&
                     event.key == "ArrowRight" &&
                     this.window_width >= 1200) ||
@@ -340,28 +377,41 @@ export default {
         },
 
         updateCard() {
+            this.viewed_indexes.push({
+                id: this.card_index,
+                success: this.cards[this.card_index].success_streak,
+                fail: this.cards[this.card_index].fail_counter,
+                ease: this.cards[this.card_index].ease_factor,
+                int: this.cards[this.card_index].interval,
+                next: this.cards[this.card_index].next_session,
+            });
+
             this.cards[this.card_index] = spacedRepetition(
                 this.cards[this.card_index],
                 event.key,
                 event.target.id
             );
-            this.viewed_indexes.push(this.card_index);
 
             if (
                 (this.cardIds.length == 0 &&
-                    this.cards[this.card_index].interval == 0.150) ||
+                    this.cards[this.card_index].interval == 0.15) ||
                 (this.cardIds.length == 0 &&
-                    this.cards[this.card_index].interval == 0.60)
+                    this.cards[this.card_index].interval == 0.6)
             ) {
                 this.reveal = !this.reveal;
             } else if (this.cardIds.length > 0) {
                 if (
-                    this.cards[this.card_index].interval == 0.150 ||
-                    this.cards[this.card_index].interval == 0.60
+                    this.cards[this.card_index].interval == 0.15 ||
+                    this.cards[this.card_index].interval == 0.6
                 ) {
                     this.cardIds.push(this.card_index);
                     this.card_index = this.cardIds.shift();
-                } else this.card_index = this.cardIds.shift();
+                } else {
+                    if (this.cards[this.card_index].fail_counter >= 5) {
+                        this.leeched();
+                    }
+                    this.card_index = this.cardIds.shift();
+                }
                 this.reveal = !this.reveal;
             } else if (this.cardIds.length == 0 && this.reveal == true) {
                 this.cardUpdate();
@@ -417,6 +467,18 @@ export default {
             this.$store.dispatch("feedback", true);
             this.$router.push({ path: `/kram` });
         },
+
+        leeched() {
+            this.burried = true;
+            let counter = 1;
+            const timer = setInterval(() => {
+                counter--;
+                if (counter === 0) {
+                    clearInterval(timer);
+                    this.burried = false;
+                }
+            }, 1000);
+        },
     },
 
     props: {},
@@ -425,8 +487,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.card-btn-holder{
-    align-items: center;;
+.card-btn-holder {
+    align-items: center;
 }
 .image-fit {
     width: 350px;
@@ -458,9 +520,10 @@ export default {
 .undo-btn {
     position: fixed;
     border-radius: 100%;
-    border: 1px solid #c8c8c8;
+    border: 1px solid #2229;
     background-color: transparent;
-    fill: #c8c8c8;
+    fill: #2229;
+
     right: 0;
     bottom: 0;
     width: 32px;
@@ -468,10 +531,11 @@ export default {
     cursor: pointer;
 
     &:hover,
-    &:active {
-        fill: #8a8d90;
-        border-color: #8a8d90;
+    &:active,
+    &:focus {
+        fill: #222;
         background-color: #8a8d9011;
+        border-color: #222;
     }
 
     svg {
@@ -544,6 +608,13 @@ export default {
         flex-grow: 1;
         flex-direction: column-reverse;
     }
+}
+
+.qst-answ {
+    background-color: #0079c2dd;
+    color: #f0f0f0;
+    padding: 5px 17px;
+    border-radius: 2px;
 }
 
 @media (max-width: 1200px) {
@@ -651,8 +722,8 @@ export default {
         }
     }
 
-    .keyboard-commands{
-        color: #C8C8C8;
+    .keyboard-commands {
+        color: #c8c8c8;
     }
 
     .spacebar p {
@@ -679,18 +750,18 @@ export default {
 
     .highlight-state {
         p {
-            color: #888888CC;
-            border-color: #888888CC;
+            color: #888888cc;
+            border-color: #888888cc;
         }
         button {
-            color: #888888CC;
+            color: #888888cc;
         }
     }
 
     .highlight-state-btn #fail,
     .highlight-state-btn #pass,
     .result-undo-h button {
-        color: #888888CC;
+        color: #888888cc;
     }
 
     .svg-pass,
@@ -700,12 +771,12 @@ export default {
     .svg-fail-h,
     .svg-pass-h,
     .result-undo-h svg {
-        fill: #888888CC;
+        fill: #888888cc;
     }
     .highlight-state-border-fail,
     .highlight-state-border-pass,
     .result-undo-h .arrow {
-        border-color: #888888CC;
+        border-color: #888888cc;
     }
 
     .result-undo .arrow {

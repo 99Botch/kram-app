@@ -24,6 +24,7 @@ function spacedRepetition(_card, _event, _id){
         }  
 
         else if (_card.interval >= 30) {
+            _card.success_streak++;
 
             if (_card.success_streak != 0 && _card.success_streak % 2 == 0) 
                 _card.ease_factor += 0.20;
@@ -34,7 +35,6 @@ function spacedRepetition(_card, _event, _id){
             _card.interval = Math.round(_card.interval * _card.ease_factor);
             if (_card.interval > 3650) _card.interval = 3650;
 
-            _card.success_streak++;
             _card.next_session = DateTime.local().plus({ days: _card.interval }).toISODate();
         }   
     } 
@@ -50,11 +50,12 @@ function spacedRepetition(_card, _event, _id){
         else{
             _card.success_streak = 0;
             _card.fail_counter++;
-            _card.ease_factor -= 0.35;
+            _card.ease_factor -= 0.20;
             
             if (_card.ease_factor <= 1.3) _card.ease_factor = 1.3;
             
             _card.interval = Math.round(_card.interval * _card.ease_factor);
+            if (_card.interval > 3650) _card.interval = 3650;
             _card.next_session = DateTime.local().plus({ days: _card.interval }).toISODate();
         }
 
