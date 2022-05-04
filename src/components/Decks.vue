@@ -182,7 +182,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -275,7 +275,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -365,7 +365,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -458,7 +458,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -548,7 +548,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -638,7 +638,7 @@
                                     :disabled="deck.card_count == 0"
                                 >
                                     <span v-if="deck.card_count == 0"
-                                        >/w That deck has no card yet..</span
+                                        >/w No cards to review yet..</span
                                     >
                                     <span v-else-if="deck.card_count == 1"
                                         >Review {{ deck.card_count }} card</span
@@ -765,7 +765,6 @@ export default {
         },
 
         async getDecks() {
-            console.log("bite");
             if (!localStorage.getItem("token")) {
                 this.$router.push({ path: `/` });
             } else {
