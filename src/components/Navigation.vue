@@ -150,7 +150,6 @@ export default {
                     }
                 )
                 .then(async (res) => {
-                    console.log("bite");
                     let found_decks = await res.data;
                     let i = 0;
                     found_decks.forEach((deck) => (deck.index = i++));
