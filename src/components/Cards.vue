@@ -1128,7 +1128,7 @@ export default {
                 })
                 .then((res) => {
                     if (res.status === 200) {
-                        // this.feedback();
+                        this.feedback();
                         console.log(this.cards[_card_index].fail_counter);
                         if (this.cards[_card_index].fail_counter == undefined) {
                             this.cards[_card_index].fail_counter = 0;
