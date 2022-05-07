@@ -125,20 +125,25 @@ export default {
     },
 
     methods: {
+        // Submitting information invariably follwos this sequencce
         async submitForm() {
+            // First create a JSON file with the data for the request
             const json = JSON.stringify(this.form);
 
+            // specify the request type, select the URIL, pass in the json file
             await axios
                 .post(`${URI}/users/register`, json, {
                     headers: {
                         "Content-Type": "application/json",
                     },
                 })
+                // wait for a response, and within the .then clause, di data manipulation if necessary
                 .then((res) => {
                     if (res.status === 200) {
                         this.$router.go({ path: "/" });
                     }
                 })
+                // or send back an error message
                 .catch((error) => {
                     if (error.response.data.type == "string.empty") {
                         this.formError = "Make sure you fill in all the form";
@@ -148,6 +153,7 @@ export default {
                 });
         },
 
+        // outsider is a simple function that s closes a modal element if the user clicks outside the modal element
         outsider(e){
             if (e.target.id == 'RegisterForm') this.$emit('clicked', 'CloseRegister')
         },
@@ -158,6 +164,9 @@ export default {
         },
 
         // FORM VALIDATION
+        // I made form validation myself based on the criterions if the API
+        // Validation happens both in the back end and front end, mainly to avoid waiting for response while valdiation could be done in the front
+        // After reflection, I think I should have used a middleware made specifically for valdiation
         validation() {
             if (
                 document.getElementById("emailRegister").value.length != 0 &&

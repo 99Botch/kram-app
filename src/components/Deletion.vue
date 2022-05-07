@@ -1,3 +1,4 @@
+<!-- simple modal to confirm profile deletion-->
 <template>
     <div class="delete-holder" @click="outsider" id="delBox">
         <div class="delete-box">

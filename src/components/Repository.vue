@@ -26,6 +26,12 @@
         </div>
 
         <!-- MOBILES -->
+        <!-- 
+            Based on the screen width, the repository, cards and decks page display between one to three columns of cards
+            columns are calclated based on the index of the items, modulo 0, 1 and 2 usng a for each loop
+            I guess I could have been more efficient using components or the cards, but did nont do so because I did not want to botehr with more props
+            Because cards already managed props passin for the menus & links
+        -->
         <div class="decks-repo" v-if="windowWidth < 500">
             <div>
 
@@ -39,7 +45,7 @@
                             </div>
                             
                             <div class="voting">
-                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                    <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
@@ -184,7 +190,7 @@
                             </div>
                             
                             <div class="voting">
-                                                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
+                                <button @click="vote(deck.index, 'up')" id="up" title="Upvote" class="btn-voter"
                                     :disabled="deck.voters.find(elem => elem.voter_id==this.id && elem.vote == 'up')">
                                     <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.5 15.5H3.5V6H0L5 0L10 6H6.5V15.5Z" fill="#8A8D90"/>
@@ -338,6 +344,7 @@
         mounted () {
             this.getDecks();
         },
+        // created, beforeUpdate checks automatically the screen sze to adpat accodingly to the screen the number of columns
         created() {
             window.addEventListener("resize", this.myEventHandler);
         },
@@ -345,6 +352,7 @@
             if (this.$props.query.length != 0) this.decks = this.$props.query;
             this.windowWidth = window.innerWidth;
         },
+        // unmounted deletes the event to avoid memory leaks
         unmounted() {
             window.removeEventListener("resize", this.myEventHandler);
         },
@@ -354,6 +362,8 @@
                 this.windowWidth = window.innerWidth;
             },
 
+            // using .sort() I managed to rearraagne the decks array to reorder the decks display
+            // for example, the decks with the higher number of votes get more visibility than thsoe with lesser scores
             decksSort(){
                 this.loading = !this.loading;
 
@@ -383,6 +393,7 @@
                         this.owned = JSON.parse(localStorage.own_ids);
 
                         this.decks = decks_og.map(elem => {
+                            // If a puclic deck was created by the same user of the session, as noted by .owned, he won't be able to duplicate it
                             this.owned.find(item => (item == elem._id) ? elem.owned = 1 : elem.owned = 0 )
                             return elem
                         })

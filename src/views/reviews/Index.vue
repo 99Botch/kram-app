@@ -200,13 +200,20 @@ export default {
     },
 
     methods: {
-        reverseReview() {
+        // reverse review is trigerred when clicking the undo button
+        // It reverts a card back to its previous state
+        // States are stored under viewed_indexes which keeps track of the history of a session
+        reverseReview() {*
+            // cardIds is the array holding the card ids in the order the cards are reviews
             this.cardIds.unshift(this.card_index);
+            // when clicking the the undo, the last card in review_index gets stored in old_card
             let old_card = this.viewed_indexes[this.viewed_indexes.length - 1]
+            // card_index storeds the index of the card that gets rendered, updating dynamically the client
             this.card_index = old_card.id;
 
             let card = this.cards[this.card_index];
 
+            // the old_card data is pushed to the card geting displayed
             card.success_streak = old_card.success;
             card.fail_counter = old_card.fail;
             card.ease_factor = old_card.ease;
@@ -215,10 +222,10 @@ export default {
 
             this.viewed_indexes.pop();
 
-            // console.log(this.cards[this.card_index])
             if (this.reveal) this.reveal = !this.reveal;
         },
 
+        // the clock is there just to give an appreciation of the time spend over a card
         clock() {
             const timer = setInterval(() => {
                 this.timeCount--;
@@ -231,6 +238,8 @@ export default {
             }, 1000);
         },
 
+        // predict interval calculates the next time a card gets reviewd and displays the result directly to the clien (buttons)
+        // for the user to see the next intervals
         predictInterval() {
             let current_interval = this.learning_cue.find(
                 (elem) => elem == this.cards[this.card_index].interval
@@ -243,6 +252,7 @@ export default {
                 this.nextInterval = "15 min";
             }
 
+            // refer to spaced repetition.js
             if (this.cards[this.card_index].interval >= 30) {
                 let interval = this.cards[this.card_index].interval;
                 let ease_factor = this.cards[this.card_index].ease_factor;
@@ -330,6 +340,7 @@ export default {
             document.getElementById("reviewHolder").focus();
         },
 
+        // shuffle array shuffles randomly the array so that cards always pop up in a different order
         shuffleArray(_array) {
             for (let i = _array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -338,6 +349,7 @@ export default {
         },
 
         // ------------------------------ REVIEW SESSION
+        // cardReview manages the correct response to give to the client based on what keys are getting presses
         cardReview() {
             if (event.key == "ArrowDown"){
                 this.reverseReview();
@@ -368,14 +380,17 @@ export default {
                     event.target.id == "fail" &&
                     this.window_width <= 1200)
             ) {
+                // updateCard updates the card data
                 this.updateCard();
                 if (this.timer == "00:00") this.clock();
                 this.timeCount = 60;
                 this.timer = "01:00";
             }
+            // predict interval predicts the next interval of a card to display the results on the client
             this.predictInterval();
         },
 
+        // updateCard updates the cards data
         updateCard() {
             this.viewed_indexes.push({
                 id: this.card_index,
@@ -386,6 +401,7 @@ export default {
                 next: this.cards[this.card_index].next_session,
             });
 
+            // card informatio is passed to spaced repetition.js
             this.cards[this.card_index] = spacedRepetition(
                 this.cards[this.card_index],
                 event.key,
@@ -414,11 +430,16 @@ export default {
                 }
                 this.reveal = !this.reveal;
             } else if (this.cardIds.length == 0 && this.reveal == true) {
+                // once all the cards are being reviewed, cardUpdate sends a request to update the database
                 this.cardUpdate();
             }
         },
 
         // ------------------------------ SEND JSON
+        // The way I made the updaes is highly inefficient
+        // Basically, after a reviewn, the requet updates all the items of a user in user_cards
+        //  I did not find a way to modify only the cards that were reviewed, so instead, a single JSON file upasted the all item
+        // that works fine with few elements, but I think that would not be somehting to do with lets say users having 5000 cards
         async cardUpdate() {
             let id = this.id;
             let user_cards = JSON.parse(JSON.stringify(this.user_cards));

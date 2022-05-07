@@ -1,10 +1,17 @@
+/**
+ * Router is a Vue library to create single page applications
+ * When entering the matching URL, Vue ROuter umounts the given component, loads and mount the one attach to that URL
+ */
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue';
 
 const routes = [
     {
+        // URL 
         path: '/',
+        // Component URL
         name: 'Home',
+        // and component itself
         component: Home,
     },
     {

@@ -1,3 +1,5 @@
+<!--to get more information on how the clinet displays the information, checks the repository page as it is more or less the same process
+the differences being what gets rendered in the screen-->
 <template>
     <Feedback v-if="saved" />
     <span v-if="!loading">

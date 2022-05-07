@@ -1,7 +1,12 @@
+/**
+ * Vuex is a state managmeent library used to pass states from a component to another regardless of their parent
+ */
 import { createStore } from 'vuex';
 
 export default createStore({
     state: {
+        // states hold the data to be read from or written from
+        // data gets upadted only within the store file
         sessionState: false,
         feedback: false,
         cards: null,
@@ -10,6 +15,7 @@ export default createStore({
     },
     
     mutations: {
+        // mutations are responsible to update the states wihtin the file, it receives data from the payload which itsself comes from the actions
         SIGN_IN(state, payload) {
             state.sessionState = payload;
         },
@@ -28,6 +34,7 @@ export default createStore({
     },
     
     actions: {
+        // actions gets the data from the components and sends it to the mutations
         signIn(context, payload){
             const sessionUpd = payload;
             context.commit('SIGN_IN', sessionUpd);
@@ -52,6 +59,7 @@ export default createStore({
     },
     
     getters: {
+        // getters allow to read data from the components
         getSession(state){
             return state.sessionState;
         },

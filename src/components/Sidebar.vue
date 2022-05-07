@@ -1,4 +1,7 @@
 <template>
+    <!--
+    $store.state.sessionState checks whether the user is logged in and displays the side bar if so
+    -->
     <div class="sidebar" v-if="$store.state.sessionState || null">
         <div class="links">
             <div @click="switchPage($event)" id="frgDeck">
@@ -18,7 +21,10 @@
                 </svg>
                 <p>my decks</p>
             </div>
-
+            <!--
+            switchPage($event) I use switchPage() to switch apge using the elemnts id
+            very inneficient way of doing I shoudl have revered back to the old way as soon as I did this, yet did not see the problem at that time
+            -->
             <div @click="switchPage($event)" id="frgRepo">
                 <svg
                     width="24"

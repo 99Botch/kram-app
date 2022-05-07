@@ -1,3 +1,5 @@
+// predictInterval is fancy name, but its only purpose is to parse a number of days (card interval)
+// into a legible period indicator or whe users click on a button
 function predictInterval(_interval) {
     let interval;
 

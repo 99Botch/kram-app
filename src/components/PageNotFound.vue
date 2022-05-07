@@ -1,9 +1,7 @@
 <template>
     <div class="" id="page_not_found">
-
         <h1>Error 404 | Page not found</h1>
         <p>You will be redirected in 5 seconds</p>
-
     </div>
 </template>
 

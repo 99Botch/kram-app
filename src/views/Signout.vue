@@ -1,3 +1,7 @@
+<!-- 
+    There is nothing special here other than the compoents prompts when users logout
+-->
+
 <template>
     <div class="" id="signout">
         <h1>Signout</h1>
@@ -5,26 +9,21 @@
 </template>
 
 <script>
-    export default {
-        name: 'Signout',
-        
-        data () {
-            return {}
-        },
+export default {
+    name: "Signout",
 
-        mounted () {
-            this.redirect();
-        },
+    mounted() {
+        this.redirect();
+    },
 
-        methods: {
-            redirect(){
-                if (!localStorage.getItem('token')) {
-                    this.$router.push({ path : `/` });
-                }
-            },
-        }
-    }
+    methods: {
+        redirect() {
+            if (!localStorage.getItem("token")) {
+                this.$router.push({ path: `/` });
+            }
+        },
+    },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss"></style>

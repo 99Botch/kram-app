@@ -1,10 +1,15 @@
+<!--
+    App.vue is here to hold literraly the application. The component app won't change
+    Its only purpose is to hold the router so that when a page updates, I don't create duplicate components which happened
+    to me before a I remvode components from this file
+-->
+
 <template>
     <router-view/>
 </template>
 
 <script>
     import 'element-plus/es/components/button/style/css'
-    // import 'element-plus/es/components/container/style/css'
 
     export default {
         components: {},

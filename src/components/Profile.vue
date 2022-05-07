@@ -194,6 +194,9 @@ export default {
             this.upload();
         },
 
+        //prepareFormData & upload are function given by cloudinary documentation to uplaod images to their database
+        // Upon uploading an iamge, it creae afake url in the local machine before sending it to cloudinary after user clicked the create button
+        // Thats because JS should never have access to the File system of machine
         prepareFormData: function () {
             this.formData = new FormData();
             this.formData.append("upload_preset", "kram-upload");
@@ -216,6 +219,7 @@ export default {
                         data: this.formData,
                     };
 
+                    // If the cards was successfully uploaded, the card is creted with the image URL
                     axios(requestObj)
                         .then((response) => {
                             let results = response.data.secure_url;
@@ -332,6 +336,7 @@ export default {
                 this.submitPass();
             
 
+            // form validation
             if (this.user.username.length == 0 || this.user.email.length == 0)
                 this.profileError = "Username and email can't be empty";
             else if (this.user.username.length < 6)
