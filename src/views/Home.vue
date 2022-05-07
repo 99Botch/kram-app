@@ -13,6 +13,15 @@
                 <div id="home-btn">
                     <router-link to="/">
                         <img src="@/assets/Logo.svg" />
+                        <p class="app-name">
+                            K<span
+                                style="
+                                    text-transform: uppercase;
+                                    font-size: 22px;
+                                "
+                                >ram</span
+                            >
+                        </p>
                     </router-link>
                 </div>
                 <div id="login">
@@ -36,9 +45,28 @@
         <div class="triangle-isosceles top"></div>
 
         <div class="description-prg drp-one">
-            <svg class="bulb" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 9C4 11.9611 5.60879 14.5465 8 15.9297V15.9999C8 18.2091 9.79086 19.9999 12 19.9999C14.2091 19.9999 16 18.2091 16 15.9999V15.9297C18.3912 14.5465 20 11.9611 20 9C20 4.58172 16.4183 1 12 1C7.58172 1 4 4.58172 4 9ZM16 13.4722C17.2275 12.3736 18 10.777 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 10.777 6.7725 12.3736 8 13.4722L10 13.4713V16C10 17.1045 10.8954 17.9999 12 17.9999C13.1045 17.9999 14 17.1045 14 15.9999V13.4713L16 13.4722Z" fill="currentColor" /><path d="M10 21.0064V21C10.5883 21.3403 11.2714 21.5351 12 21.5351C12.7286 21.5351 13.4117 21.3403 14 21V21.0064C14 22.111 13.1046 23.0064 12 23.0064C10.8954 23.0064 10 22.111 10 21.0064Z" fill="currentColor" /></svg>
+            <svg
+                class="bulb"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M4 9C4 11.9611 5.60879 14.5465 8 15.9297V15.9999C8 18.2091 9.79086 19.9999 12 19.9999C14.2091 19.9999 16 18.2091 16 15.9999V15.9297C18.3912 14.5465 20 11.9611 20 9C20 4.58172 16.4183 1 12 1C7.58172 1 4 4.58172 4 9ZM16 13.4722C17.2275 12.3736 18 10.777 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 10.777 6.7725 12.3736 8 13.4722L10 13.4713V16C10 17.1045 10.8954 17.9999 12 17.9999C13.1045 17.9999 14 17.1045 14 15.9999V13.4713L16 13.4722Z"
+                    fill="currentColor"
+                />
+                <path
+                    d="M10 21.0064V21C10.5883 21.3403 11.2714 21.5351 12 21.5351C12.7286 21.5351 13.4117 21.3403 14 21V21.0064C14 22.111 13.1046 23.0064 12 23.0064C10.8954 23.0064 10 22.111 10 21.0064Z"
+                    fill="currentColor"
+                />
+            </svg>
             <p>
-                Kram is a web application that will help you memorize easily information
+                Kram is a web application that will help you memorize easily
+                information
             </p>
         </div>
 
@@ -46,10 +74,28 @@
 
         <div class="description-prg drp-two">
             <p>
-                <svg class="pen" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z" fill="currentColor" /><path d="M2 22.9502L4.12171 15.1717L9.77817 20.8289L2 22.9502Z" fill="currentColor" /></svg>
+                <svg
+                    class="pen"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z"
+                        fill="currentColor"
+                    />
+                    <path
+                        d="M2 22.9502L4.12171 15.1717L9.77817 20.8289L2 22.9502Z"
+                        fill="currentColor"
+                    />
+                </svg>
                 Kram utilizes a new kind of spaced repetition algorithm. Review
-                information only when you need it. First learn properly
-                your card and then review it right before you forget it
+                information only when you need it. First learn properly your
+                card and then review it right before you forget it
             </p>
         </div>
 
@@ -57,7 +103,21 @@
 
         <div class="description-prg drp-three">
             <p>
-                <svg class="tree" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 1H1V9H9V6H11V20H15V23H23V15H15V18H13V6H15V9H23V1H15V4H9V1ZM21 3H17V7H21V3ZM17 17H21V21H17V17Z" fill="currentColor" /></svg>
+                <svg
+                    class="tree"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M9 1H1V9H9V6H11V20H15V23H23V15H15V18H13V6H15V9H23V1H15V4H9V1ZM21 3H17V7H21V3ZM17 17H21V21H17V17Z"
+                        fill="currentColor"
+                    />
+                </svg>
                 Use Kram repository to get decks and cards from other users and
                 upload yours to share them to the world
             </p>
@@ -113,11 +173,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.drp-two{
-    background-color: #0084c4;
-    color: white
+@media (max-width: 600px) {
+    .app-name {
+        display: none;
+    }
 }
-.drp-three{
+
+.drp-two {
+    background-color: #0084c4;
+    color: white;
+}
+.drp-three {
     background-color: #3658b9;
     color: white;
 }
@@ -143,18 +209,18 @@ export default {
         position: relative;
         padding: 0 15px;
     }
-    svg{
+    svg {
         position: absolute;
         top: 50%;
         left: 50%;
     }
-    .bulb{
+    .bulb {
         transform: translate(-50%, -200%);
     }
-    .pen{
+    .pen {
         transform: translate(-50%, -275%);
     }
-    .tree{
+    .tree {
         transform: translate(-50%, -250%);
     }
     p {
@@ -276,6 +342,21 @@ export default {
         }
         #home-btn {
             justify-content: center;
+            a {
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                img {
+                    width: 40px;
+                }
+                p {
+                    margin-left: 10px;
+                    color: black;
+                    font-size: 32px;
+                    font-weight: 300;
+                    font-family: sans-serif;
+                }
+            }
         }
     }
 

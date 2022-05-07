@@ -3,6 +3,11 @@
         <div id="logo">
             <router-link to="/">
                 <img src="@/assets/Logo.svg" class="desktop" />
+                <p class="app-name-2">
+                    K<span style="text-transform: uppercase; font-size: 22px"
+                        >ram</span
+                    >
+                </p>
                 <img src="@/assets/minified.svg" class="mobile" />
             </router-link>
         </div>
@@ -40,8 +45,15 @@
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item @click="profile($event)"><span class="profile-lnk">Profile</span></el-dropdown-item>
-                        <span class="hidder"><el-dropdown-item class="desktop-logout"><Logout /></el-dropdown-item></span>
+                        <el-dropdown-item @click="profile($event)"
+                            ><span class="profile-lnk"
+                                >Profile</span
+                            ></el-dropdown-item
+                        >
+                        <span class="hidder"
+                            ><el-dropdown-item class="desktop-logout"
+                                ><Logout /></el-dropdown-item
+                        ></span>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -51,14 +63,13 @@
 
 <script>
 import { URI, axios } from "@/plugins/index.js";
-import Logout from '@/components/Logout.vue';
-
+import Logout from "@/components/Logout.vue";
 
 export default {
     name: "Navigation",
     props: ["picUrl", "search"],
     components: {
-        Logout
+        Logout,
     },
 
     data() {
@@ -184,8 +195,29 @@ nav {
 
     #logo {
         justify-content: center;
+        a{
+            display: flex;
+            align-items: center;
+            color: #222;
+            text-decoration: none;
+            text-transform: capitalize;
+        }
+        img{
+            width: 40px;
+        }
+        .app-name-2{
+            font-size: 32px;
+            margin-left: 10px;
+        }
     }
 }
+
+@media (max-width: 600px) {
+    .app-name-2 {
+        display: none;
+    }
+}
+
 
 .search-bar input {
     height: 100%;
@@ -195,10 +227,10 @@ nav {
     color: #333;
 }
 
-.profile-lnk{
+.profile-lnk {
     font-size: 16px !important;
     font-family: Arial, Helvetica, sans-serif !important;
-    &:hover{
+    &:hover {
         color: #3393ce;
     }
 }
@@ -300,7 +332,7 @@ input::placeholder {
     }
 }
 @media (max-width: 1024px) {
-    .hidder{
+    .hidder {
         display: none;
     }
 }
