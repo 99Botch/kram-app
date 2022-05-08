@@ -1340,7 +1340,7 @@ export default {
 .reset-interval {
     background-color: transparent;
     border-width: 0;
-    padding-bottom: 10px;
+    padding: 5px 0 10px 0;
     color: #0079c2;
     cursor: pointer;
 

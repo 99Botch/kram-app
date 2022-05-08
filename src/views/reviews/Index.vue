@@ -203,7 +203,7 @@ export default {
         // reverse review is trigerred when clicking the undo button
         // It reverts a card back to its previous state
         // States are stored under viewed_indexes which keeps track of the history of a session
-        reverseReview() {*
+        reverseReview() {
             // cardIds is the array holding the card ids in the order the cards are reviews
             this.cardIds.unshift(this.card_index);
             // when clicking the the undo, the last card in review_index gets stored in old_card

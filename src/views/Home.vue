@@ -13,15 +13,7 @@
                 <div id="home-btn">
                     <router-link to="/">
                         <img src="@/assets/Logo.svg" />
-                        <p class="app-name">
-                            K<span
-                                style="
-                                    text-transform: uppercase;
-                                    font-size: 22px;
-                                "
-                                >ram</span
-                            >
-                        </p>
+                        <p class="app-name">Kram</p>
                     </router-link>
                 </div>
                 <div id="login">
@@ -352,7 +344,7 @@ export default {
                 p {
                     margin-left: 10px;
                     color: black;
-                    font-size: 32px;
+                    font-size: 28px;
                     font-weight: 300;
                     font-family: sans-serif;
                 }

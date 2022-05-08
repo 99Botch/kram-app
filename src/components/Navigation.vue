@@ -3,11 +3,7 @@
         <div id="logo">
             <router-link to="/">
                 <img src="@/assets/Logo.svg" class="desktop" />
-                <p class="app-name-2">
-                    K<span style="text-transform: uppercase; font-size: 22px"
-                        >ram</span
-                    >
-                </p>
+                <p class="app-name-2">Kram</p>
                 <img src="@/assets/minified.svg" class="mobile" />
             </router-link>
         </div>
@@ -206,7 +202,7 @@ nav {
             width: 40px;
         }
         .app-name-2{
-            font-size: 32px;
+            font-size: 28px;
             margin-left: 10px;
         }
     }
